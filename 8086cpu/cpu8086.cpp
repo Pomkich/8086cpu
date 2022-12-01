@@ -55,6 +55,11 @@ void cpu8086::testFlagASub(word prev_val, word& src_op) {
 	else remFlag(Flag::A);
 }
 
+void cpu8086::testFlagO(bool prev_sig_bit, bool now_sig_bit) {
+	if (prev_sig_bit != now_sig_bit) setFlag(Flag::O);
+	else remFlag(Flag::O);
+}
+
 // операции с флагами
 bool cpu8086::getFlag(Flag f) { return (flag_reg >> (word)f) & 1; }
 void cpu8086::setFlag(Flag f) { flag_reg |= (1 << (word)f); }

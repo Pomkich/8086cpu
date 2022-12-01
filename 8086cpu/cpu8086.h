@@ -32,6 +32,7 @@ public:
 	void testFlagCSub(word prev_val, word& src_op);
 	void testFlagAAdd(word prev_val, word& src_op);
 	void testFlagASub(word prev_val, word& src_op);
+	void testFlagO(bool prev_sig_bit, bool now_sig_bit);
 
 	// функции работы с флагами
 	bool getFlag(Flag f);
