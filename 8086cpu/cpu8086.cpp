@@ -1,5 +1,24 @@
 #include "cpu8086.h"
 
+cpu8086::cpu8086() {
+	flag_reg = 0;
+	IP = 0;
+	CS = 0xFFFF;
+	DS = 0;
+	SS = 0;
+	ES = 0;
+}
+
+// сброс состояния процессора
+void cpu8086::reset() {
+	flag_reg = 0;
+	IP = 0;
+	CS = 0xFFFF;
+	DS = 0;
+	SS = 0;
+	ES = 0;
+}
+
 // фкнкции проверки флагов
 void cpu8086::testFlagZ(byte& src_op) {
 	(src_op == 0) ? setFlag(Flag::Z) : remFlag(Flag::Z);

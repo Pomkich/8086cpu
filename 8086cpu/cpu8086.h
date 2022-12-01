@@ -17,10 +17,10 @@ public:
 	// регистр флагов
 	word flag_reg;
 
-	cpu8086() {
-
-	}
 public:
+	cpu8086();
+	void reset();
+
 	// фунции для проверки флагов
 	void testFlagZ(byte& src_op);
 	void testFlagS(byte& src_op);	// для работы с байтами
