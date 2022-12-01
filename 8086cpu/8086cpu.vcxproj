@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cpu8086.cpp" />
     <ClCompile Include="GenReg.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
