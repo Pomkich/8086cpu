@@ -1,10 +1,19 @@
 #pragma once 
-#include "GenReg.h"
 #include "Constants.h"
 #include <map>
 #include <functional>
 
 static enum class Flag { O = 11, D = 10, I = 9, T = 8, S = 7, Z = 6, A = 4, P = 2, C = 0 };	// bits of flags register
+
+// замена текста препроцессором для более удобного
+// обращения к верхней и нижней частей регистров
+#define L HL[0]
+#define H HL[1]
+
+union reg {
+	word X;
+	byte HL[2];
+};
 
 class cpu8086 {
 public:

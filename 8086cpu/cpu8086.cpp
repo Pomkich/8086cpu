@@ -1,5 +1,6 @@
 #include "cpu8086.h"
 
+// конструктор
 cpu8086::cpu8086() {
 	flag_reg = 0;
 	IP = 0;
@@ -11,6 +12,10 @@ cpu8086::cpu8086() {
 	BP = 0;
 	SI = 0;
 	DI = 0;
+	A.X = 0;
+	B.X = 0;
+	C.X = 0;
+	D.X = 0;
 }
 
 // сброс состояния процессора
@@ -23,6 +28,7 @@ void cpu8086::reset() {
 	ES = 0;
 }
 
+// функция выполнения одной команды
 void cpu8086::clock() {
 	opcode = ((int)CS << 4) + IP;	// получение физического адреса
 	opcode_table[opcode]();			// выполнение команды
@@ -95,6 +101,10 @@ void cpu8086::remFlag(Flag f) { flag_reg &= (~(1 << (word)f)); }
 
 // функция инициализирует таблицу команд
 void cpu8086::initOpTable() {
+	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
+	opcode_table[0x41] = std::bind(&cpu8086::INC_R, this, std::ref(B.X));
+	opcode_table[0x42] = std::bind(&cpu8086::INC_R, this, std::ref(C.X));
+	opcode_table[0x43] = std::bind(&cpu8086::INC_R, this, std::ref(D.X));
 	opcode_table[0x44] = std::bind(&cpu8086::INC_R, this, std::ref(SP));
 	opcode_table[0x45] = std::bind(&cpu8086::INC_R, this, std::ref(BP));
 	opcode_table[0x46] = std::bind(&cpu8086::INC_R, this, std::ref(SI));

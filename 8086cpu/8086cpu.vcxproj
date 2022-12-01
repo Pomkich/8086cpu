@@ -128,13 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cpu8086.cpp" />
-    <ClCompile Include="GenReg.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
     <ClInclude Include="cpu8086.h" />
-    <ClInclude Include="GenReg.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

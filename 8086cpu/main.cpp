@@ -8,8 +8,8 @@ int main() {
 	c.initOpTable();
 	c.reset();
 
-	c.opcode_table[0x44]();
-	std::cout << c.SP << std::endl;
+	c.opcode_table[0x40]();
+	std::cout << c.A.X << std::endl;
 
 
 	return 0;
