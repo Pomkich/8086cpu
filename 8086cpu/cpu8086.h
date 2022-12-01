@@ -26,7 +26,9 @@ public:
 	void testFlagS(byte& src_op);	// для работы с байтами
 	void testFlagS(word& src_op);	// для работы со словами
 	void testFlagP(byte& src_op);
-	void testFlagCAdd(word prev_val, word& src_op);
+	void testFlagCAdd(byte prev_val, byte& src_op);	// для работы с байтами
+	void testFlagCSub(byte prev_val, byte& src_op);	
+	void testFlagCAdd(word prev_val, word& src_op);	// для работы со словами
 	void testFlagCSub(word prev_val, word& src_op);
 	void testFlagAAdd(word prev_val, word& src_op);
 	void testFlagASub(word prev_val, word& src_op);

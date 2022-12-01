@@ -25,6 +25,16 @@ void cpu8086::testFlagP(byte& src_op) {
 	else remFlag(Flag::P);
 }
 
+void cpu8086::testFlagCAdd(byte prev_val, byte& src_op) {
+	if (prev_val > src_op) setFlag(Flag::C);	// carry bit set add
+	else remFlag(Flag::C);
+}
+
+void cpu8086::testFlagCSub(byte prev_val, byte& src_op) {
+	if (prev_val < src_op) setFlag(Flag::C);	// carry bit set sub
+	else remFlag(Flag::C);
+}
+
 void cpu8086::testFlagCAdd(word prev_val, word& src_op) {
 	if (prev_val > src_op) setFlag(Flag::C);	// carry bit set add
 	else remFlag(Flag::C);
