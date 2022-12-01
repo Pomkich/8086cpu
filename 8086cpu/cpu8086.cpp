@@ -7,6 +7,10 @@ cpu8086::cpu8086() {
 	DS = 0;
 	SS = 0;
 	ES = 0;
+	SP = 0;
+	BP = 0;
+	SI = 0;
+	DI = 0;
 }
 
 // сброс состояния процессора
@@ -19,8 +23,14 @@ void cpu8086::reset() {
 	ES = 0;
 }
 
+void cpu8086::clock() {
+	opcode = ((int)CS << 4) + IP;	// получение физического адреса
+	opcode_table[opcode]();			// выполнение команды
+	IP++;							// установка счётчика на следующую команду
+}
+
 // фкнкции проверки флагов
-void cpu8086::testFlagZ(byte& src_op) {
+void cpu8086::testFlagZ(word& src_op) {
 	(src_op == 0) ? setFlag(Flag::Z) : remFlag(Flag::Z);
 }
 
@@ -32,10 +42,9 @@ void cpu8086::testFlagS(byte& src_op) {
 	((src_op >> 7) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
 }
 
-void cpu8086::testFlagP(byte& src_op) {
+void cpu8086::testFlagP(byte val) {
 	// counting setted bits
 	byte set_bits = 0;
-	byte val = src_op;
 	for (int i = 0; i < 8; i++) {
 		if ((val & 1) == 1) set_bits++;
 		val = val >> 1;
@@ -83,3 +92,23 @@ void cpu8086::testFlagO(bool prev_sig_bit, bool now_sig_bit) {
 bool cpu8086::getFlag(Flag f) { return (flag_reg >> (word)f) & 1; }
 void cpu8086::setFlag(Flag f) { flag_reg |= (1 << (word)f); }
 void cpu8086::remFlag(Flag f) { flag_reg &= (~(1 << (word)f)); }
+
+// функция инициализирует таблицу команд
+void cpu8086::initOpTable() {
+	opcode_table[0x44] = std::bind(&cpu8086::INC_R, this, std::ref(SP));
+	opcode_table[0x45] = std::bind(&cpu8086::INC_R, this, std::ref(BP));
+	opcode_table[0x46] = std::bind(&cpu8086::INC_R, this, std::ref(SI));
+	opcode_table[0x47] = std::bind(&cpu8086::INC_R, this, std::ref(DI));
+}
+
+/******OPCODES_BEG******/ 
+void cpu8086::INC_R(word& rgs) {
+	word prev_val = rgs;
+	rgs++;
+	// affected flags
+	testFlagZ(rgs);
+	testFlagS(rgs);
+	testFlagP(rgs);
+	testFlagAAdd(prev_val, rgs);
+}
+/******OPCODES_END******/

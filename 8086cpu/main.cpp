@@ -5,9 +5,11 @@ using namespace std;
 
 int main() {
 	cpu8086 c;
+	c.initOpTable();
 	c.reset();
 
-	std::cout << c.getFlag(Flag::O);
+	c.opcode_table[0x44]();
+	std::cout << c.SP << std::endl;
 
 
 	return 0;

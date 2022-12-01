@@ -1,6 +1,8 @@
 #pragma once 
 #include "GenReg.h"
 #include "Constants.h"
+#include <map>
+#include <functional>
 
 static enum class Flag { O = 11, D = 10, I = 9, T = 8, S = 7, Z = 6, A = 4, P = 2, C = 0 };	// bits of flags register
 
@@ -17,15 +19,23 @@ public:
 	// регистр флагов
 	word flag_reg;
 
+	// таблица команд
+	std::map<byte, std::function<void()>> opcode_table;
+
+	// переменная для выбора и выполнения команды
+	byte opcode;
+
 public:
 	cpu8086();
-	void reset();
+	void reset();	// сброс
+	void clock();	// выполнение одной команды
+	void initOpTable();
 
 	// фунции для проверки флагов
-	void testFlagZ(byte& src_op);
+	void testFlagZ(word& src_op);
 	void testFlagS(byte& src_op);	// для работы с байтами
 	void testFlagS(word& src_op);	// для работы со словами
-	void testFlagP(byte& src_op);
+	void testFlagP(byte val);
 	void testFlagCAdd(byte prev_val, byte& src_op);	// для работы с байтами
 	void testFlagCSub(byte prev_val, byte& src_op);	
 	void testFlagCAdd(word prev_val, word& src_op);	// для работы со словами
@@ -38,4 +48,7 @@ public:
 	bool getFlag(Flag f);
 	void setFlag(Flag f);
 	void remFlag(Flag f);
+
+private:
+	void INC_R(word& rgs);
 };
