@@ -59,22 +59,22 @@ void cpu8086::testFlagP(byte val) {
 	else remFlag(Flag::P);
 }
 
-void cpu8086::testFlagCAdd(byte prev_val, byte& src_op) {
+void cpu8086::testFlagCAddB(byte prev_val, byte& src_op) {
 	if (prev_val > src_op) setFlag(Flag::C);	// carry bit set add
 	else remFlag(Flag::C);
 }
 
-void cpu8086::testFlagCSub(byte prev_val, byte& src_op) {
+void cpu8086::testFlagCSubB(byte prev_val, byte& src_op) {
 	if (prev_val < src_op) setFlag(Flag::C);	// carry bit set sub
 	else remFlag(Flag::C);
 }
 
-void cpu8086::testFlagCAdd(word prev_val, word& src_op) {
+void cpu8086::testFlagCAddW(word prev_val, word& src_op) {
 	if (prev_val > src_op) setFlag(Flag::C);	// carry bit set add
 	else remFlag(Flag::C);
 }
 
-void cpu8086::testFlagCSub(word prev_val, word& src_op) {
+void cpu8086::testFlagCSubW(word prev_val, word& src_op) {
 	if (prev_val < src_op) setFlag(Flag::C);	// carry bit set sub
 	else remFlag(Flag::C);
 }
@@ -114,11 +114,14 @@ void cpu8086::initOpTable() {
 /******OPCODES_BEG******/ 
 void cpu8086::INC_R(word& rgs) {
 	word prev_val = rgs;
+	bool prev_sig = static_cast<bool>(getFlag(Flag::S));
 	rgs++;
 	// affected flags
 	testFlagZ(rgs);
 	testFlagS(rgs);
 	testFlagP(rgs);
 	testFlagAAdd(prev_val, rgs);
+	bool now_sig = static_cast<bool>(getFlag(Flag::S));
+	testFlagO(prev_sig, now_sig);
 }
 /******OPCODES_END******/

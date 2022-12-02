@@ -45,10 +45,10 @@ public:
 	void testFlagS(byte& src_op);	// для работы с байтами
 	void testFlagS(word& src_op);	// для работы со словами
 	void testFlagP(byte val);
-	void testFlagCAdd(byte prev_val, byte& src_op);	// для работы с байтами
-	void testFlagCSub(byte prev_val, byte& src_op);	
-	void testFlagCAdd(word prev_val, word& src_op);	// для работы со словами
-	void testFlagCSub(word prev_val, word& src_op);
+	void testFlagCAddB(byte prev_val, byte& src_op);	// для работы с байтами
+	void testFlagCSubB(byte prev_val, byte& src_op);	
+	void testFlagCAddW(word prev_val, word& src_op);	// для работы со словами
+	void testFlagCSubW(word prev_val, word& src_op);
 	void testFlagAAdd(word prev_val, word& src_op);
 	void testFlagASub(word prev_val, word& src_op);
 	void testFlagO(bool prev_sig_bit, bool now_sig_bit);
