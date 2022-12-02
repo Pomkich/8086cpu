@@ -60,4 +60,5 @@ public:
 
 private:
 	void INC_R(word& rgs);
+	void DEC_R(word& rgs);
 };
