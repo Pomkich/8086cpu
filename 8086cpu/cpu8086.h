@@ -18,7 +18,7 @@ union reg {
 };
 
 class cpu8086 {
-public:
+public:	// private
 	// регистры общего назначения
 	reg A, B, C, D;
 	// регистры указателей и индексов
@@ -47,6 +47,7 @@ public:
 	void initOpTable();
 	void initMemory(std::shared_ptr<Memory> mem);
 
+public: // private
 	// фунции для проверки флагов
 	void testFlagZ(word& src_op);
 	void testFlagSB(byte& src_op);	// для работы с байтами
@@ -64,6 +65,9 @@ public:
 	bool getFlag(Flag f);
 	void setFlag(Flag f);
 	void remFlag(Flag f);
+
+	// получение эффективного адреса в зависимости от типа адресации
+	word fetchEA(byte MOD, byte RM, word disp);
 
 private:
 	void INC_R(word& rgs);

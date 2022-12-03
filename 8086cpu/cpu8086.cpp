@@ -108,6 +108,51 @@ bool cpu8086::getFlag(Flag f) { return (flag_reg >> (word)f) & 1; }
 void cpu8086::setFlag(Flag f) { flag_reg |= (1 << (word)f); }
 void cpu8086::remFlag(Flag f) { flag_reg &= (~(1 << (word)f)); }
 
+// получение эффективного адреса в зависимости от типа адресации
+word cpu8086::fetchEA(byte MOD, byte RM, word disp) {
+	word effective_address = 0;
+	switch (MOD) {
+	case 0:	// MOD 00; no displacement
+		switch (RM) {
+		case 0: effective_address = B.X + SI; break;
+		case 1: effective_address = B.X + DI; break;
+		case 2: effective_address = BP + SI; break;
+		case 3: effective_address = BP + DI; break;
+		case 4: effective_address = SI; break;
+		case 5: effective_address = DI; break;
+		case 6: effective_address = disp; break;	// direct addressing
+		case 7: effective_address = B.X; break;
+		}
+		break;
+	case 1:	// MOD 01; 8-bit displacement
+		switch (RM) {
+		case 0: effective_address = B.X + SI + disp; break;
+		case 1: effective_address = B.X + DI + disp; break;
+		case 2: effective_address = BP + SI + disp; break;
+		case 3: effective_address = BP + DI + disp; break;
+		case 4: effective_address = SI + disp; break;
+		case 5: effective_address = DI + disp; break;
+		case 6: effective_address = BP + disp; break;
+		case 7: effective_address = B.X + disp; break;
+		}
+		break;
+	case 2:	// MOD 10; 16-bit displacement
+		switch (RM) {
+		case 0: effective_address = B.X + SI + disp; break;
+		case 1: effective_address = B.X + DI + disp; break;
+		case 2: effective_address = BP + SI + disp; break;
+		case 3: effective_address = BP + DI + disp; break;
+		case 4: effective_address = SI + disp; break;
+		case 5: effective_address = DI + disp; break;
+		case 6: effective_address = BP + disp; break;
+		case 7: effective_address = B.X + disp; break;
+		}
+		break;
+	//case 3:	// MOD 11; register addressing
+	}
+	return effective_address;
+}
+
 // функция инициализирует таблицу команд
 void cpu8086::initOpTable() {
 	// инкремент регистров
