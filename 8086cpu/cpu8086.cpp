@@ -33,8 +33,8 @@ void cpu8086::reset() {
 
 // функция выполнения одной команды
 void cpu8086::clock() {
-	instr_adr = ((int)CS << 4) + IP;	// получение физического адреса
-	opcode = memory->read(instr_adr);
+	instr_adr = ((int)CS << 4) + IP;	// генерация физического адреса
+	opcode = memory->read(instr_adr);	// получение команды
 	opcode_table[opcode]();				// выполнение команды
 	IP++;								// установка счётчика на следующую команду
 }
@@ -48,12 +48,12 @@ void cpu8086::testFlagZ(word& src_op) {
 	(src_op == 0) ? setFlag(Flag::Z) : remFlag(Flag::Z);
 }
 
-void cpu8086::testFlagS(word& src_op) {
-	((src_op >> 15) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
+void cpu8086::testFlagSB(byte& src_op) {
+	((src_op >> 7) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
 }
 
-void cpu8086::testFlagS(byte& src_op) {
-	((src_op >> 7) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
+void cpu8086::testFlagSW(word& src_op) {
+	((src_op >> 15) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
 }
 
 void cpu8086::testFlagP(byte val) {
@@ -136,7 +136,7 @@ void cpu8086::INC_R(word& rgs) {
 	rgs++;
 	// affected flags
 	testFlagZ(rgs);
-	testFlagS(rgs);
+	testFlagSW(rgs);
 	testFlagP(rgs);
 	testFlagAAdd(prev_val, rgs);
 	bool now_sig = static_cast<bool>(getFlag(Flag::S));
@@ -149,7 +149,7 @@ void cpu8086::DEC_R(word& rgs) {
 	rgs--;
 	// affected flags
 	testFlagZ(rgs);
-	testFlagS(rgs);
+	testFlagSW(rgs);
 	testFlagP(rgs);
 	testFlagASub(prev_val, rgs);
 	bool now_sig = static_cast<bool>(getFlag(Flag::S));

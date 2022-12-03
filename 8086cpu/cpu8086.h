@@ -48,8 +48,8 @@ public:
 
 	// фунции для проверки флагов
 	void testFlagZ(word& src_op);
-	void testFlagS(byte& src_op);	// для работы с байтами
-	void testFlagS(word& src_op);	// для работы со словами
+	void testFlagSB(byte& src_op);	// для работы с байтами
+	void testFlagSW(word& src_op);	// для работы со словами
 	void testFlagP(byte val);
 	void testFlagCAddB(byte prev_val, byte& src_op);	// для работы с байтами
 	void testFlagCSubB(byte prev_val, byte& src_op);	
