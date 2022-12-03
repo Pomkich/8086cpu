@@ -9,12 +9,12 @@ static enum class Flag { O = 11, D = 10, I = 9, T = 8, S = 7, Z = 6, A = 4, P = 
 
 // замена текста препроцессором для более удобного
 // обращения к верхней и нижней частей регистров
-#define L HL[0]
-#define H HL[1]
+#define L low_high[0]
+#define H low_high[1]
 
 union reg {
 	word X;
-	byte HL[2];
+	byte low_high[2];
 };
 
 class cpu8086 {
@@ -66,8 +66,10 @@ public: // private
 	void setFlag(Flag f);
 	void remFlag(Flag f);
 
-	// получение эффективного адреса в зависимости от типа адресации
-	word fetchEA(byte MOD, byte RM, word disp);
+	// функции-помощники адресации
+	word fetchEA(byte MOD, byte RM, word disp);	// получение эффективного адреса в зависимости от типа адресации
+	byte& getRegB(byte reg);	// декодирование 8-битного регистра
+	word& getRegW(byte reg);	// декодирование 16-битного регистра
 
 private:
 	void INC_R(word& rgs);

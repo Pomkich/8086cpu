@@ -148,9 +148,39 @@ word cpu8086::fetchEA(byte MOD, byte RM, word disp) {
 		case 7: effective_address = B.X + disp; break;
 		}
 		break;
-	//case 3:	// MOD 11; register addressing
+	//case 3:	// MOD 11; register addressing not supported
 	}
 	return effective_address;
+}
+
+// декодирование регистра по номеру
+// команды должны сами выбирать тип декодирования (8-битные 
+// части регистров или весь регистр)
+// возвращают ссылки на регистр
+byte& cpu8086::getRegB(byte reg) {
+	switch (reg) {
+	case 0: return A.L; break;
+	case 1: return C.L; break;
+	case 2: return D.L; break;
+	case 3: return B.L; break;
+	case 4: return A.L; break;
+	case 5: return C.L; break;
+	case 6: return D.L; break;
+	case 7: return B.L; break;
+	}
+}
+
+word& cpu8086::getRegW(byte reg) {
+	switch (reg) {
+	case 0: return A.X; break;
+	case 1: return C.X; break;
+	case 2: return D.X; break;
+	case 3: return B.X; break;
+	case 4: return SP; break;
+	case 5: return BP; break;
+	case 6: return SI; break;
+	case 7: return DI; break;
+	}
 }
 
 // функция инициализирует таблицу команд
