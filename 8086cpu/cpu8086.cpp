@@ -16,6 +16,9 @@ cpu8086::cpu8086() {
 	B.X = 0;
 	C.X = 0;
 	D.X = 0;
+
+	instr_adr = 0;
+	opcode = 0;
 }
 
 // сброс состояния процессора
@@ -30,9 +33,14 @@ void cpu8086::reset() {
 
 // функция выполнения одной команды
 void cpu8086::clock() {
-	opcode = ((int)CS << 4) + IP;	// получение физического адреса
-	opcode_table[opcode]();			// выполнение команды
-	IP++;							// установка счётчика на следующую команду
+	instr_adr = ((int)CS << 4) + IP;	// получение физического адреса
+	opcode = memory->read(instr_adr);
+	opcode_table[opcode]();				// выполнение команды
+	IP++;								// установка счётчика на следующую команду
+}
+
+void cpu8086::initMemory(std::shared_ptr<Memory> mem) {
+	memory = mem;
 }
 
 // фкнкции проверки флагов
@@ -101,6 +109,7 @@ void cpu8086::remFlag(Flag f) { flag_reg &= (~(1 << (word)f)); }
 
 // функция инициализирует таблицу команд
 void cpu8086::initOpTable() {
+	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
 	opcode_table[0x41] = std::bind(&cpu8086::INC_R, this, std::ref(B.X));
 	opcode_table[0x42] = std::bind(&cpu8086::INC_R, this, std::ref(C.X));
@@ -109,6 +118,7 @@ void cpu8086::initOpTable() {
 	opcode_table[0x45] = std::bind(&cpu8086::INC_R, this, std::ref(BP));
 	opcode_table[0x46] = std::bind(&cpu8086::INC_R, this, std::ref(SI));
 	opcode_table[0x47] = std::bind(&cpu8086::INC_R, this, std::ref(DI));
+	// декремент регистров
 	opcode_table[0x48] = std::bind(&cpu8086::DEC_R, this, std::ref(A.X));
 	opcode_table[0x49] = std::bind(&cpu8086::DEC_R, this, std::ref(B.X));
 	opcode_table[0x4A] = std::bind(&cpu8086::DEC_R, this, std::ref(C.X));
@@ -144,5 +154,9 @@ void cpu8086::DEC_R(word& rgs) {
 	testFlagASub(prev_val, rgs);
 	bool now_sig = static_cast<bool>(getFlag(Flag::S));
 	testFlagO(prev_sig, now_sig);
+}
+
+void cpu8086::PUSH_R(word& rgs) {
+
 }
 /******OPCODES_END******/

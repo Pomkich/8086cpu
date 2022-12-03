@@ -2,6 +2,8 @@
 #include "Constants.h"
 #include <map>
 #include <functional>
+#include <memory>
+#include "Memory.h"
 
 static enum class Flag { O = 11, D = 10, I = 9, T = 8, S = 7, Z = 6, A = 4, P = 2, C = 0 };	// bits of flags register
 
@@ -31,14 +33,18 @@ public:
 	// таблица команд
 	std::map<byte, std::function<void()>> opcode_table;
 
-	// переменная для выбора и выполнения команды
-	byte opcode;
+	byte opcode;	// переменная хранящая команду
+	int instr_adr;	// переменная хранящая адрес команды
+
+	// указатель на физическое адресное пространство
+	std::shared_ptr<Memory> memory;
 
 public:
 	cpu8086();
 	void reset();	// сброс
 	void clock();	// выполнение одной команды
 	void initOpTable();
+	void initMemory(std::shared_ptr<Memory> mem);
 
 	// фунции для проверки флагов
 	void testFlagZ(word& src_op);
@@ -61,4 +67,5 @@ public:
 private:
 	void INC_R(word& rgs);
 	void DEC_R(word& rgs);
+	void PUSH_R(word& rgs);
 };
