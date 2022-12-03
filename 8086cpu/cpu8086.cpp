@@ -35,7 +35,7 @@ void cpu8086::reset() {
 // функция выполнения одной команды
 void cpu8086::clock() {
 	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса
-	opcode = memory->read(instr_adr);	// получение команды
+	opcode = memory->readB(instr_adr);	// получение команды
 	opcode_table[opcode]();				// выполнение команды
 	IP++;								// установка счётчика на следующую команду
 }
@@ -137,6 +137,15 @@ void cpu8086::initOpTable() {
 	opcode_table[0x55] = std::bind(&cpu8086::PUSH_R, this, std::ref(BP));
 	opcode_table[0x56] = std::bind(&cpu8086::PUSH_R, this, std::ref(SI));
 	opcode_table[0x57] = std::bind(&cpu8086::PUSH_R, this, std::ref(DI));
+	// чтение из стека
+	opcode_table[0x58] = std::bind(&cpu8086::POP_R, this, std::ref(A.X));
+	opcode_table[0x59] = std::bind(&cpu8086::POP_R, this, std::ref(B.X));
+	opcode_table[0x5A] = std::bind(&cpu8086::POP_R, this, std::ref(C.X));
+	opcode_table[0x5B] = std::bind(&cpu8086::POP_R, this, std::ref(D.X));
+	opcode_table[0x5C] = std::bind(&cpu8086::POP_R, this, std::ref(SP));
+	opcode_table[0x5D] = std::bind(&cpu8086::POP_R, this, std::ref(BP));
+	opcode_table[0x5E] = std::bind(&cpu8086::POP_R, this, std::ref(SI));
+	opcode_table[0x5F] = std::bind(&cpu8086::POP_R, this, std::ref(DI));
 }
 
 /******OPCODES_BEG******/ 
@@ -167,8 +176,14 @@ void cpu8086::DEC_R(word& rgs) {
 }
 
 void cpu8086::PUSH_R(word& rgs) {
-	stack_adr = ((dword)SS << 4) + SP;
-	memory->writeW(stack_adr, rgs);
 	SP -= 2;	// стек растёт вниз
+	stack_adr = ((dword)SS << 4) + SP;	// получение физического адреса вершины стека
+	memory->writeW(stack_adr, rgs);	
+}
+
+void cpu8086::POP_R(word& rgs) {
+	stack_adr = ((dword)SS << 4) + SP;
+	rgs = memory->readW(stack_adr);
+	SP += 2;
 }
 /******OPCODES_END******/

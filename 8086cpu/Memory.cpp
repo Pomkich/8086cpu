@@ -4,8 +4,12 @@ Memory::Memory() {
 	memset(memory, 0, memory_size);
 }
 
-byte Memory::read(dword address) {
+byte Memory::readB(dword address) {
 	return memory[address];
+}
+
+word Memory::readW(dword address) {
+	return ((memory[address + 1] << 8) | memory[address]);
 }
 
 void Memory::writeB(dword address, byte val) {

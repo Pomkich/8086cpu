@@ -69,4 +69,5 @@ private:
 	void INC_R(word& rgs);
 	void DEC_R(word& rgs);
 	void PUSH_R(word& rgs);
+	void POP_R(word& rgs);
 };

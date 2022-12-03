@@ -9,7 +9,8 @@ private:
 
 public:
 	Memory();
-	byte read(dword address);
+	byte readB(dword address);
+	word readW(dword address);
 	void writeB(dword address, byte val);
 	void writeW(dword address, word val);
 };
