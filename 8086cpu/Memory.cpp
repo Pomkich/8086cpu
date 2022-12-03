@@ -8,6 +8,12 @@ byte Memory::read(dword address) {
 	return memory[address];
 }
 
-void Memory::write(dword address, byte val) {
+void Memory::writeB(dword address, byte val) {
 	memory[address] = val;
+}
+
+void Memory::writeW(dword address, word val) {
+	// NOTE: следует добавить проверки на выход за пределы
+	memory[address] = (val & 0x00FF);		// нижняя часть слова
+	memory[address + 1] = (val >> 8);		// верхняя часть слова
 }

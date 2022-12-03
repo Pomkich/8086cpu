@@ -10,13 +10,10 @@ int main() {
 	c.initMemory(mem);
 	c.reset();
 
-	mem->write(0xFFFF0, 0x40);
-	mem->write(0xFFFF1, 0x40);
-	std::cout << c.A.X << std::endl;
-	c.clock();
-	c.clock();
-	std::cout << c.A.X << std::endl;
+	c.A.X = 0x1234;
 
+	mem->writeB(0xFFFF0, 0x50);
+	c.clock();
 
 	return 0;
 }

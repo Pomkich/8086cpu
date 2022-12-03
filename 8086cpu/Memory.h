@@ -1,6 +1,7 @@
 #pragma once
 #include "Constants.h"
 #include <cstring>
+#include <iostream>
 
 class Memory {
 private:
@@ -9,5 +10,6 @@ private:
 public:
 	Memory();
 	byte read(dword address);
-	void write(dword address, byte val);
+	void writeB(dword address, byte val);
+	void writeW(dword address, word val);
 };
