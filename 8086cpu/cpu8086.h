@@ -49,16 +49,15 @@ public:
 
 public: // private
 	// фунции для проверки флагов
-	void testFlagZ(word& src_op);
-	void testFlagSB(byte& src_op);	// для работы с байтами
-	void testFlagSW(word& src_op);	// для работы со словами
+	void testFlagZ(word src_op);
+	void testFlagS(word src_op, bool w);	// w == 1 - работа со словами
 	void testFlagP(byte val);
-	void testFlagCAddB(byte prev_val, byte& src_op);	// для работы с байтами
-	void testFlagCSubB(byte prev_val, byte& src_op);	
-	void testFlagCAddW(word prev_val, word& src_op);	// для работы со словами
-	void testFlagCSubW(word prev_val, word& src_op);
-	void testFlagAAdd(word prev_val, word& src_op);
-	void testFlagASub(word prev_val, word& src_op);
+	void testFlagCAddB(byte prev_val, byte src_op);	// для работы со словами
+	void testFlagCSubB(byte prev_val, byte src_op);
+	void testFlagCAddW(word prev_val, word src_op);	// для работы со словами
+	void testFlagCSubW(word prev_val, word src_op);
+	void testFlagAAdd(word prev_val, word src_op);
+	void testFlagASub(word prev_val, word src_op);
 	void testFlagO(bool prev_sig_bit, bool now_sig_bit);
 
 	// функции работы с флагами
@@ -68,7 +67,7 @@ public: // private
 
 	// функции-помощники адресации
 	word fetchEA(byte MOD, byte RM, word disp);	// получение эффективного адреса в зависимости от типа адресации
-	word fetchDisp(byte mod, byte rm);
+	word fetchDisp(byte mod, byte rm);	// получение смещения
 	byte& getRegB(byte reg);	// декодирование 8-битного регистра
 	word& getRegW(byte reg);	// декодирование 16-битного регистра
 

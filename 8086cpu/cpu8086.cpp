@@ -45,16 +45,13 @@ void cpu8086::initMemory(std::shared_ptr<Memory> mem) {
 }
 
 // фкнкции проверки флагов
-void cpu8086::testFlagZ(word& src_op) {
+void cpu8086::testFlagZ(word src_op) {
 	(src_op == 0) ? setFlag(Flag::Z) : remFlag(Flag::Z);
 }
 
-void cpu8086::testFlagSB(byte& src_op) {
-	((src_op >> 7) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
-}
-
-void cpu8086::testFlagSW(word& src_op) {
-	((src_op >> 15) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
+void cpu8086::testFlagS(word src_op, bool w) {
+	if (!w) ((src_op >> 7) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
+	else ((src_op >> 15) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
 }
 
 void cpu8086::testFlagP(byte val) {
@@ -68,32 +65,32 @@ void cpu8086::testFlagP(byte val) {
 	else remFlag(Flag::P);
 }
 
-void cpu8086::testFlagCAddB(byte prev_val, byte& src_op) {
+void cpu8086::testFlagCAddB(byte prev_val, byte src_op) {
 	if (prev_val > src_op) setFlag(Flag::C);	// carry bit set add
 	else remFlag(Flag::C);
 }
 
-void cpu8086::testFlagCSubB(byte prev_val, byte& src_op) {
+void cpu8086::testFlagCSubB(byte prev_val, byte src_op) {
 	if (prev_val < src_op) setFlag(Flag::C);	// carry bit set sub
 	else remFlag(Flag::C);
 }
 
-void cpu8086::testFlagCAddW(word prev_val, word& src_op) {
+void cpu8086::testFlagCAddW(word prev_val, word src_op) {
 	if (prev_val > src_op) setFlag(Flag::C);	// carry bit set add
 	else remFlag(Flag::C);
 }
 
-void cpu8086::testFlagCSubW(word prev_val, word& src_op) {
+void cpu8086::testFlagCSubW(word prev_val, word src_op) {
 	if (prev_val < src_op) setFlag(Flag::C);	// carry bit set sub
 	else remFlag(Flag::C);
 }
 
-void cpu8086::testFlagAAdd(word prev_val, word& src_op) {
+void cpu8086::testFlagAAdd(word prev_val, word src_op) {
 	if ((prev_val & 0x000F) > (src_op & 0x000F)) setFlag(Flag::A);	// Auxiliary carry bit set add
 	else remFlag(Flag::A);
 }
 
-void cpu8086::testFlagASub(word prev_val, word& src_op) {
+void cpu8086::testFlagASub(word prev_val, word src_op) {
 	if ((prev_val & 0x000F) < (src_op & 0x000F)) setFlag(Flag::A);	// Auxiliary carry bit set sub
 	else remFlag(Flag::A);
 }
@@ -211,7 +208,7 @@ word& cpu8086::getRegW(byte reg) {
 // функция инициализирует таблицу команд
 void cpu8086::initOpTable() {
 	// сложение
-
+	
 
 	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
@@ -261,11 +258,15 @@ void cpu8086::ADD_R_IN_B() {
 	byte reg = (mod_reg_rm & 0b00111000) >> 3;
 	byte rm = (mod_reg_rm & 0b00000111);
 	// определяем регистр для байтов
-	byte& first_reg_b = getRegB(reg);
+	byte& first_reg = getRegB(reg);
+
+	// переменные нужны для проверки флагов
+	byte prev_val = first_reg;
+	bool prev_sig_bit = getFlag(Flag::S);
 
 	if (mod == 3) {	// регистровая адресация
-		byte& second_reg_b = getRegB(rm);
-		first_reg_b += second_reg_b;
+		byte& second_reg = getRegB(rm);
+		first_reg += second_reg;
 	}
 	else {	// вычисление эффективного адреса
 		word displacement = fetchDisp(mod, rm);	// смещение
@@ -273,8 +274,15 @@ void cpu8086::ADD_R_IN_B() {
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
 		dword phys_EA = ((dword)DS << 4) + EA;
-		first_reg_b += memory->readB(phys_EA);
+		first_reg += memory->readB(phys_EA);
 	}
+	// установка флагов
+	testFlagZ(first_reg);
+	testFlagS(first_reg, 0);
+	testFlagP(first_reg);
+	testFlagCAddB(prev_val, first_reg);
+	testFlagAAdd(prev_val, first_reg);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
 void cpu8086::ADD_R_OUT_B() {
@@ -286,11 +294,16 @@ void cpu8086::ADD_R_OUT_B() {
 	byte reg = (mod_reg_rm & 0b00111000) >> 3;
 	byte rm = (mod_reg_rm & 0b00000111);
 	
-	byte& first_reg_b = getRegB(reg);
+	byte& first_reg = getRegB(reg);
+
+	// переменные нужны для проверки флагов
+	byte prev_val = 0;
+	byte new_val = 0;
+	bool prev_sig_bit = getFlag(Flag::S);
 
 	if (mod == 3) {	// регистровая адресация
-		byte& second_reg_b = getRegB(rm);
-		second_reg_b += first_reg_b;	// по идее такое невозможно
+		byte& second_reg = getRegB(rm);
+		second_reg += first_reg;	// по идее такое невозможно
 	}
 	else {	// вычисление эффективного адреса
 		word displacement = fetchDisp(mod, rm);	// смещение
@@ -298,8 +311,16 @@ void cpu8086::ADD_R_OUT_B() {
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
 		dword phys_EA = ((dword)DS << 4) + EA;
-		memory->writeB(phys_EA, memory->readB(phys_EA) + first_reg_b);
+		prev_val = memory->readB(phys_EA);
+		new_val = prev_val + first_reg;
+		memory->writeB(phys_EA, new_val);
 	}
+	testFlagZ(new_val);
+	testFlagS(new_val, 0);
+	testFlagP(new_val);
+	testFlagCAddB(prev_val, new_val);
+	testFlagAAdd(prev_val, new_val);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
 void cpu8086::ADD_R_IN_W() {
@@ -311,11 +332,15 @@ void cpu8086::ADD_R_IN_W() {
 	byte reg = (mod_reg_rm & 0b00111000) >> 3;
 	byte rm = (mod_reg_rm & 0b00000111);
 	
-	word& first_reg_w = getRegW(reg);
+	word& first_reg = getRegW(reg);
+
+	// переменные нужны для проверки флагов
+	word prev_val = first_reg;
+	bool prev_sig_bit = getFlag(Flag::S);
 
 	if (mod == 3) {	// регистровая адресация
-		word& second_reg_w = getRegW(rm);
-		first_reg_w += second_reg_w;
+		word& second_reg = getRegW(rm);
+		first_reg += second_reg;
 	}
 	else {	// вычисление эффективного адреса
 		word displacement = fetchDisp(mod, rm);	// смещение
@@ -323,8 +348,14 @@ void cpu8086::ADD_R_IN_W() {
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
 		dword phys_EA = ((dword)DS << 4) + EA;
-		first_reg_w += memory->readB(phys_EA);
+		first_reg += memory->readW(phys_EA);
 	}
+	testFlagZ(first_reg);
+	testFlagS(first_reg, 1);
+	testFlagP(first_reg);
+	testFlagCAddB(prev_val, first_reg);
+	testFlagAAdd(prev_val, first_reg);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
 void cpu8086::ADD_R_OUT_W() {
@@ -336,11 +367,16 @@ void cpu8086::ADD_R_OUT_W() {
 	byte reg = (mod_reg_rm & 0b00111000) >> 3;
 	byte rm = (mod_reg_rm & 0b00000111);
 	
-	word& first_reg_w = getRegW(reg);
+	word& first_reg = getRegW(reg);
+
+	// переменные нужны для проверки флагов
+	word prev_val = 0;
+	word new_val = 0;
+	bool prev_sig_bit = getFlag(Flag::S);
 
 	if (mod == 3) {	// регистровая адресация
-		word& second_reg_w = getRegW(rm);
-		second_reg_w += first_reg_w;	// по идее такое невозможно
+		word& second_reg = getRegW(rm);
+		second_reg += first_reg;	// по идее такое невозможно
 	}
 	else {	// вычисление эффективного адреса
 		word displacement = fetchDisp(mod, rm);	// смещение
@@ -348,8 +384,16 @@ void cpu8086::ADD_R_OUT_W() {
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
 		dword phys_EA = ((dword)DS << 4) + EA;
-		memory->writeW(phys_EA, memory->readW(phys_EA) + first_reg_w);
+		prev_val = memory->readW(phys_EA);
+		new_val = prev_val + first_reg;
+		memory->writeW(phys_EA, new_val);
 	}
+	testFlagZ(new_val);
+	testFlagS(new_val, 1);
+	testFlagP(new_val);
+	testFlagCAddB(prev_val, new_val);
+	testFlagAAdd(prev_val, new_val);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
 void cpu8086::INC_R(word& rgs) {
@@ -358,7 +402,7 @@ void cpu8086::INC_R(word& rgs) {
 	rgs++;
 	// affected flags
 	testFlagZ(rgs);
-	testFlagSW(rgs);
+	testFlagS(rgs, 1);
 	testFlagP(rgs);
 	testFlagAAdd(prev_val, rgs);
 	bool now_sig = static_cast<bool>(getFlag(Flag::S));
@@ -371,7 +415,7 @@ void cpu8086::DEC_R(word& rgs) {
 	rgs--;
 	// affected flags
 	testFlagZ(rgs);
-	testFlagSW(rgs);
+	testFlagS(rgs, 1);
 	testFlagP(rgs);
 	testFlagASub(prev_val, rgs);
 	bool now_sig = static_cast<bool>(getFlag(Flag::S));
