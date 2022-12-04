@@ -76,6 +76,8 @@ private:
 	void ADD_R_OUT_B();		// сложение из байтового регистра
 	void ADD_R_IN_W();		// сложение в 16-битный регистр
 	void ADD_R_OUT_W();		// сложение из 16-битного регистра
+	void ADD_A_B();
+	void ADD_A_W();
 	void INC_R(word& rgs);
 	void DEC_R(word& rgs);
 	void PUSH_R(word& rgs);

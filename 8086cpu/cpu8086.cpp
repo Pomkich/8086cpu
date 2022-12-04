@@ -212,6 +212,10 @@ void cpu8086::initOpTable() {
 	opcode_table[0x01] = std::bind(&cpu8086::ADD_R_OUT_W, this);
 	opcode_table[0x02] = std::bind(&cpu8086::ADD_R_IN_B, this);
 	opcode_table[0x03] = std::bind(&cpu8086::ADD_R_IN_W, this);
+	opcode_table[0x04] = std::bind(&cpu8086::ADD_A_B, this);
+	opcode_table[0x05] = std::bind(&cpu8086::ADD_A_W, this);
+	opcode_table[0x06] = std::bind(&cpu8086::PUSH_R, this, std::ref(ES));
+	opcode_table[0x07] = std::bind(&cpu8086::POP_R, this, std::ref(ES));
 
 	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
@@ -396,6 +400,45 @@ void cpu8086::ADD_R_OUT_W() {
 	testFlagP(new_val);
 	testFlagCAddB(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
+void cpu8086::ADD_A_B() {
+	IP++;
+	instr_adr = ((dword)CS << 4) + IP;
+	IP++;
+	byte data = ((dword)CS << 4) + IP;	// получение данных
+
+	byte prev_val = A.L;
+	bool prev_sig_bit = getFlag(Flag::S);
+	A.L += data;
+
+	testFlagZ(A.L);
+	testFlagS(A.L, 0);
+	testFlagP(A.L);
+	testFlagCAddB(prev_val, A.L);
+	testFlagAAdd(prev_val, A.L);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
+void cpu8086::ADD_A_W() {
+	IP++;
+	instr_adr = ((dword)CS << 4) + IP;
+	IP++;
+	byte data_low = ((dword)CS << 4) + IP;	// получение данных
+	IP++;
+	word data = ((dword)CS << 4) + IP;
+	data = (data << 8) | data_low;
+
+	byte prev_val = A.X;
+	bool prev_sig_bit = getFlag(Flag::S);
+	A.X += data;
+
+	testFlagZ(A.X);
+	testFlagS(A.X, 1);
+	testFlagP(A.X);
+	testFlagCAddB(prev_val, A.X);
+	testFlagAAdd(prev_val, A.X);
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
