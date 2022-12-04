@@ -68,6 +68,7 @@ public: // private
 
 	// функции-помощники адресации
 	word fetchEA(byte MOD, byte RM, word disp);	// получение эффективного адреса в зависимости от типа адресации
+	word fetchDisp(byte mod, byte rm);
 	byte& getRegB(byte reg);	// декодирование 8-битного регистра
 	word& getRegW(byte reg);	// декодирование 16-битного регистра
 

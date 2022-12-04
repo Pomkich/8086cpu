@@ -153,6 +153,31 @@ word cpu8086::fetchEA(byte MOD, byte RM, word disp) {
 	return effective_address;
 }
 
+word cpu8086::fetchDisp(byte mod, byte rm) {
+	word displacement = 0;
+	switch (mod) {
+	case 0:	// нет смещения, но возможно действует режим прямой адресации
+		if (rm == 0b110) {
+			IP++;
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readB(instr_adr);
+		}
+		break;
+	case 1: // однобайтное смещение
+		IP++;	// переводим указатель на позицию вперёд
+		instr_adr = ((dword)CS << 4) + IP;
+		displacement = memory->readB(instr_adr);	// читаем байт
+		break;
+	case 2:	// двухбайтное смещение
+		IP++;
+		instr_adr = ((dword)CS << 4) + IP;
+		displacement = memory->readW(instr_adr);
+		IP++;	// так как было считано два байта, нужно перевести указатель дальше
+		break;
+	}
+	return displacement;
+}
+
 // декодирование регистра по номеру
 // команды должны сами выбирать тип декодирования (8-битные 
 // части регистров или весь регистр)
@@ -243,27 +268,7 @@ void cpu8086::ADD_R_IN_B() {
 		first_reg_b += second_reg_b;
 	}
 	else {	// вычисление эффективного адреса
-		word displacement = 0;	// смещение
-		switch (mod) {
-		case 0:	// нет смещения, но возможно действует режим прямой адресации
-			if (rm == 0b110) {
-				IP++;
-				instr_adr = ((dword)CS << 4) + IP;
-				displacement = memory->readB(instr_adr);
-			}
-			break;
-		case 1: // однобайтное смещение
-			IP++;	// переводим указатель на позицию вперёд
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readB(instr_adr);	// читаем байт
-			break;
-		case 2:	// двухбайтное смещение
-			IP++;
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readW(instr_adr);
-			IP++;	// так как было считано два байта, нужно перевести указатель дальше
-			break;
-		}
+		word displacement = fetchDisp(mod, rm);	// смещение
 
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
@@ -288,28 +293,7 @@ void cpu8086::ADD_R_OUT_B() {
 		second_reg_b += first_reg_b;	// по идее такое невозможно
 	}
 	else {	// вычисление эффективного адреса
-		word displacement = 0;	// смещение
-		switch (mod) {
-		case 0:	// нет смещения, но возможно действует режим прямой адресации
-			if (rm == 0b110) {
-				IP++;
-				instr_adr = ((dword)CS << 4) + IP;
-				displacement = memory->readW(instr_adr);
-				IP++;
-			}
-			break;
-		case 1: // однобайтное смещение
-			IP++;	// переводим указатель на позицию вперёд
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readB(instr_adr);	// читаем байт
-			break;
-		case 2:	// двухбайтное смещение
-			IP++;
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readW(instr_adr);
-			IP++;	// так как было считано два байта, нужно перевести указатель дальше
-			break;
-		}
+		word displacement = fetchDisp(mod, rm);	// смещение
 
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
@@ -334,27 +318,7 @@ void cpu8086::ADD_R_IN_W() {
 		first_reg_w += second_reg_w;
 	}
 	else {	// вычисление эффективного адреса
-		word displacement = 0;	// смещение
-		switch (mod) {
-		case 0:	// нет смещения, но возможно действует режим прямой адресации
-			if (rm == 0b110) {
-				IP++;
-				instr_adr = ((dword)CS << 4) + IP;
-				displacement = memory->readB(instr_adr);
-			}
-			break;
-		case 1: // однобайтное смещение
-			IP++;	// переводим указатель на позицию вперёд
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readB(instr_adr);	// читаем байт
-			break;
-		case 2:	// двухбайтное смещение
-			IP++;
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readW(instr_adr);
-			IP++;	// так как было считано два байта, нужно перевести указатель дальше
-			break;
-		}
+		word displacement = fetchDisp(mod, rm);	// смещение
 
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
@@ -379,28 +343,7 @@ void cpu8086::ADD_R_OUT_W() {
 		second_reg_w += first_reg_w;	// по идее такое невозможно
 	}
 	else {	// вычисление эффективного адреса
-		word displacement = 0;	// смещение
-		switch (mod) {
-		case 0:	// нет смещения, но возможно действует режим прямой адресации
-			if (rm == 0b110) {
-				IP++;
-				instr_adr = ((dword)CS << 4) + IP;
-				displacement = memory->readW(instr_adr);
-				IP++;
-			}
-			break;
-		case 1: // однобайтное смещение
-			IP++;	// переводим указатель на позицию вперёд
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readB(instr_adr);	// читаем байт
-			break;
-		case 2:	// двухбайтное смещение
-			IP++;
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readW(instr_adr);
-			IP++;	// так как было считано два байта, нужно перевести указатель дальше
-			break;
-		}
+		word displacement = fetchDisp(mod, rm);	// смещение
 
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
