@@ -208,7 +208,10 @@ word& cpu8086::getRegW(byte reg) {
 // функция инициализирует таблицу команд
 void cpu8086::initOpTable() {
 	// сложение
-	
+	opcode_table[0x00] = std::bind(&cpu8086::ADD_R_OUT_B, this);
+	opcode_table[0x01] = std::bind(&cpu8086::ADD_R_OUT_W, this);
+	opcode_table[0x02] = std::bind(&cpu8086::ADD_R_IN_B, this);
+	opcode_table[0x03] = std::bind(&cpu8086::ADD_R_IN_W, this);
 
 	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
