@@ -163,10 +163,10 @@ byte& cpu8086::getRegB(byte reg) {
 	case 1: return C.L; break;
 	case 2: return D.L; break;
 	case 3: return B.L; break;
-	case 4: return A.L; break;
-	case 5: return C.L; break;
-	case 6: return D.L; break;
-	case 7: return B.L; break;
+	case 4: return A.H; break;
+	case 5: return C.H; break;
+	case 6: return D.H; break;
+	case 7: return B.H; break;
 	}
 }
 
@@ -185,6 +185,9 @@ word& cpu8086::getRegW(byte reg) {
 
 // функция инициализирует таблицу команд
 void cpu8086::initOpTable() {
+	// сложение
+
+
 	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
 	opcode_table[0x41] = std::bind(&cpu8086::INC_R, this, std::ref(B.X));
@@ -223,7 +226,189 @@ void cpu8086::initOpTable() {
 	opcode_table[0x5F] = std::bind(&cpu8086::POP_R, this, std::ref(DI));
 }
 
-/******OPCODES_BEG******/ 
+/******OPCODES_BEG******/
+void cpu8086::ADD_R_IN_B() {
+	IP++;
+	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(instr_adr);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+	// определяем регистр для байтов
+	byte& first_reg_b = getRegB(reg);
+
+	if (mod == 3) {	// регистровая адресация
+		byte& second_reg_b = getRegB(rm);
+		first_reg_b += second_reg_b;
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = 0;	// смещение
+		switch (mod) {
+		case 0:	// нет смещения, но возможно действует режим прямой адресации
+			if (rm == 0b110) {
+				IP++;
+				instr_adr = ((dword)CS << 4) + IP;
+				displacement = memory->readB(instr_adr);
+			}
+			break;
+		case 1: // однобайтное смещение
+			IP++;	// переводим указатель на позицию вперёд
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readB(instr_adr);	// читаем байт
+			break;
+		case 2:	// двухбайтное смещение
+			IP++;
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readW(instr_adr);
+			IP++;	// так как было считано два байта, нужно перевести указатель дальше
+			break;
+		}
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		dword phys_EA = ((dword)DS << 4) + EA;
+		first_reg_b += memory->readB(phys_EA);
+	}
+}
+
+void cpu8086::ADD_R_OUT_B() {
+	IP++;
+	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(instr_adr);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+	
+	byte& first_reg_b = getRegB(reg);
+
+	if (mod == 3) {	// регистровая адресация
+		byte& second_reg_b = getRegB(rm);
+		second_reg_b += first_reg_b;	// по идее такое невозможно
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = 0;	// смещение
+		switch (mod) {
+		case 0:	// нет смещения, но возможно действует режим прямой адресации
+			if (rm == 0b110) {
+				IP++;
+				instr_adr = ((dword)CS << 4) + IP;
+				displacement = memory->readW(instr_adr);
+				IP++;
+			}
+			break;
+		case 1: // однобайтное смещение
+			IP++;	// переводим указатель на позицию вперёд
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readB(instr_adr);	// читаем байт
+			break;
+		case 2:	// двухбайтное смещение
+			IP++;
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readW(instr_adr);
+			IP++;	// так как было считано два байта, нужно перевести указатель дальше
+			break;
+		}
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		dword phys_EA = ((dword)DS << 4) + EA;
+		memory->writeB(phys_EA, memory->readB(phys_EA) + first_reg_b);
+	}
+}
+
+void cpu8086::ADD_R_IN_W() {
+	IP++;
+	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(instr_adr);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+	
+	word& first_reg_w = getRegW(reg);
+
+	if (mod == 3) {	// регистровая адресация
+		word& second_reg_w = getRegW(rm);
+		first_reg_w += second_reg_w;
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = 0;	// смещение
+		switch (mod) {
+		case 0:	// нет смещения, но возможно действует режим прямой адресации
+			if (rm == 0b110) {
+				IP++;
+				instr_adr = ((dword)CS << 4) + IP;
+				displacement = memory->readB(instr_adr);
+			}
+			break;
+		case 1: // однобайтное смещение
+			IP++;	// переводим указатель на позицию вперёд
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readB(instr_adr);	// читаем байт
+			break;
+		case 2:	// двухбайтное смещение
+			IP++;
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readW(instr_adr);
+			IP++;	// так как было считано два байта, нужно перевести указатель дальше
+			break;
+		}
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		dword phys_EA = ((dword)DS << 4) + EA;
+		first_reg_w += memory->readB(phys_EA);
+	}
+}
+
+void cpu8086::ADD_R_OUT_W() {
+	IP++;
+	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(instr_adr);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+	
+	word& first_reg_w = getRegW(reg);
+
+	if (mod == 3) {	// регистровая адресация
+		word& second_reg_w = getRegW(rm);
+		second_reg_w += first_reg_w;	// по идее такое невозможно
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = 0;	// смещение
+		switch (mod) {
+		case 0:	// нет смещения, но возможно действует режим прямой адресации
+			if (rm == 0b110) {
+				IP++;
+				instr_adr = ((dword)CS << 4) + IP;
+				displacement = memory->readW(instr_adr);
+				IP++;
+			}
+			break;
+		case 1: // однобайтное смещение
+			IP++;	// переводим указатель на позицию вперёд
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readB(instr_adr);	// читаем байт
+			break;
+		case 2:	// двухбайтное смещение
+			IP++;
+			instr_adr = ((dword)CS << 4) + IP;
+			displacement = memory->readW(instr_adr);
+			IP++;	// так как было считано два байта, нужно перевести указатель дальше
+			break;
+		}
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		dword phys_EA = ((dword)DS << 4) + EA;
+		memory->writeW(phys_EA, memory->readW(phys_EA) + first_reg_w);
+	}
+}
+
 void cpu8086::INC_R(word& rgs) {
 	word prev_val = rgs;
 	bool prev_sig = static_cast<bool>(getFlag(Flag::S));
