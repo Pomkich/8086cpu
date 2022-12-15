@@ -157,7 +157,8 @@ word cpu8086::fetchDisp(byte mod, byte rm) {
 		if (rm == 0b110) {
 			IP++;
 			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readB(instr_adr);
+			displacement = memory->readW(instr_adr);
+			IP++;
 		}
 		break;
 	case 1: // однобайтное смещение
@@ -444,27 +445,27 @@ void cpu8086::ADD_A_W() {
 
 void cpu8086::INC_R(word& rgs) {
 	word prev_val = rgs;
-	bool prev_sig = static_cast<bool>(getFlag(Flag::S));
+	bool prev_sig = getFlag(Flag::S);
 	rgs++;
 	// affected flags
 	testFlagZ(rgs);
 	testFlagS(rgs, 1);
 	testFlagP(rgs);
 	testFlagAAdd(prev_val, rgs);
-	bool now_sig = static_cast<bool>(getFlag(Flag::S));
+	bool now_sig = getFlag(Flag::S);
 	testFlagO(prev_sig, now_sig);
 }
 
 void cpu8086::DEC_R(word& rgs) {
 	word prev_val = rgs;
-	bool prev_sig = static_cast<bool>(getFlag(Flag::S));
+	bool prev_sig = getFlag(Flag::S);
 	rgs--;
 	// affected flags
 	testFlagZ(rgs);
 	testFlagS(rgs, 1);
 	testFlagP(rgs);
 	testFlagASub(prev_val, rgs);
-	bool now_sig = static_cast<bool>(getFlag(Flag::S));
+	bool now_sig = getFlag(Flag::S);
 	testFlagO(prev_sig, now_sig);
 }
 
