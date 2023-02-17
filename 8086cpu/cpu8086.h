@@ -40,6 +40,8 @@ public:	// private
 	// указатель на физическое адресное пространство
 	std::shared_ptr<Memory> memory;
 
+	friend class Tester;
+
 public:
 	cpu8086();
 	void reset();	// сброс
