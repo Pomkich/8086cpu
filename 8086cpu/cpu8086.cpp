@@ -206,6 +206,8 @@ word& cpu8086::getRegW(byte reg) {
 	}
 }
 
+std::shared_ptr<Memory> cpu8086::getMemPt() { return memory; }
+
 // функция инициализирует таблицу команд
 void cpu8086::initOpTable() {
 	// сложение
