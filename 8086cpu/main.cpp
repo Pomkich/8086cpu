@@ -1,10 +1,14 @@
 #include <iostream>
+#include "Tester.h"
 #include "cpu8086.h"
 
 using namespace std;
 
 int main() {
-	std::shared_ptr<Memory> mem = std::make_shared<Memory>();
+	Tester test;
+	test.RunTests();
+
+	/*std::shared_ptr<Memory> mem = std::make_shared<Memory>();
 	cpu8086 c;
 	c.initOpTable();
 	c.initMemory(mem);
@@ -18,6 +22,6 @@ int main() {
 	mem->writeB(0x00064, 123);
 	c.clock();
 	std::cout << mem->readW(0x00064) << std::endl;
-
+	*/
 	return 0;
 }
