@@ -54,10 +54,14 @@ void cpu8086::testFlagS(word src_op, bool w) {
 	else ((src_op >> 15) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
 }
 
-void cpu8086::testFlagP(byte val) {
+void cpu8086::testFlagP(word val, bool w) {
 	// counting setted bits
-	byte set_bits = 0;
-	for (int i = 0; i < 8; i++) {
+	word bits;
+	if (w) { bits = 16; }
+	else { bits = 8; val = val & 0x00FF; }	// обрезание до одного байта
+
+	word set_bits = 0;
+	for (int i = 0; i < bits; i++) {
 		if ((val & 1) == 1) set_bits++;
 		val = val >> 1;
 	}
@@ -286,8 +290,8 @@ void cpu8086::ADD_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(first_reg);
-	testFlagS(first_reg, 0);
-	testFlagP(first_reg);
+	testFlagS(first_reg, false);
+	testFlagP(first_reg, false);
 	testFlagCAddB(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
@@ -324,8 +328,8 @@ void cpu8086::ADD_R_OUT_B() {
 		memory->writeB(phys_EA, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagS(new_val, 0);
-	testFlagP(new_val);
+	testFlagS(new_val, false);
+	testFlagP(new_val, false);
 	testFlagCAddB(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
@@ -359,8 +363,8 @@ void cpu8086::ADD_R_IN_W() {
 		first_reg += memory->readW(phys_EA);
 	}
 	testFlagZ(first_reg);
-	testFlagS(first_reg, 1);
-	testFlagP(first_reg);
+	testFlagS(first_reg, true);
+	testFlagP(first_reg, true);
 	testFlagCAddB(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
@@ -397,8 +401,8 @@ void cpu8086::ADD_R_OUT_W() {
 		memory->writeW(phys_EA, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagS(new_val, 1);
-	testFlagP(new_val);
+	testFlagS(new_val, true);
+	testFlagP(new_val, true);
 	testFlagCAddB(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
@@ -415,8 +419,8 @@ void cpu8086::ADD_A_B() {
 	A.L += data;
 
 	testFlagZ(A.L);
-	testFlagS(A.L, 0);
-	testFlagP(A.L);
+	testFlagS(A.L, false);
+	testFlagP(A.L, false);
 	testFlagCAddB(prev_val, A.L);
 	testFlagAAdd(prev_val, A.L);
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
@@ -436,8 +440,8 @@ void cpu8086::ADD_A_W() {
 	A.X += data;
 
 	testFlagZ(A.X);
-	testFlagS(A.X, 1);
-	testFlagP(A.X);
+	testFlagS(A.X, true);
+	testFlagP(A.X, true);
 	testFlagCAddB(prev_val, A.X);
 	testFlagAAdd(prev_val, A.X);
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
@@ -449,8 +453,8 @@ void cpu8086::INC_R(word& rgs) {
 	rgs++;
 	// affected flags
 	testFlagZ(rgs);
-	testFlagS(rgs, 1);
-	testFlagP(rgs);
+	testFlagS(rgs, true);
+	testFlagP(rgs, true);
 	testFlagAAdd(prev_val, rgs);
 	bool now_sig = getFlag(Flag::S);
 	testFlagO(prev_sig, now_sig);
@@ -462,8 +466,8 @@ void cpu8086::DEC_R(word& rgs) {
 	rgs--;
 	// affected flags
 	testFlagZ(rgs);
-	testFlagS(rgs, 1);
-	testFlagP(rgs);
+	testFlagS(rgs, true);
+	testFlagP(rgs, true);
 	testFlagASub(prev_val, rgs);
 	bool now_sig = getFlag(Flag::S);
 	testFlagO(prev_sig, now_sig);

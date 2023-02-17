@@ -23,6 +23,12 @@ public:
 	/*** MEMORY TESTS END   ***/
 
 	/*** FLAG TESTS BEGIN ***/
+	void FlagOTest();
+	void FlagSTest();
+	void FlagZTest();
+	void FlagATest();
+	void FlagPTest();
+	void FlagCTest();
 	/*** FLAG TESTS END   ***/
 
 	/*** OPCODE TESTS BEGIN ***/
