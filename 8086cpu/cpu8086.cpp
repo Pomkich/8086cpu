@@ -157,8 +157,8 @@ word cpu8086::fetchDisp(byte mod, byte rm) {
 		if (rm == 0b110) {
 			IP++;
 			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readW(instr_adr);
-			IP++;
+			displacement = memory->readW(instr_adr);	// при прямой адресации читаются два байта
+			IP++;	// так как было считано два байта, нужно перевести указатель дальше
 		}
 		break;
 	case 1: // однобайтное смещение
@@ -170,7 +170,7 @@ word cpu8086::fetchDisp(byte mod, byte rm) {
 		IP++;
 		instr_adr = ((dword)CS << 4) + IP;
 		displacement = memory->readW(instr_adr);
-		IP++;	// так как было считано два байта, нужно перевести указатель дальше
+		IP++;
 		break;
 	}
 	return displacement;
