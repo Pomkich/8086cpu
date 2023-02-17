@@ -73,8 +73,6 @@ public: // private
 	byte& getRegB(byte reg);	// декодирование 8-битного регистра
 	word& getRegW(byte reg);	// декодирование 16-битного регистра
 
-	std::shared_ptr<Memory> getMemPt();
-
 private:
 	void ADD_R_IN_B();		// сложение в байтовый регистр
 	void ADD_R_OUT_B();		// сложение из байтового регистра

@@ -3,12 +3,13 @@
 #include "cpu8086.h"
 #include "Memory.h"
 #include <memory>
+#include <cassert>
 
 
 class Tester {
 private:
 	std::shared_ptr<cpu8086> cpu_pt;
-	std::shared_ptr<cpu8086> mem_pt;
+	std::shared_ptr<Memory> mem_pt;
 
 public:
 	Tester();
@@ -16,6 +17,9 @@ public:
 	void RunTests();
 
 	/*** MEMORY TESTS BEGIN ***/
+	void MemoryCheckByteWriting();
+	void MemoryCheckWordWriting();
+	void MemoryCheckBytePlacement();
 	/*** MEMORY TESTS END   ***/
 
 	/*** FLAG TESTS BEGIN ***/
