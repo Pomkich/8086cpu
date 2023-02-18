@@ -12,6 +12,7 @@ void Tester::RunTests() {
 	MemoryCheckByteWriting();
 	MemoryCheckWordWriting();
 	MemoryCheckBytePlacement();
+
 	FlagOTest();
 	FlagSTest();
 	FlagZTest();
@@ -37,7 +38,16 @@ void Tester::MemoryCheckBytePlacement() {
 }
 
 void Tester::FlagOTest() {
-
+	// overflow occured
+	cpu_pt->testFlagO(1, 0);
+	assert(cpu_pt->getFlag(Flag::O) == 1);
+	cpu_pt->testFlagO(0, 1);
+	assert(cpu_pt->getFlag(Flag::O) == 1);
+	// overflow didn't occured
+	cpu_pt->testFlagO(1, 1);
+	assert(cpu_pt->getFlag(Flag::O) == 0);
+	cpu_pt->testFlagO(0, 0);
+	assert(cpu_pt->getFlag(Flag::O) == 0);
 }
 
 void Tester::FlagSTest() {
@@ -61,7 +71,24 @@ void Tester::FlagZTest() {
 }
 
 void Tester::FlagATest() {
-
+	// borrow from high nimble
+	cpu_pt->testFlagAAdd(0xFF0F, 0xFF10);
+	assert(cpu_pt->getFlag(Flag::A) == 1);
+	cpu_pt->testFlagAAdd(0xFF0F, 0x0000);
+	assert(cpu_pt->getFlag(Flag::A) == 1);
+	cpu_pt->testFlagAAdd(0xFF0F, 0x0E0F);
+	assert(cpu_pt->getFlag(Flag::A) == 0);
+	cpu_pt->testFlagAAdd(0xFF03, 0xFF06);
+	assert(cpu_pt->getFlag(Flag::A) == 0);
+	// carry out from low nimble
+	cpu_pt->testFlagASub(0xFFF0, 0xFF0F);
+	assert(cpu_pt->getFlag(Flag::A) == 1);
+	cpu_pt->testFlagASub(0xFF30, 0xFF10);
+	assert(cpu_pt->getFlag(Flag::A) == 0);
+	cpu_pt->testFlagASub(0xFF0F, 0x000E);
+	assert(cpu_pt->getFlag(Flag::A) == 0);
+	cpu_pt->testFlagASub(0xFF30, 0x0000);
+	assert(cpu_pt->getFlag(Flag::A) == 0);
 }
 
 void Tester::FlagPTest() {
