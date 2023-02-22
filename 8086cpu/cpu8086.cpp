@@ -472,12 +472,12 @@ void cpu8086::DEC_R(word& rgs) {
 void cpu8086::PUSH_R(word& rgs) {
 	SP -= 2;	// стек растёт вниз
 	stack_adr = ((dword)SS << 4) + SP;	// получение физического адреса вершины стека
-	memory->writeW(stack_adr, rgs);	
+	memory->writeStack(stack_adr, rgs);	
 }
 
 void cpu8086::POP_R(word& rgs) {
 	stack_adr = ((dword)SS << 4) + SP;
-	rgs = memory->readW(stack_adr);
+	rgs = memory->readStack(stack_adr);
 	SP += 2;
 }
 /******OPCODES_END******/
