@@ -106,5 +106,33 @@ void Tester::FlagPTest() {
 }
 
 void Tester::FlagCTest() {
+	// byte functions
+	cpu_pt->testFlagCAddB(0xFF, 0xFE);
+	cpu_pt->testFlagAAdd(0xFF, 0xFE);
+	assert(cpu_pt->getFlag(Flag::C) == 1);
+	assert(cpu_pt->getFlag(Flag::A) == 1);
 
+	cpu_pt->testFlagCSubB(0x00, 0xFF);
+	assert(cpu_pt->getFlag(Flag::C) == 1);
+
+	cpu_pt->testFlagCAddB(0xEE, 0xEF);
+	assert(cpu_pt->getFlag(Flag::C) == 0);
+
+	cpu_pt->testFlagCSubB(0xEE, 0xEA);
+	assert(cpu_pt->getFlag(Flag::C) == 0);
+
+	cpu_pt->testFlagCSubB(0xEE, 0xEF);
+	cpu_pt->testFlagASub(0xEE, 0xEF);
+	assert(cpu_pt->getFlag(Flag::C) == 1);
+	assert(cpu_pt->getFlag(Flag::A) == 1);
+
+	// word functions
+	cpu_pt->testFlagCAddW(0xF000, 0x0004);
+	assert(cpu_pt->getFlag(Flag::C) == 1);
+	cpu_pt->testFlagCSubW(0x0000, 0xF000);
+	assert(cpu_pt->getFlag(Flag::C) == 1);
+	cpu_pt->testFlagCAddW(0x7000, 0x7AFF);
+	assert(cpu_pt->getFlag(Flag::C) == 0);
+	cpu_pt->testFlagCSubW(0xFFFF, 0xFF00);
+	assert(cpu_pt->getFlag(Flag::C) == 0);
 }
