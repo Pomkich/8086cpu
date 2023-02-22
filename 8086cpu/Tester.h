@@ -32,6 +32,16 @@ public:
 	/*** FLAG TESTS END   ***/
 
 	/*** OPCODE TESTS BEGIN ***/
+	void ADD_R_IN_B_Test();
+	void ADD_R_OUT_B_Test();
+	void ADD_R_IN_W_Test();
+	void ADD_R_OUT_W_Test();
+	void ADD_A_B_Test();
+	void ADD_A_W_Test();
+	void INC_R_Test();
+	void DEC_R_Test();
+	void PUSH_R_Test();
+	void POP_R_Test();
 	/*** OPCODE TESTS END   ***/
 };
 
