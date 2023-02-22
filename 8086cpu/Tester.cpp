@@ -19,6 +19,17 @@ void Tester::RunTests() {
 	FlagATest();
 	FlagPTest();
 	FlagCTest();
+
+	ADD_R_IN_B_Test();
+	ADD_R_OUT_B_Test();
+	ADD_R_IN_W_Test();
+	ADD_R_OUT_W_Test();
+	ADD_A_B_Test();
+	ADD_A_W_Test();
+	INC_R_Test();
+	DEC_R_Test();
+	PUSH_R_Test();
+	POP_R_Test();
 }
 
 void Tester::MemoryCheckByteWriting() {
@@ -135,4 +146,55 @@ void Tester::FlagCTest() {
 	assert(cpu_pt->getFlag(Flag::C) == 0);
 	cpu_pt->testFlagCSubW(0xFFFF, 0xFF00);
 	assert(cpu_pt->getFlag(Flag::C) == 0);
+}
+
+void Tester::ADD_R_IN_B_Test() {
+
+}
+
+void Tester::ADD_R_OUT_B_Test() {
+
+}
+
+void Tester::ADD_R_IN_W_Test() {
+
+}
+
+void Tester::ADD_R_OUT_W_Test() {
+
+}
+
+void Tester::ADD_A_B_Test() {
+
+}
+
+void Tester::ADD_A_W_Test() {
+
+}
+
+void Tester::INC_R_Test() {
+
+}
+
+void Tester::DEC_R_Test() {
+
+}
+
+void Tester::PUSH_R_Test() {
+	cpu_pt->reset();
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	// initialize stack segment
+	cpu_pt->SS = 0x1000;
+	cpu_pt->SP = 0x0004;
+	mem_pt->writeB(0x40001, 0x50);
+	cpu_pt->A.X = 0x1234;
+	cpu_pt->clock();
+	// stack grows down
+	assert(mem_pt->readB(0x10002) == 0x34 && mem_pt->readB(0x10001) == 0x12);
+}
+
+void Tester::POP_R_Test() {
+
 }
