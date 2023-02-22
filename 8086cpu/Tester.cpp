@@ -196,5 +196,18 @@ void Tester::PUSH_R_Test() {
 }
 
 void Tester::POP_R_Test() {
+	cpu_pt->reset();
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	// initialize stack segment
+	cpu_pt->SS = 0x1000;
+	cpu_pt->SP = 0x0004;
+	mem_pt->writeB(0x40001, 0x58);
+	mem_pt->writeB(0x10004, 0x35);
+	mem_pt->writeB(0x10003, 0xFF);
+	cpu_pt->A.X = 0x1234;
+	cpu_pt->clock();
 
+	assert(cpu_pt->A.X == 0xFF35);
 }
