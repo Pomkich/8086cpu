@@ -149,11 +149,55 @@ void Tester::FlagCTest() {
 }
 
 void Tester::ADD_R_IN_B_Test() {
+	// adding value from memory to register
+	cpu_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->DS = 0x0100;
+	cpu_pt->B.L = 0x32;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x02);	// opcode: ADD
+	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
+	mem_pt->writeB(0x10002, 0x64);	// displacement low
+	mem_pt->writeB(0x10003, 0x00);	// displacement high
+	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
+	// run opcode
+	cpu_pt->clock();
+	assert(cpu_pt->B.L == 0x67);
 
+	// adding value to register from register
+	cpu_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->B.L = 0x32;
+	cpu_pt->C.L = 0x58;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x02);	// opcode: ADD
+	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
+	// run opcode
+	cpu_pt->clock();
+	assert(cpu_pt->B.L == 0x8A);
 }
 
 void Tester::ADD_R_OUT_B_Test() {
-
+	// adding value from register to memory by address
+	cpu_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->DS = 0x0100;
+	cpu_pt->B.L = 0x32;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x00);	// opcode: ADD
+	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
+	mem_pt->writeB(0x10002, 0x64);	// displacement low
+	mem_pt->writeB(0x10003, 0x00);	// displacement high
+	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
+	// run opcode
+	cpu_pt->clock();
+	assert(mem_pt->readB(0x01064) == 0x67);
 }
 
 void Tester::ADD_R_IN_W_Test() {
@@ -173,11 +217,29 @@ void Tester::ADD_A_W_Test() {
 }
 
 void Tester::INC_R_Test() {
-
+	cpu_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->B.X = 0x35;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x41);
+	// run command
+	cpu_pt->clock();
+	assert(cpu_pt->B.X == 0x36);
 }
 
 void Tester::DEC_R_Test() {
-
+	cpu_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->B.X = 0x35;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x49);
+	// run command
+	cpu_pt->clock();
+	assert(cpu_pt->B.X == 0x34);
 }
 
 void Tester::PUSH_R_Test() {
