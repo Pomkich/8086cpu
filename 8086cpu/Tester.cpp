@@ -253,11 +253,35 @@ void Tester::ADD_R_OUT_W_Test() {
 }
 
 void Tester::ADD_A_B_Test() {
+	// adding value accumulator byte
+	cpu_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->A.L = 0x32;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x04);	// opcode: ADD
+	mem_pt->writeB(0x10001, 0x35);
+	// run opcode
+	cpu_pt->clock();
 
+	assert(cpu_pt->A.L == 0x67);
 }
 
 void Tester::ADD_A_W_Test() {
+	// adding value accumulator word
+	cpu_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->A.X = 0x3211;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x05);		// opcode: ADD
+	mem_pt->writeW(0x10001, 0x3511);
+	// run opcode
+	cpu_pt->clock();
 
+	assert(cpu_pt->A.X == 0x6722);
 }
 
 void Tester::INC_R_Test() {

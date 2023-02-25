@@ -411,8 +411,7 @@ void cpu8086::ADD_R_OUT_W() {
 void cpu8086::ADD_A_B() {
 	IP++;
 	instr_adr = ((dword)CS << 4) + IP;
-	IP++;
-	byte data = ((dword)CS << 4) + IP;	// получение данных
+	byte data = memory->readB(instr_adr);	// получение данных
 
 	byte prev_val = A.L;
 	bool prev_sig_bit = getFlag(Flag::S);
@@ -429,13 +428,10 @@ void cpu8086::ADD_A_B() {
 void cpu8086::ADD_A_W() {
 	IP++;
 	instr_adr = ((dword)CS << 4) + IP;
+	word data = memory->readW(instr_adr);
 	IP++;
-	byte data_low = ((dword)CS << 4) + IP;	// получение данных
-	IP++;
-	word data = ((dword)CS << 4) + IP;
-	data = (data << 8) | data_low;
 
-	byte prev_val = A.X;
+	word prev_val = A.X;
 	bool prev_sig_bit = getFlag(Flag::S);
 	A.X += data;
 
