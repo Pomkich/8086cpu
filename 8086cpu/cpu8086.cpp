@@ -264,6 +264,24 @@ void cpu8086::initOpTable() {
 	opcode_table[0x5D] = std::bind(&cpu8086::POP_R, this, std::ref(BP));
 	opcode_table[0x5E] = std::bind(&cpu8086::POP_R, this, std::ref(SI));
 	opcode_table[0x5F] = std::bind(&cpu8086::POP_R, this, std::ref(DI));
+	// прямое помещение значения в байтовый регистр
+	opcode_table[0xB0] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.L));
+	opcode_table[0xB1] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.L));
+	opcode_table[0xB2] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(D.L));
+	opcode_table[0xB3] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(B.L));
+	opcode_table[0xB4] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.H));
+	opcode_table[0xB5] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.H));
+	opcode_table[0xB6] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(D.H));
+	opcode_table[0xB7] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(B.H));
+	// прямое помещение значения в двухбайтовый регистр
+	opcode_table[0xB8] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(A.X));
+	opcode_table[0xB9] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(C.X));
+	opcode_table[0xBA] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(D.X));
+	opcode_table[0xBB] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(B.X));
+	opcode_table[0xBC] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(SP));
+	opcode_table[0xBD] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(BP));
+	opcode_table[0xBE] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(SI));
+	opcode_table[0xBF] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(DI));
 }
 
 /******OPCODES_BEG******/
@@ -485,5 +503,15 @@ void cpu8086::POP_R(word& reg) {
 	address = ((dword)SS << 4) + SP;
 	reg = memory->readStack(address);
 	SP += 2;
+}
+
+void cpu8086::MOV_R_IMM_B(byte& reg) {
+	address = ((dword)DS << 4) + IP;
+	reg = memory->readB(address);
+}
+
+void cpu8086::MOV_R_IMM_W(word& reg) {
+	address = ((dword)DS << 4) + IP;
+	reg = memory->readW(address);
 }
 /******OPCODES_END******/

@@ -85,4 +85,6 @@ private:
 	void DEC_R(word& reg);
 	void PUSH_R(word& reg);
 	void POP_R(word& reg);
+	void MOV_R_IMM_B(byte& reg);
+	void MOV_R_IMM_W(word& reg);
 };
