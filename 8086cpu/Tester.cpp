@@ -30,6 +30,8 @@ void Tester::RunTests() {
 	DEC_R_Test();
 	PUSH_R_Test();
 	POP_R_Test();
+	MOV_R_IMM_B_Test();
+	MOV_R_IMM_W_Test();
 }
 
 void Tester::MemoryCheckByteWriting() {
@@ -340,4 +342,28 @@ void Tester::POP_R_Test() {
 	cpu_pt->clock();
 
 	assert(cpu_pt->A.X == 0xFF35);
+}
+
+void Tester::MOV_R_IMM_B_Test() {
+	cpu_pt->reset();
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	mem_pt->writeB(0x40001, 0xB0);
+	mem_pt->writeB(0x40002, 0x0A);
+	cpu_pt->clock();
+
+	assert(cpu_pt->A.L == 0x0A);
+}
+
+void Tester::MOV_R_IMM_W_Test() {
+	cpu_pt->reset();
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	mem_pt->writeB(0x40001, 0xBB);
+	mem_pt->writeW(0x40002, 0x0A12);
+	cpu_pt->clock();
+
+	assert(cpu_pt->B.X == 0x0A12);
 }

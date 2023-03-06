@@ -506,12 +506,14 @@ void cpu8086::POP_R(word& reg) {
 }
 
 void cpu8086::MOV_R_IMM_B(byte& reg) {
-	address = ((dword)DS << 4) + IP;
+	IP++;
+	address = ((dword)CS << 4) + IP;
 	reg = memory->readB(address);
 }
 
 void cpu8086::MOV_R_IMM_W(word& reg) {
-	address = ((dword)DS << 4) + IP;
+	IP++;
+	address = ((dword)CS << 4) + IP;
 	reg = memory->readW(address);
 }
 /******OPCODES_END******/

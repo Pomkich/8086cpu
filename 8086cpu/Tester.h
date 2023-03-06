@@ -42,6 +42,8 @@ public:
 	void DEC_R_Test();
 	void PUSH_R_Test();
 	void POP_R_Test();
+	void MOV_R_IMM_B_Test();
+	void MOV_R_IMM_W_Test();
 	/*** OPCODE TESTS END   ***/
 };
 
