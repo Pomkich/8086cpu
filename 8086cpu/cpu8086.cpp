@@ -449,41 +449,41 @@ void cpu8086::ADD_A_W() {
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
-void cpu8086::INC_R(word& rgs) {
-	word prev_val = rgs;
+void cpu8086::INC_R(word& reg) {
+	word prev_val = reg;
 	bool prev_sig = getFlag(Flag::S);
-	rgs++;
+	reg++;
 	// affected flags
-	testFlagZ(rgs);
-	testFlagSW(rgs);
-	testFlagPW(rgs);
-	testFlagAAdd(prev_val, rgs);
+	testFlagZ(reg);
+	testFlagSW(reg);
+	testFlagPW(reg);
+	testFlagAAdd(prev_val, reg);
 	bool now_sig = getFlag(Flag::S);
 	testFlagO(prev_sig, now_sig);
 }
 
-void cpu8086::DEC_R(word& rgs) {
-	word prev_val = rgs;
+void cpu8086::DEC_R(word& reg) {
+	word prev_val = reg;
 	bool prev_sig = getFlag(Flag::S);
-	rgs--;
+	reg--;
 	// affected flags
-	testFlagZ(rgs);
-	testFlagSW(rgs);
-	testFlagPW(rgs);
-	testFlagASub(prev_val, rgs);
+	testFlagZ(reg);
+	testFlagSW(reg);
+	testFlagPW(reg);
+	testFlagASub(prev_val, reg);
 	bool now_sig = getFlag(Flag::S);
 	testFlagO(prev_sig, now_sig);
 }
 
-void cpu8086::PUSH_R(word& rgs) {
+void cpu8086::PUSH_R(word& reg) {
 	SP -= 2;	// стек растёт вниз
 	address = ((dword)SS << 4) + SP;	// получение физического адреса вершины стека
-	memory->writeStack(address, rgs);	
+	memory->writeStack(address, reg);	
 }
 
-void cpu8086::POP_R(word& rgs) {
+void cpu8086::POP_R(word& reg) {
 	address = ((dword)SS << 4) + SP;
-	rgs = memory->readStack(address);
+	reg = memory->readStack(address);
 	SP += 2;
 }
 /******OPCODES_END******/
