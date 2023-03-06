@@ -76,8 +76,8 @@ public: // private
 
 private:
 	void ADD_R_IN_B();		// сложение в байтовый регистр
-	void ADD_R_OUT_B();		// сложение из байтового регистра
-	void ADD_R_IN_W();		// сложение в 16-битный регистр
+	void ADD_R_IN_W();		// сложение в 16-битный регист
+	void ADD_R_OUT_B();		// сложение из байтового регистрар
 	void ADD_R_OUT_W();		// сложение из 16-битного регистра
 	void ADD_A_B();
 	void ADD_A_W();
@@ -85,6 +85,10 @@ private:
 	void DEC_R(word& reg);
 	void PUSH_R(word& reg);
 	void POP_R(word& reg);
+	void MOV_A_IN_B();
+	void MOV_A_IN_W();
+	void MOV_A_OUT_B();
+	void MOV_A_OUT_W();
 	void MOV_R_IMM_B(byte& reg);
 	void MOV_R_IMM_W(word& reg);
 };

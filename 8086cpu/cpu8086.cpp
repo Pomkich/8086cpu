@@ -227,7 +227,6 @@ void cpu8086::initOpTable() {
 	opcode_table[0x05] = std::bind(&cpu8086::ADD_A_W, this);
 	opcode_table[0x06] = std::bind(&cpu8086::PUSH_R, this, std::ref(ES));
 	opcode_table[0x07] = std::bind(&cpu8086::POP_R, this, std::ref(ES));
-
 	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
 	opcode_table[0x41] = std::bind(&cpu8086::INC_R, this, std::ref(B.X));
@@ -264,6 +263,12 @@ void cpu8086::initOpTable() {
 	opcode_table[0x5D] = std::bind(&cpu8086::POP_R, this, std::ref(BP));
 	opcode_table[0x5E] = std::bind(&cpu8086::POP_R, this, std::ref(SI));
 	opcode_table[0x5F] = std::bind(&cpu8086::POP_R, this, std::ref(DI));
+	// помещение значения из аккумулятора в память
+	opcode_table[0xA0] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.L));
+	opcode_table[0xA1] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.L));
+	// помещение значения в аккумулятор из памяти
+	opcode_table[0xA2] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.L));
+	opcode_table[0xA3] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.L));
 	// прямое помещение значения в байтовый регистр
 	opcode_table[0xB0] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.L));
 	opcode_table[0xB1] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.L));
@@ -515,5 +520,34 @@ void cpu8086::MOV_R_IMM_W(word& reg) {
 	IP++;
 	address = ((dword)CS << 4) + IP;
 	reg = memory->readW(address);
+}
+
+void cpu8086::MOV_A_IN_B() {
+	IP++;
+	// fetch address from code segment and then fetch value from data segment by address
+	address = ((dword)CS << 4) + IP;
+	address = memory->readW(address);
+	A.L = memory->readB((dword)DS << 4 + address);
+}
+
+void cpu8086::MOV_A_IN_W() {
+	IP++;
+	address = ((dword)CS << 4) + IP;
+	address = memory->readW(address);
+	A.X = memory->readB((dword)DS << 4 + address);
+}
+
+void cpu8086::MOV_A_OUT_B() {
+	IP++;
+	address = ((dword)CS << 4) + IP;
+	address = memory->readW(address);
+	memory->writeB((dword)DS << 4 + address, A.L);
+}
+
+void cpu8086::MOV_A_OUT_W() {
+	IP++;
+	address = ((dword)CS << 4) + IP;
+	address = memory->readW(address);
+	memory->writeB((dword)DS << 4 + address, A.X);
 }
 /******OPCODES_END******/
