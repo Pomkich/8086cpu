@@ -34,8 +34,7 @@ public:	// private
 	std::map<byte, std::function<void()>> opcode_table;
 
 	byte opcode;		// переменная хранящая команду
-	dword instr_adr;	// переменная хранящая физический адрес команды
-	dword stack_adr;	// переменная хранящая физический адрес стека
+	dword address;			// вычисленный адрес
 
 	// указатель на физическое адресное пространство
 	std::shared_ptr<Memory> memory;

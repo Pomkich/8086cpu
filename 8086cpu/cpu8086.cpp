@@ -18,8 +18,7 @@ cpu8086::cpu8086() {
 	D.X = 0;
 
 	opcode = 0;
-	instr_adr = 0;
-	stack_adr = 0;
+	address = 0;
 }
 
 // сброс состояния процессора
@@ -34,8 +33,8 @@ void cpu8086::reset() {
 
 // функция выполнения одной команды
 void cpu8086::clock() {
-	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса
-	opcode = memory->readB(instr_adr);	// получение команды
+	address = ((dword)CS << 4) + IP;	// генерация физического адреса
+	opcode = memory->readB(address);	// получение команды
 	opcode_table[opcode]();				// выполнение команды
 	IP++;								// установка счётчика на следующую команду
 }
@@ -167,20 +166,20 @@ word cpu8086::fetchDisp(byte mod, byte rm) {
 	case 0:	// нет смещения, но возможно действует режим прямой адресации
 		if (rm == 0b110) {
 			IP++;
-			instr_adr = ((dword)CS << 4) + IP;
-			displacement = memory->readW(instr_adr);	// при прямой адресации читаются два байта
+			address = ((dword)CS << 4) + IP;
+			displacement = memory->readW(address);	// при прямой адресации читаются два байта
 			IP++;	// так как было считано два байта, нужно перевести указатель дальше
 		}
 		break;
 	case 1: // однобайтное смещение
 		IP++;	// переводим указатель на позицию вперёд
-		instr_adr = ((dword)CS << 4) + IP;
-		displacement = memory->readB(instr_adr);	// читаем байт
+		address = ((dword)CS << 4) + IP;
+		displacement = memory->readB(address);	// читаем байт
 		break;
 	case 2:	// двухбайтное смещение
 		IP++;
-		instr_adr = ((dword)CS << 4) + IP;
-		displacement = memory->readW(instr_adr);
+		address = ((dword)CS << 4) + IP;
+		displacement = memory->readW(address);
 		IP++;
 		break;
 	}
@@ -270,8 +269,8 @@ void cpu8086::initOpTable() {
 /******OPCODES_BEG******/
 void cpu8086::ADD_R_IN_B() {
 	IP++;
-	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(instr_adr);
+	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(address);
 	// выделение полей
 	byte mod = mod_reg_rm >> 6;
 	byte reg = (mod_reg_rm & 0b00111000) >> 3;
@@ -292,8 +291,8 @@ void cpu8086::ADD_R_IN_B() {
 
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
-		dword phys_EA = ((dword)DS << 4) + EA;
-		first_reg += memory->readB(phys_EA);
+		address = ((dword)DS << 4) + EA;
+		first_reg += memory->readB(address);
 	}
 	// установка флагов
 	testFlagZ(first_reg);
@@ -306,8 +305,8 @@ void cpu8086::ADD_R_IN_B() {
 
 void cpu8086::ADD_R_OUT_B() {
 	IP++;
-	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(instr_adr);
+	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(address);
 	// выделение полей
 	byte mod = mod_reg_rm >> 6;
 	byte reg = (mod_reg_rm & 0b00111000) >> 3;
@@ -329,10 +328,10 @@ void cpu8086::ADD_R_OUT_B() {
 
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
-		dword phys_EA = ((dword)DS << 4) + EA;
-		prev_val = memory->readB(phys_EA);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readB(address);
 		new_val = prev_val + first_reg;
-		memory->writeB(phys_EA, new_val);
+		memory->writeB(address, new_val);
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
@@ -344,8 +343,8 @@ void cpu8086::ADD_R_OUT_B() {
 
 void cpu8086::ADD_R_IN_W() {
 	IP++;
-	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(instr_adr);
+	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(address);
 	// выделение полей
 	byte mod = mod_reg_rm >> 6;
 	byte reg = (mod_reg_rm & 0b00111000) >> 3;
@@ -366,8 +365,8 @@ void cpu8086::ADD_R_IN_W() {
 
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
-		dword phys_EA = ((dword)DS << 4) + EA;
-		first_reg += memory->readW(phys_EA);
+		address = ((dword)DS << 4) + EA;
+		first_reg += memory->readW(address);
 	}
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
@@ -379,8 +378,8 @@ void cpu8086::ADD_R_IN_W() {
 
 void cpu8086::ADD_R_OUT_W() {
 	IP++;
-	instr_adr = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(instr_adr);
+	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(address);
 	// выделение полей
 	byte mod = mod_reg_rm >> 6;
 	byte reg = (mod_reg_rm & 0b00111000) >> 3;
@@ -402,10 +401,10 @@ void cpu8086::ADD_R_OUT_W() {
 
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
-		dword phys_EA = ((dword)DS << 4) + EA;
-		prev_val = memory->readW(phys_EA);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readW(address);
 		new_val = prev_val + first_reg;
-		memory->writeW(phys_EA, new_val);
+		memory->writeW(address, new_val);
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
@@ -417,8 +416,8 @@ void cpu8086::ADD_R_OUT_W() {
 
 void cpu8086::ADD_A_B() {
 	IP++;
-	instr_adr = ((dword)CS << 4) + IP;
-	byte data = memory->readB(instr_adr);	// получение данных
+	address = ((dword)CS << 4) + IP;
+	byte data = memory->readB(address);	// получение данных
 
 	byte prev_val = A.L;
 	bool prev_sig_bit = getFlag(Flag::S);
@@ -434,8 +433,8 @@ void cpu8086::ADD_A_B() {
 
 void cpu8086::ADD_A_W() {
 	IP++;
-	instr_adr = ((dword)CS << 4) + IP;
-	word data = memory->readW(instr_adr);
+	address = ((dword)CS << 4) + IP;
+	word data = memory->readW(address);
 	IP++;
 
 	word prev_val = A.X;
@@ -478,13 +477,13 @@ void cpu8086::DEC_R(word& rgs) {
 
 void cpu8086::PUSH_R(word& rgs) {
 	SP -= 2;	// стек растёт вниз
-	stack_adr = ((dword)SS << 4) + SP;	// получение физического адреса вершины стека
-	memory->writeStack(stack_adr, rgs);	
+	address = ((dword)SS << 4) + SP;	// получение физического адреса вершины стека
+	memory->writeStack(address, rgs);	
 }
 
 void cpu8086::POP_R(word& rgs) {
-	stack_adr = ((dword)SS << 4) + SP;
-	rgs = memory->readStack(stack_adr);
+	address = ((dword)SS << 4) + SP;
+	rgs = memory->readStack(address);
 	SP += 2;
 }
 /******OPCODES_END******/
