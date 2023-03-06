@@ -264,11 +264,11 @@ void cpu8086::initOpTable() {
 	opcode_table[0x5E] = std::bind(&cpu8086::POP_R, this, std::ref(SI));
 	opcode_table[0x5F] = std::bind(&cpu8086::POP_R, this, std::ref(DI));
 	// помещение значения из аккумулятора в память
-	opcode_table[0xA0] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.L));
-	opcode_table[0xA1] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.L));
+	opcode_table[0xA0] = std::bind(&cpu8086::MOV_A_IN_B, this);
+	opcode_table[0xA1] = std::bind(&cpu8086::MOV_A_IN_W, this);
 	// помещение значения в аккумулятор из памяти
-	opcode_table[0xA2] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.L));
-	opcode_table[0xA3] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.L));
+	opcode_table[0xA2] = std::bind(&cpu8086::MOV_A_OUT_B, this);
+	opcode_table[0xA3] = std::bind(&cpu8086::MOV_A_OUT_W, this);
 	// прямое помещение значения в байтовый регистр
 	opcode_table[0xB0] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.L));
 	opcode_table[0xB1] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.L));
@@ -527,27 +527,27 @@ void cpu8086::MOV_A_IN_B() {
 	// fetch address from code segment and then fetch value from data segment by address
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
-	A.L = memory->readB((dword)DS << 4 + address);
+	A.L = memory->readB(((dword)DS << 4) + address);
 }
 
 void cpu8086::MOV_A_IN_W() {
 	IP++;
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
-	A.X = memory->readB((dword)DS << 4 + address);
+	A.X = memory->readW(((dword)DS << 4) + address);
 }
 
 void cpu8086::MOV_A_OUT_B() {
 	IP++;
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
-	memory->writeB((dword)DS << 4 + address, A.L);
+	memory->writeB(((dword)DS << 4) + address, A.L);
 }
 
 void cpu8086::MOV_A_OUT_W() {
 	IP++;
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
-	memory->writeB((dword)DS << 4 + address, A.X);
+	memory->writeW(((dword)DS << 4) + address, A.X);
 }
 /******OPCODES_END******/

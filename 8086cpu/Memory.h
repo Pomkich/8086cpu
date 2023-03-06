@@ -9,6 +9,8 @@ private:
 
 public:
 	Memory();
+	void reset();
+
 	byte readB(dword address);
 	word readW(dword address);
 	word readStack(dword address);

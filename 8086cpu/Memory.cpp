@@ -4,6 +4,10 @@ Memory::Memory() {
 	memset(memory, 0, memory_size);
 }
 
+void Memory::reset() {
+	memset(memory, 0, memory_size);
+}
+
 byte Memory::readB(dword address) {
 	return memory[address];
 }
