@@ -63,14 +63,14 @@ void Tester::FlagOTest() {
 
 void Tester::FlagSTest() {
 	// byte values
-	cpu_pt->testFlagS(0b10000000, false);
+	cpu_pt->testFlagSB(0b10000000);
 	assert(cpu_pt->getFlag(Flag::S) == true);
-	cpu_pt->testFlagS(0b00101100, false);
+	cpu_pt->testFlagSB(0b00101100);
 	assert(cpu_pt->getFlag(Flag::S) == false);
 	// word values
-	cpu_pt->testFlagS(0xFFFF, true);
+	cpu_pt->testFlagSW(0xFFFF);
 	assert(cpu_pt->getFlag(Flag::S) == true);
-	cpu_pt->testFlagS(0x0FFF, true);
+	cpu_pt->testFlagSW(0x0FFF);
 	assert(cpu_pt->getFlag(Flag::S) == false);
 }
 
@@ -104,15 +104,15 @@ void Tester::FlagATest() {
 
 void Tester::FlagPTest() {
 	// byte values
-	cpu_pt->testFlagP(0xF0, false);
+	cpu_pt->testFlagPB(0xF0);
 	assert(cpu_pt->getFlag(Flag::P) == true);
-	cpu_pt->testFlagP(0xF1, false);
+	cpu_pt->testFlagPB(0xF1);
 	assert(cpu_pt->getFlag(Flag::P) == false);
 
 	// word values
-	cpu_pt->testFlagP(0xFF00, true);
+	cpu_pt->testFlagPW(0xFF00);
 	assert(cpu_pt->getFlag(Flag::P) == true);
-	cpu_pt->testFlagP(0xFF01, true);
+	cpu_pt->testFlagPW(0xFF01);
 	assert(cpu_pt->getFlag(Flag::P) == false);
 }
 

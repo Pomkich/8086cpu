@@ -52,8 +52,10 @@ public:
 public: // private
 	// фунции для проверки флагов
 	void testFlagZ(word src_op);
-	void testFlagS(word src_op, bool w);	// w == 1 - работа со словами
-	void testFlagP(word val, bool w);
+	void testFlagSB(byte src_op);
+	void testFlagSW(word src_op);
+	void testFlagPB(byte val);
+	void testFlagPW(word val);
 	void testFlagCAddB(byte prev_val, byte src_op);	// для работы со словами
 	void testFlagCSubB(byte prev_val, byte src_op);
 	void testFlagCAddW(word prev_val, word src_op);	// для работы со словами
