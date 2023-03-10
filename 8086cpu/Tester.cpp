@@ -37,6 +37,8 @@ void Tester::RunTests() {
 	MOV_A_OUT_W_Test();
 	MOV_R_IMM_B_Test();
 	MOV_R_IMM_W_Test();
+	MOV_MEM_IMM_B_Test();
+	MOV_MEM_IMM_W_Test();
 }
 
 void Tester::MemoryCheckByteWriting() {
@@ -463,10 +465,43 @@ void Tester::MOV_R_IMM_W_Test() {
 	assert(cpu_pt->B.X == 0x0A12);
 }
 
-void MOV_MEM_IMM_B_Test() {
-	//cpu_pt
+void Tester::MOV_MEM_IMM_B_Test() {
+	cpu_pt->reset();
+	mem_pt->reset();
+	// initialize data segment
+	cpu_pt->DS = 0x1000;
+
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	mem_pt->writeB(0x40001, 0xC6);
+	mem_pt->writeB(0x40002, 0x06);	// 00 - mod; 000 - reg; 110 - rm
+	mem_pt->writeB(0x40003, 0x10);
+	mem_pt->writeB(0x40004, 0x00);
+	mem_pt->writeB(0x40005, 0x74);
+
+	cpu_pt->clock();
+
+	assert(mem_pt->readB(0x10010) == 0x74);
 }
 
-void MOV_MEM_IMM_W_Test() {
+void Tester::MOV_MEM_IMM_W_Test() {
+	cpu_pt->reset();
+	mem_pt->reset();
+	// initialize data segment
+	cpu_pt->DS = 0x1000;
 
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	mem_pt->writeB(0x40001, 0xC7);
+	mem_pt->writeB(0x40002, 0x06);	// 00 - mod; 000 - reg; 110 - rm
+	mem_pt->writeB(0x40003, 0x10);
+	mem_pt->writeB(0x40004, 0x00);
+	mem_pt->writeB(0x40005, 0x74);
+	mem_pt->writeB(0x40006, 0x32);
+
+	cpu_pt->clock();
+
+	assert(mem_pt->readW(0x10010) == 0x3274);
 }
