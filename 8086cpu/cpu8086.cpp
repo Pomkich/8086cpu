@@ -293,6 +293,82 @@ void cpu8086::initOpTable() {
 }
 
 /******OPCODES_BEG******/
+void cpu8086::ADD_R_OUT_B() {
+	IP++;
+	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(address);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+
+	byte& first_reg = getRegB(reg);
+
+	// переменные нужны для проверки флагов
+	byte prev_val = 0;
+	byte new_val = 0;
+	bool prev_sig_bit = getFlag(Flag::S);
+
+	if (mod == 3) {	// регистровая адресация
+		byte& second_reg = getRegB(rm);
+		second_reg += first_reg;	// по идее такое невозможно
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readB(address);
+		new_val = prev_val + first_reg;
+		memory->writeB(address, new_val);
+	}
+	testFlagZ(new_val);
+	testFlagSB(new_val);
+	testFlagPB(new_val);
+	testFlagCAddB(prev_val, new_val);
+	testFlagAAdd(prev_val, new_val);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
+void cpu8086::ADD_R_OUT_W() {
+	IP++;
+	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
+	byte mod_reg_rm = memory->readB(address);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+
+	word& first_reg = getRegW(reg);
+
+	// переменные нужны для проверки флагов
+	word prev_val = 0;
+	word new_val = 0;
+	bool prev_sig_bit = getFlag(Flag::S);
+
+	if (mod == 3) {	// регистровая адресация
+		word& second_reg = getRegW(rm);
+		second_reg += first_reg;	// по идее такое невозможно
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readW(address);
+		new_val = prev_val + first_reg;
+		memory->writeW(address, new_val);
+	}
+	testFlagZ(new_val);
+	testFlagSW(new_val);
+	testFlagPW(new_val);
+	testFlagCAddW(prev_val, new_val);
+	testFlagAAdd(prev_val, new_val);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
 void cpu8086::ADD_R_IN_B() {
 	IP++;
 	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
@@ -329,44 +405,6 @@ void cpu8086::ADD_R_IN_B() {
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
-void cpu8086::ADD_R_OUT_B() {
-	IP++;
-	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
-	
-	byte& first_reg = getRegB(reg);
-
-	// переменные нужны для проверки флагов
-	byte prev_val = 0;
-	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
-
-	if (mod == 3) {	// регистровая адресация
-		byte& second_reg = getRegB(rm);
-		second_reg += first_reg;	// по идее такое невозможно
-	}
-	else {	// вычисление эффективного адреса
-		word displacement = fetchDisp(mod, rm);	// смещение
-
-		// получаем эффективный адрес
-		word EA = fetchEA(mod, rm, displacement);
-		address = ((dword)DS << 4) + EA;
-		prev_val = memory->readB(address);
-		new_val = prev_val + first_reg;
-		memory->writeB(address, new_val);
-	}
-	testFlagZ(new_val);
-	testFlagSB(new_val);
-	testFlagPB(new_val);
-	testFlagCAddB(prev_val, new_val);
-	testFlagAAdd(prev_val, new_val);
-	testFlagO(prev_sig_bit, getFlag(Flag::S));
-}
-
 void cpu8086::ADD_R_IN_W() {
 	IP++;
 	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
@@ -399,44 +437,6 @@ void cpu8086::ADD_R_IN_W() {
 	testFlagPW(first_reg);
 	testFlagCAddW(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
-	testFlagO(prev_sig_bit, getFlag(Flag::S));
-}
-
-void cpu8086::ADD_R_OUT_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
-	
-	word& first_reg = getRegW(reg);
-
-	// переменные нужны для проверки флагов
-	word prev_val = 0;
-	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
-
-	if (mod == 3) {	// регистровая адресация
-		word& second_reg = getRegW(rm);
-		second_reg += first_reg;	// по идее такое невозможно
-	}
-	else {	// вычисление эффективного адреса
-		word displacement = fetchDisp(mod, rm);	// смещение
-
-		// получаем эффективный адрес
-		word EA = fetchEA(mod, rm, displacement);
-		address = ((dword)DS << 4) + EA;
-		prev_val = memory->readW(address);
-		new_val = prev_val + first_reg;
-		memory->writeW(address, new_val);
-	}
-	testFlagZ(new_val);
-	testFlagSW(new_val);
-	testFlagPW(new_val);
-	testFlagCAddW(prev_val, new_val);
-	testFlagAAdd(prev_val, new_val);
 	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
