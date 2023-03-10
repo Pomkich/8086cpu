@@ -287,6 +287,9 @@ void cpu8086::initOpTable() {
 	opcode_table[0xBD] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(BP));
 	opcode_table[0xBE] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(SI));
 	opcode_table[0xBF] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(DI));
+	// прямое помещение значения в память
+	opcode_table[0xC6] = std::bind(&cpu8086::MOV_MEM_IMM_B, this);
+	opcode_table[0xC7] = std::bind(&cpu8086::MOV_MEM_IMM_W, this);
 }
 
 /******OPCODES_BEG******/
@@ -549,5 +552,53 @@ void cpu8086::MOV_A_OUT_W() {
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
 	memory->writeW(((dword)DS << 4) + address, A.X);
+}
+
+void cpu8086::MOV_MEM_IMM_B() {
+	IP++;
+	address = ((dword)CS << 4) + IP;
+	byte mod_reg_rm = memory->readB(address);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+
+	// остальные команды не используются
+	if (reg != 0) return;
+
+	// получаем смещение
+	word displacement = fetchDisp(mod, rm);
+	// получаем эффективный адрес
+	word EA = fetchEA(mod, rm, displacement);
+	address = ((dword)DS << 4) + EA;
+	// получаем прямое значение после получения адреса
+	IP++;
+	byte value = memory->readB(((dword)CS << 4) + IP);
+	// записываем значение
+	memory->writeB(address, value);
+}
+
+void cpu8086::MOV_MEM_IMM_W() {
+	IP++;
+	address = ((dword)CS << 4) + IP;
+	byte mod_reg_rm = memory->readB(address);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+
+	// остальные команды не используются
+	if (reg != 0) return;
+
+	// получаем смещение
+	word displacement = fetchDisp(mod, rm);
+	// получаем эффективный адрес
+	word EA = fetchEA(mod, rm, displacement);
+	address = ((dword)DS << 4) + EA;
+	// получаем прямое значение после получения адреса
+	IP++;
+	word value = memory->readW(((dword)CS << 4) + IP);
+	// записываем значение
+	memory->writeW(address, value);
 }
 /******OPCODES_END******/
