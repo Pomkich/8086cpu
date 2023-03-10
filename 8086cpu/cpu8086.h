@@ -91,4 +91,6 @@ private:
 	void MOV_A_OUT_W();
 	void MOV_R_IMM_B(byte& reg);
 	void MOV_R_IMM_W(word& reg);
+	void MOV_MEM_IMM_B();
+	void MOV_MEM_IMM_W();
 };
