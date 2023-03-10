@@ -75,10 +75,10 @@ public: // private
 	word& getRegW(byte reg);	// декодирование 16-битного регистра
 
 private:
-	void ADD_R_IN_B();		// сложение в байтовый регистр
-	void ADD_R_IN_W();		// сложение в 16-битный регист
 	void ADD_R_OUT_B();		// сложение из байтового регистрар
 	void ADD_R_OUT_W();		// сложение из 16-битного регистра
+	void ADD_R_IN_B();		// сложение в байтовый регистр
+	void ADD_R_IN_W();		// сложение в 16-битный регист
 	void ADD_A_B();
 	void ADD_A_W();
 	void INC_R(word& reg);
