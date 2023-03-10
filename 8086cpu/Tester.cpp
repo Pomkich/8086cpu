@@ -6,6 +6,7 @@ Tester::Tester() {
 	cpu_pt->initMemory(mem_pt);
 	cpu_pt->initOpTable();
 	cpu_pt->reset();
+	mem_pt->reset();
 }
 
 void Tester::RunTests() {
@@ -39,16 +40,19 @@ void Tester::RunTests() {
 }
 
 void Tester::MemoryCheckByteWriting() {
+	mem_pt->reset();
 	mem_pt->writeB(0x1000, 0x32);
 	assert(mem_pt->readB(0x1000), 0x32);
 }
 
 void Tester::MemoryCheckWordWriting() {
+	mem_pt->reset();
 	mem_pt->writeW(0x1000, 0x3264);
 	assert(mem_pt->readW(0x1000), 0x3264);
 }
 
 void Tester::MemoryCheckBytePlacement() {
+	mem_pt->reset();
 	mem_pt->writeW(0x1000, 0x3264);
 	assert(mem_pt->readB(0x1000), 0x64);
 	assert(mem_pt->readB(0x1000), 0x32);
@@ -157,6 +161,7 @@ void Tester::FlagCTest() {
 void Tester::ADD_R_IN_B_Test() {
 	// adding value from memory to register
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -174,6 +179,7 @@ void Tester::ADD_R_IN_B_Test() {
 
 	// adding value to register from register
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -190,6 +196,7 @@ void Tester::ADD_R_IN_B_Test() {
 void Tester::ADD_R_OUT_B_Test() {
 	// adding value from register to memory by address
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -209,6 +216,7 @@ void Tester::ADD_R_OUT_B_Test() {
 void Tester::ADD_R_IN_W_Test() {
 	// adding value from memory to register
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -226,6 +234,7 @@ void Tester::ADD_R_IN_W_Test() {
 	
 	// adding value to register from register
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -242,6 +251,7 @@ void Tester::ADD_R_IN_W_Test() {
 void Tester::ADD_R_OUT_W_Test() {
 	// adding value from register to memory by address
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -261,6 +271,7 @@ void Tester::ADD_R_OUT_W_Test() {
 void Tester::ADD_A_B_Test() {
 	// adding value accumulator byte
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -277,6 +288,7 @@ void Tester::ADD_A_B_Test() {
 void Tester::ADD_A_W_Test() {
 	// adding value accumulator word
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -292,6 +304,7 @@ void Tester::ADD_A_W_Test() {
 
 void Tester::INC_R_Test() {
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -305,6 +318,7 @@ void Tester::INC_R_Test() {
 
 void Tester::DEC_R_Test() {
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
@@ -318,6 +332,7 @@ void Tester::DEC_R_Test() {
 
 void Tester::PUSH_R_Test() {
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize code segment
 	cpu_pt->CS = 0x4000;
 	cpu_pt->IP = 0x0001;
@@ -333,6 +348,7 @@ void Tester::PUSH_R_Test() {
 
 void Tester::POP_R_Test() {
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize code segment
 	cpu_pt->CS = 0x4000;
 	cpu_pt->IP = 0x0001;
@@ -350,6 +366,7 @@ void Tester::POP_R_Test() {
 
 void Tester::MOV_A_IN_B_Test() {
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize code segment
 	cpu_pt->CS = 0x4000;
 	cpu_pt->IP = 0x0001;
@@ -366,6 +383,7 @@ void Tester::MOV_A_IN_B_Test() {
 
 void Tester::MOV_A_IN_W_Test() {
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize code segment
 	cpu_pt->CS = 0x4000;
 	cpu_pt->IP = 0x0001;
@@ -382,6 +400,7 @@ void Tester::MOV_A_IN_W_Test() {
 
 void Tester::MOV_A_OUT_B_Test() {
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize code segment
 	cpu_pt->CS = 0x4000;
 	cpu_pt->IP = 0x0001;
@@ -400,6 +419,7 @@ void Tester::MOV_A_OUT_B_Test() {
 
 void Tester::MOV_A_OUT_W_Test() {
 	cpu_pt->reset();
+	mem_pt->reset();
 	// initialize code segment
 	cpu_pt->CS = 0x4000;
 	cpu_pt->IP = 0x0001;
@@ -441,4 +461,12 @@ void Tester::MOV_R_IMM_W_Test() {
 	cpu_pt->clock();
 
 	assert(cpu_pt->B.X == 0x0A12);
+}
+
+void MOV_MEM_IMM_B_Test() {
+	//cpu_pt
+}
+
+void MOV_MEM_IMM_W_Test() {
+
 }

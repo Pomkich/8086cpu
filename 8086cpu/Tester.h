@@ -48,6 +48,8 @@ public:
 	void MOV_A_OUT_W_Test();
 	void MOV_R_IMM_B_Test();
 	void MOV_R_IMM_W_Test();
+	void MOV_MEM_IMM_B_Test();
+	void MOV_MEM_IMM_W_Test();
 	/*** OPCODE TESTS END   ***/
 };
 
