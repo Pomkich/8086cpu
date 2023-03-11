@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Tester.h"
 #include "cpu8086.h"
+#include "ConsolePresenter.h"
 
 using namespace std;
 
@@ -8,20 +9,13 @@ int main() {
 	Tester test;
 	test.RunTests();
 
-	/*std::shared_ptr<Memory> mem = std::make_shared<Memory>();
-	cpu8086 c;
-	c.initOpTable();
-	c.initMemory(mem);
-	c.reset();
+	/*std::shared_ptr<cpu8086> cpu_pt;
+	std::shared_ptr<Memory> mem_pt;
+	cpu_pt->initMemory(mem_pt);
+	cpu_pt->initOpTable();
 
-	c.A.X = 132;
-	mem->writeB(0xFFFF0, 0x01);
-	mem->writeB(0xFFFF1, 0x06);
-	mem->writeB(0xFFFF2, 0x64);
-	mem->writeB(0xFFFF3, 0x00);
-	mem->writeB(0x00064, 123);
-	c.clock();
-	std::cout << mem->readW(0x00064) << std::endl;
-	*/
+	ConsolePresenter pres(cpu_pt, mem_pt);*/
+	
+
 	return 0;
 }

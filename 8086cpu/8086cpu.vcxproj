@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConsolePresenter.cpp" />
     <ClCompile Include="cpu8086.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Memory.cpp" />
@@ -134,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractPresenter.h" />
+    <ClInclude Include="ConsolePresenter.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="cpu8086.h" />
     <ClInclude Include="Memory.h" />
