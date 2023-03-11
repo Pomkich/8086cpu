@@ -216,6 +216,15 @@ word& cpu8086::getRegW(byte reg) {
 	}
 }
 
+word& cpu8086::getSegReg(byte reg) {
+	switch(reg) {
+	case 0: return ES;  break;
+	case 1: return CS;  break;
+	case 2: return SS;  break;
+	case 3: return DS;  break;
+	}
+}
+
 // функция инициализирует таблицу команд
 void cpu8086::initOpTable() {
 	// сложение
@@ -266,6 +275,9 @@ void cpu8086::initOpTable() {
 	// помещение значения из регистра в память
 	opcode_table[0x88] = std::bind(&cpu8086::MOV_R_OUT_B, this);
 	opcode_table[0x89] = std::bind(&cpu8086::MOV_R_OUT_W, this);
+	// помещение из и в сегментные регистры
+	opcode_table[0x8C] = std::bind(&cpu8086::MOV_SR_OUT, this);
+	opcode_table[0x8E] = std::bind(&cpu8086::MOV_SR_IN, this);
 	// помещение значения в регистр из памяти
 	opcode_table[0x8A] = std::bind(&cpu8086::MOV_R_IN_B, this);
 	opcode_table[0x8B] = std::bind(&cpu8086::MOV_R_IN_W, this);
@@ -690,6 +702,60 @@ void cpu8086::MOV_R_IN_W() {
 	byte rm = (mod_reg_rm & 0b00000111);
 
 	word& first_reg = getRegW(reg);
+
+	if (mod == 3) {	// регистровая адресация
+		word& second_reg = getRegW(rm);
+		first_reg = second_reg;
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		first_reg = memory->readW(address);
+	}
+}
+
+void cpu8086::MOV_SR_OUT() {
+	IP++;
+	address = ((dword)CS << 4) + IP;
+	byte mod_reg_rm = memory->readB(address);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+
+	// остальные не используются
+	if (reg >> 3 != 0) return;
+
+	word& first_reg = getSegReg(reg);
+
+	if (mod == 3) {	// регистровая адресация
+		word& second_reg = getRegW(rm);
+		second_reg = first_reg;
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		memory->writeW(address, first_reg);
+	}
+}
+
+void cpu8086::MOV_SR_IN() {
+	IP++;
+	address = ((dword)CS << 4) + IP;
+	byte mod_reg_rm = memory->readB(address);
+	// выделение полей
+	byte mod = mod_reg_rm >> 6;
+	byte reg = (mod_reg_rm & 0b00111000) >> 3;
+	byte rm = (mod_reg_rm & 0b00000111);
+
+	// остальные не используются
+	if (reg >> 3 != 0) return;
+
+	word& first_reg = getSegReg(reg);
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
