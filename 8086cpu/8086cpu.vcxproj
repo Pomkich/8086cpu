@@ -133,6 +133,7 @@
     <ClCompile Include="Tester.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractPresenter.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="cpu8086.h" />
     <ClInclude Include="Memory.h" />
