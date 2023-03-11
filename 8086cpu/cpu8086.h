@@ -73,6 +73,7 @@ public: // private
 	word fetchDisp(byte mod, byte rm);	// получение смещения
 	byte& getRegB(byte reg);	// декодирование 8-битного регистра
 	word& getRegW(byte reg);	// декодирование 16-битного регистра
+	word& getSegReg(byte reg);	// декодирование сегментного регистра
 
 private:
 	void ADD_R_OUT_B();		// сложение из байтового регистрар
@@ -89,6 +90,8 @@ private:
 	void MOV_R_OUT_W();
 	void MOV_R_IN_B();
 	void MOV_R_IN_W();
+	void MOV_SR_OUT();
+	void MOV_SR_IN();
 	void MOV_A_IN_B();
 	void MOV_A_IN_W();
 	void MOV_A_OUT_B();
