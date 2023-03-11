@@ -35,6 +35,8 @@ void Tester::RunTests() {
 	MOV_R_OUT_W_Test();
 	MOV_R_IN_B_Test();
 	MOV_R_IN_W_Test();
+	MOV_SR_OUT_Test();
+	MOV_SR_IN_Test();
 	MOV_A_IN_B_Test();
 	MOV_A_IN_W_Test();
 	MOV_A_OUT_B_Test();
@@ -484,6 +486,77 @@ void Tester::MOV_R_IN_W_Test() {
 	cpu_pt->clock();
 
 	assert(cpu_pt->B.X == 0x1133);
+}
+
+void Tester::MOV_SR_OUT_Test() {
+	// memory mode test
+	cpu_pt->reset();
+	mem_pt->reset();
+	cpu_pt->SS = 0x1111;
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	// initialize data segment
+	cpu_pt->DS = 0x1000;
+	// initialize memory
+	mem_pt->writeB(0x40001, 0x8C);
+	mem_pt->writeB(0x40002, 0x16);
+	mem_pt->writeB(0x40003, 0x64);
+	mem_pt->writeB(0x40004, 0x00);
+	cpu_pt->clock();
+
+	assert(mem_pt->readW(0x10064) == 0x1111);
+
+	// register mode test
+	cpu_pt->reset();
+	mem_pt->reset();
+	cpu_pt->SS = 0x1111;
+
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	// initialize memory
+	mem_pt->writeB(0x40001, 0x8C);
+	mem_pt->writeB(0x40002, 0xD0);
+	cpu_pt->clock();
+
+	assert(cpu_pt->A.X == 0x1111);
+}
+
+void Tester::MOV_SR_IN_Test() {
+	// memory mode test
+	cpu_pt->reset();
+	mem_pt->reset();
+	
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	// initialize data segment
+	cpu_pt->DS = 0x1000;
+	// initialize memory
+	mem_pt->writeB(0x40001, 0x8E);
+	mem_pt->writeB(0x40002, 0x16);
+	mem_pt->writeB(0x40003, 0x64);
+	mem_pt->writeB(0x40004, 0x00);
+	mem_pt->writeW(0x10064, 0x3211);
+	cpu_pt->clock();
+
+	assert(cpu_pt->SS == 0x3211);
+
+	// register mode test
+	cpu_pt->reset();
+	mem_pt->reset();
+	cpu_pt->A.X = 0x1111;
+
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	// initialize memory
+	mem_pt->writeB(0x40001, 0x8E);
+	mem_pt->writeB(0x40002, 0xD0);
+	cpu_pt->clock();
+
+	assert(cpu_pt->SS == 0x1111);
 }
 
 void Tester::MOV_A_IN_B_Test() {

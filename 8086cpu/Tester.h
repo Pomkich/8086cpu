@@ -46,6 +46,8 @@ public:
 	void MOV_R_OUT_W_Test();
 	void MOV_R_IN_B_Test();
 	void MOV_R_IN_W_Test();
+	void MOV_SR_OUT_Test();
+	void MOV_SR_IN_Test();
 	void MOV_A_IN_B_Test();
 	void MOV_A_IN_W_Test();
 	void MOV_A_OUT_B_Test();
