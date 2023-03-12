@@ -49,21 +49,21 @@ void Tester::RunTests() {
 
 void Tester::MemoryCheckByteWriting() {
 	mem_pt->reset();
-	mem_pt->writeB(0x1000, 0x32);
-	assert(mem_pt->readB(0x1000), 0x32);
+	mem_pt->writeB(0x10000, 0x32);
+	assert(mem_pt->readB(0x10000) == 0x32);
 }
 
 void Tester::MemoryCheckWordWriting() {
 	mem_pt->reset();
-	mem_pt->writeW(0x1000, 0x3264);
-	assert(mem_pt->readW(0x1000), 0x3264);
+	mem_pt->writeW(0x10000, 0x3264);
+	assert(mem_pt->readW(0x10000) == 0x3264);
 }
 
 void Tester::MemoryCheckBytePlacement() {
 	mem_pt->reset();
-	mem_pt->writeW(0x1000, 0x3264);
-	assert(mem_pt->readB(0x1000), 0x64);
-	assert(mem_pt->readB(0x1000), 0x32);
+	mem_pt->writeW(0x10000, 0x3264);
+	assert(mem_pt->readB(0x10000) == 0x64);
+	assert(mem_pt->readB(0x10001) == 0x32);
 }
 
 void Tester::FlagOTest() {

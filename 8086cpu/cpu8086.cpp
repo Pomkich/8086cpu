@@ -50,6 +50,20 @@ void cpu8086::initPresenter(std::shared_ptr<AbstractPresenter> p_pres) {
 	presenter = p_pres;
 }
 
+word cpu8086::getRegVal(RegId reg_id) {
+	switch (reg_id) {
+	case RegId::AL: return A.L; case RegId::AH: return A.H; case RegId::AX: return A.X;
+	case RegId::BL: return B.L; case RegId::BH: return B.H; case RegId::BX: return B.X;
+	case RegId::CL: return C.L; case RegId::CH: return C.H; case RegId::CX: return C.X;
+	case RegId::DL: return D.L; case RegId::DH: return D.H; case RegId::DX: return D.X;
+	case RegId::SP: return SP; case RegId::BP: return BP; 
+	case RegId::SI: return SI; case RegId::DI: return DI;
+	case RegId::CS: return CS; case RegId::DS: return DS;
+	case RegId::SS: return SS; case RegId::ES: return ES;
+	case RegId::IP: return IP;
+	}
+}
+
 // фкнкции проверки флагов
 void cpu8086::testFlagZ(word src_op) {
 	(src_op == 0) ? setFlag(Flag::Z) : remFlag(Flag::Z);
