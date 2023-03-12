@@ -21,8 +21,8 @@ int main() {
 	mem_pt->initPresenter(presenter_pt);
 
 	// инициализация сегментов
-	cpu_pt->CS = 0x1000;
-	cpu_pt->DS = 0x2000;
+	cpu_pt->setRegVal(RegId::CS, 0x1000);
+	cpu_pt->setRegVal(RegId::DS, 0x2000);;
 	// загрузка программы в память
 	mem_pt->writeB(0x10000, 0xB8);
 	mem_pt->writeB(0x10001, 0x32);
