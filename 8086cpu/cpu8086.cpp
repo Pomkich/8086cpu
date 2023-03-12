@@ -339,13 +339,8 @@ void cpu8086::initOpTable() {
 
 /******OPCODES_BEG******/
 void cpu8086::ADD_R_OUT_B() {
-	IP++;
-	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	byte& first_reg = getRegB(reg);
 
@@ -377,13 +372,8 @@ void cpu8086::ADD_R_OUT_B() {
 }
 
 void cpu8086::ADD_R_OUT_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	word& first_reg = getRegW(reg);
 
@@ -415,13 +405,8 @@ void cpu8086::ADD_R_OUT_W() {
 }
 
 void cpu8086::ADD_R_IN_B() {
-	IP++;
-	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 	// определяем регистр для байтов
 	byte& first_reg = getRegB(reg);
 
@@ -451,13 +436,8 @@ void cpu8086::ADD_R_IN_B() {
 }
 
 void cpu8086::ADD_R_IN_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;	// генерация физического адреса для второго байта
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 	
 	word& first_reg = getRegW(reg);
 
@@ -486,9 +466,7 @@ void cpu8086::ADD_R_IN_W() {
 }
 
 void cpu8086::ADD_A_B() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte data = memory->readB(address);	// получение данных
+	byte data = fetchCodeByte();
 
 	byte prev_val = A.L;
 	bool prev_sig_bit = getFlag(Flag::S);
@@ -503,10 +481,7 @@ void cpu8086::ADD_A_B() {
 }
 
 void cpu8086::ADD_A_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	word data = memory->readW(address);
-	IP++;
+	word data = fetchCodeWord();
 
 	word prev_val = A.X;
 	bool prev_sig_bit = getFlag(Flag::S);
@@ -559,59 +534,36 @@ void cpu8086::POP_R(word& reg) {
 }
 
 void cpu8086::MOV_R_IMM_B(byte& reg) {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	reg = memory->readB(address);
+	reg = fetchCodeByte();
 }
 
 void cpu8086::MOV_R_IMM_W(word& reg) {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	reg = memory->readW(address);
-	IP++;
+	reg = fetchCodeWord();
 }
 
 void cpu8086::MOV_A_IN_B() {
-	IP++;
-	// fetch address from code segment and then fetch value from data segment by address
-	address = ((dword)CS << 4) + IP;
-	address = memory->readW(address);
+	address = fetchCodeWord();
 	A.L = memory->readB(((dword)DS << 4) + address);
-	IP++;
 }
 
 void cpu8086::MOV_A_IN_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	address = memory->readW(address);
+	address = fetchCodeWord();
 	A.X = memory->readW(((dword)DS << 4) + address);
-	IP++;
 }
 
 void cpu8086::MOV_A_OUT_B() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	address = memory->readW(address);
+	address = fetchCodeWord();
 	memory->writeB(((dword)DS << 4) + address, A.L);
-	IP++;
 }
 
 void cpu8086::MOV_A_OUT_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	address = memory->readW(address);
+	address = fetchCodeWord();
 	memory->writeW(((dword)DS << 4) + address, A.X);
-	IP++;
 }
 
 void cpu8086::MOV_MEM_IMM_B() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	// остальные команды не используются
 	if (reg != 0) return;
@@ -621,21 +573,13 @@ void cpu8086::MOV_MEM_IMM_B() {
 	// получаем эффективный адрес
 	word EA = fetchEA(mod, rm, displacement);
 	address = ((dword)DS << 4) + EA;
-	// получаем прямое значение после получения адреса
-	IP++;
-	byte value = memory->readB(((dword)CS << 4) + IP);
-	// записываем значение
-	memory->writeB(address, value);
+	// получаем прямое значение после получения адреса и записываем его
+	memory->writeB(address, fetchCodeByte());
 }
 
 void cpu8086::MOV_MEM_IMM_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	// остальные команды не используются
 	if (reg != 0) return;
@@ -645,21 +589,12 @@ void cpu8086::MOV_MEM_IMM_W() {
 	// получаем эффективный адрес
 	word EA = fetchEA(mod, rm, displacement);
 	address = ((dword)DS << 4) + EA;
-	// получаем прямое значение после получения адреса
-	IP++;
-	word value = memory->readW(((dword)CS << 4) + IP);
-	// записываем значение
-	memory->writeW(address, value);
+	memory->writeW(address, fetchCodeWord());
 }
 
 void cpu8086::MOV_R_OUT_B() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	byte& first_reg = getRegB(reg);
 
@@ -677,13 +612,8 @@ void cpu8086::MOV_R_OUT_B() {
 }
 
 void cpu8086::MOV_R_OUT_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	word& first_reg = getRegW(reg);
 
@@ -701,13 +631,8 @@ void cpu8086::MOV_R_OUT_W() {
 }
 
 void cpu8086::MOV_R_IN_B() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	byte& first_reg = getRegB(reg);
 
@@ -725,13 +650,8 @@ void cpu8086::MOV_R_IN_B() {
 }
 
 void cpu8086::MOV_R_IN_W() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	word& first_reg = getRegW(reg);
 
@@ -749,13 +669,8 @@ void cpu8086::MOV_R_IN_W() {
 }
 
 void cpu8086::MOV_SR_OUT() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	// остальные не используются
 	if (reg >> 3 != 0) return;
@@ -776,13 +691,8 @@ void cpu8086::MOV_SR_OUT() {
 }
 
 void cpu8086::MOV_SR_IN() {
-	IP++;
-	address = ((dword)CS << 4) + IP;
-	byte mod_reg_rm = memory->readB(address);
-	// выделение полей
-	byte mod = mod_reg_rm >> 6;
-	byte reg = (mod_reg_rm & 0b00111000) >> 3;
-	byte rm = (mod_reg_rm & 0b00000111);
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
 
 	// остальные не используются
 	if (reg >> 3 != 0) return;
