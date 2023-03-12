@@ -548,6 +548,7 @@ void cpu8086::MOV_R_IMM_W(word& reg) {
 	IP++;
 	address = ((dword)CS << 4) + IP;
 	reg = memory->readW(address);
+	IP++;
 }
 
 void cpu8086::MOV_A_IN_B() {
@@ -556,6 +557,7 @@ void cpu8086::MOV_A_IN_B() {
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
 	A.L = memory->readB(((dword)DS << 4) + address);
+	IP++;
 }
 
 void cpu8086::MOV_A_IN_W() {
@@ -563,6 +565,7 @@ void cpu8086::MOV_A_IN_W() {
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
 	A.X = memory->readW(((dword)DS << 4) + address);
+	IP++;
 }
 
 void cpu8086::MOV_A_OUT_B() {
@@ -570,6 +573,7 @@ void cpu8086::MOV_A_OUT_B() {
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
 	memory->writeB(((dword)DS << 4) + address, A.L);
+	IP++;
 }
 
 void cpu8086::MOV_A_OUT_W() {
@@ -577,6 +581,7 @@ void cpu8086::MOV_A_OUT_W() {
 	address = ((dword)CS << 4) + IP;
 	address = memory->readW(address);
 	memory->writeW(((dword)DS << 4) + address, A.X);
+	IP++;
 }
 
 void cpu8086::MOV_MEM_IMM_B() {
