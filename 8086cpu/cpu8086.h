@@ -20,7 +20,7 @@ union reg {
 };
 
 class cpu8086 {
-public:	// private
+private:
 	// регистры общего назначения
 	reg A, B, C, D;
 	// регистры указателей и индексов
@@ -52,9 +52,15 @@ public:
 	void initOpTable();
 	void initMemory(std::shared_ptr<Memory> mem);
 	void initPresenter(std::shared_ptr<AbstractPresenter> p_pres);
-	word getRegVal(RegId reg_id);	// чтение значения из регистра
+	// функции работы с регистрами
+	word getRegVal(RegId reg_id);
+	void setRegVal(RegId reg_id, word value);	
+	// функции работы с флагами
+	bool getFlag(Flag f);
+	void setFlag(Flag f);
+	void remFlag(Flag f);
 
-public: // private
+private:
 	// фунции для проверки флагов
 	void testFlagZ(word src_op);
 	void testFlagSB(byte src_op);
@@ -68,11 +74,6 @@ public: // private
 	void testFlagAAdd(word prev_val, word src_op);
 	void testFlagASub(word prev_val, word src_op);
 	void testFlagO(bool prev_sig_bit, bool now_sig_bit);
-
-	// функции работы с флагами
-	bool getFlag(Flag f);
-	void setFlag(Flag f);
-	void remFlag(Flag f);
 
 	// функции-помощники адресации
 	word fetchEA(byte mod, byte rm, word disp);	// получение эффективного адреса в зависимости от типа адресации

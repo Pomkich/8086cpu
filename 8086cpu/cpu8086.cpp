@@ -64,6 +64,33 @@ word cpu8086::getRegVal(RegId reg_id) {
 	}
 }
 
+void cpu8086::setRegVal(RegId reg_id, word value) {
+	switch (reg_id) {
+	case RegId::AL: A.L = value; break; 
+	case RegId::AH: A.H = value; break;
+	case RegId::AX: A.X = value; break;
+	case RegId::BL: B.L = value; break; 
+	case RegId::BH: B.H = value; break;
+	case RegId::BX: B.X = value; break;
+	case RegId::CL: C.L = value; break; 
+	case RegId::CH: C.H = value; break;
+	case RegId::CX: C.X = value; break;
+	case RegId::DL: D.L = value; break; 
+	case RegId::DH: D.H = value; break;
+	case RegId::DX: D.X = value; break;
+	case RegId::SP: SP = value; break; 
+	case RegId::BP: BP = value; break;
+	case RegId::SI: SI = value; break; 
+	case RegId::DI: DI = value; break;
+	case RegId::CS: CS = value; break; 
+	case RegId::DS: DS = value; break;
+	case RegId::SS: SS = value; break; 
+	case RegId::ES: ES = value; break;
+	case RegId::IP: IP = value; break;
+	}
+}
+
+
 // фкнкции проверки флагов
 void cpu8086::testFlagZ(word src_op) {
 	(src_op == 0) ? setFlag(Flag::Z) : remFlag(Flag::Z);
