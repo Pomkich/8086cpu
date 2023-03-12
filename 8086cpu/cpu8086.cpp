@@ -193,6 +193,26 @@ word cpu8086::fetchDisp(byte mod, byte rm) {
 	return displacement;
 }
 
+byte cpu8086::fetchCodeByte() {
+	IP++;
+	return memory->readB(((dword)CS << 4) + IP);
+}
+
+word cpu8086::fetchCodeWord() {
+	IP++;
+	word ret_val = memory->readW(((dword)CS << 4) + IP);
+	IP++;
+	return ret_val;
+}
+
+void cpu8086::fetchModRegRm(byte& mod, byte& reg, byte& rm) {
+	byte mod_reg_rm = fetchCodeByte();	// получение следующего байта после opcode'а
+	// выделение полей
+	mod = mod_reg_rm >> 6;
+	reg = (mod_reg_rm & 0b00111000) >> 3;
+	rm = (mod_reg_rm & 0b00000111);
+}
+
 // декодирование регистра по номеру
 // команды должны сами выбирать тип декодирования (8-битные 
 // части регистров или весь регистр)

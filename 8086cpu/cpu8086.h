@@ -76,8 +76,11 @@ public: // private
 	void remFlag(Flag f);
 
 	// функции-помощники адресации
-	word fetchEA(byte MOD, byte RM, word disp);	// получение эффективного адреса в зависимости от типа адресации
-	word fetchDisp(byte mod, byte rm);	// получение смещения
+	word fetchEA(byte mod, byte rm, word disp);	// получение эффективного адреса в зависимости от типа адресации
+	word fetchDisp(byte mod, byte rm);			// получение смещения
+	byte fetchCodeByte();	// получение следующего байта в сегменте кода
+	word fetchCodeWord();	// получение следующего слова в сегменте кода
+	void fetchModRegRm(byte& mod, byte& reg, byte& rm);	// выделение полей из байта
 	byte& getRegB(byte reg);	// декодирование 8-битного регистра
 	word& getRegW(byte reg);	// декодирование 16-битного регистра
 	word& getSegReg(byte reg);	// декодирование сегментного регистра
