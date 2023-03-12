@@ -20,9 +20,11 @@ int main() {
 
 	mem_pt->initPresenter(presenter_pt);
 
+
 	// инициализация сегментов
 	cpu_pt->setRegVal(RegId::CS, 0x1000);
-	cpu_pt->setRegVal(RegId::DS, 0x2000);;
+	cpu_pt->setRegVal(RegId::DS, 0x2000);
+	cpu_pt->setRegVal(RegId::SS, 0x3000);
 	// загрузка программы в память
 	mem_pt->writeB(0x10000, 0xB8);
 	mem_pt->writeB(0x10001, 0x32);
@@ -33,7 +35,7 @@ int main() {
 	mem_pt->writeB(0x10006, 0x03);
 	mem_pt->writeB(0x10007, 0xC3);
 	mem_pt->writeB(0x10008, 0xA3);
-	mem_pt->writeB(0x10009, 0x64);
+	mem_pt->writeB(0x10009, 0x04);
 	mem_pt->writeB(0x10010, 0x00);
 	// всего загружено 4 команды, 4 раза выполняем цикл
 	for (int i = 0; i < 4; i++) {
