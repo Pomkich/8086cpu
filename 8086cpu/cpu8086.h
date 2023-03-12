@@ -4,6 +4,10 @@
 #include <functional>
 #include <memory>
 #include "Memory.h"
+#include "AbstractPresenter.h"
+#include "ConsolePresenter.h"
+
+class ConsolePresenter;
 
 static enum class Flag { O = 11, D = 10, I = 9, T = 8, S = 7, Z = 6, A = 4, P = 2, C = 0 };	// bits of flags register
 
@@ -38,6 +42,8 @@ public:	// private
 
 	// указатель на физическое адресное пространство
 	std::shared_ptr<Memory> memory;
+	// указатель на презентатор
+	std::shared_ptr<ConsolePresenter> presenter;
 
 	friend class Tester;
 
@@ -47,6 +53,7 @@ public:
 	void clock();	// выполнение одной команды
 	void initOpTable();
 	void initMemory(std::shared_ptr<Memory> mem);
+	void initPresenter(std::shared_ptr<ConsolePresenter> p_pres);
 
 public: // private
 	// фунции для проверки флагов

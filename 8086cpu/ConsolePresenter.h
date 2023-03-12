@@ -1,14 +1,15 @@
 #pragma once
 #include "AbstractPresenter.h"
+#include "cpu8086.h"
+#include "Memory.h"
 #include <iostream>
 
 class ConsolePresenter : public AbstractPresenter {
-private:
-	void notifyRegChange() override;
-	void notifyMemChange() override;
-	void notifyStkChange() override;
-
 public:
+	virtual void notifyRegChange() override;
+	virtual void notifyMemChange() override;
+	virtual void notifyStkChange() override;
+
 	ConsolePresenter(std::shared_ptr<cpu8086> p_cpu, std::shared_ptr<Memory> p_mem);
-	void Render() override;
+	virtual void Render() override;
 };

@@ -2,14 +2,20 @@
 #include "Constants.h"
 #include <cstring>
 #include <iostream>
+#include "AbstractPresenter.h"
+#include "ConsolePresenter.h"
+
+class ConsolePresenter;
 
 class Memory {
 private:
 	byte memory[memory_size];
+	std::shared_ptr<ConsolePresenter> presenter;
 
 public:
 	Memory();
 	void reset();
+	void initPresenter(std::shared_ptr<ConsolePresenter> p_pres);
 
 	byte readB(dword address);
 	word readW(dword address);
