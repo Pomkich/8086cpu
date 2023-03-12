@@ -19,6 +19,8 @@ cpu8086::cpu8086() {
 
 	opcode = 0;
 	address = 0;
+
+	presenter = std::make_shared<EmptyPresenter>();
 }
 
 // сброс состояния процессора
@@ -37,16 +39,14 @@ void cpu8086::clock() {
 	opcode = memory->readB(address);	// получение команды
 	opcode_table[opcode]();				// выполнение команды
 	IP++;								// установка счётчика на следующую команду
-	if (presenter != nullptr) {
-		presenter->notifyRegChange();		// оповещение презентатора об изменениях
-	}
+	presenter->notifyRegChange();		// оповещение презентатора об изменениях
 }
 
 void cpu8086::initMemory(std::shared_ptr<Memory> mem) {
 	memory = mem;
 }
 
-void cpu8086::initPresenter(std::shared_ptr<ConsolePresenter> p_pres) {
+void cpu8086::initPresenter(std::shared_ptr<AbstractPresenter> p_pres) {
 	presenter = p_pres;
 }
 

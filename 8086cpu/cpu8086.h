@@ -43,7 +43,7 @@ public:	// private
 	// указатель на физическое адресное пространство
 	std::shared_ptr<Memory> memory;
 	// указатель на презентатор
-	std::shared_ptr<ConsolePresenter> presenter;
+	std::shared_ptr<AbstractPresenter> presenter;
 
 	friend class Tester;
 
@@ -53,7 +53,7 @@ public:
 	void clock();	// выполнение одной команды
 	void initOpTable();
 	void initMemory(std::shared_ptr<Memory> mem);
-	void initPresenter(std::shared_ptr<ConsolePresenter> p_pres);
+	void initPresenter(std::shared_ptr<AbstractPresenter> p_pres);
 
 public: // private
 	// фунции для проверки флагов

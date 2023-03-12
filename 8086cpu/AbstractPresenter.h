@@ -15,3 +15,14 @@ public:
 
 	virtual void Render() = 0;
 };
+
+class EmptyPresenter : public AbstractPresenter {
+public:
+	EmptyPresenter() {}
+
+	void notifyRegChange() override {};
+	void notifyMemChange() override {};
+	void notifyStkChange() override {};
+
+	void Render() override {};
+};

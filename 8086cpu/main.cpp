@@ -13,7 +13,7 @@ int main() {
 
 	std::shared_ptr<cpu8086> cpu_pt = std::make_shared<cpu8086>();
 	std::shared_ptr<Memory> mem_pt = std::make_shared<Memory>();
-	std::shared_ptr<ConsolePresenter> presenter_pt = std::make_shared<ConsolePresenter>(cpu_pt, mem_pt);
+	std::shared_ptr<AbstractPresenter> presenter_pt = std::make_shared<ConsolePresenter>(cpu_pt, mem_pt);
 	cpu_pt->initMemory(mem_pt);
 	cpu_pt->initPresenter(presenter_pt);
 	cpu_pt->initOpTable();
