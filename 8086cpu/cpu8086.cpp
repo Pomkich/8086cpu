@@ -172,22 +172,14 @@ word cpu8086::fetchDisp(byte mod, byte rm) {
 	switch (mod) {
 	case 0:	// нет смещения, но возможно действует режим прямой адресации
 		if (rm == 0b110) {
-			IP++;
-			address = ((dword)CS << 4) + IP;
-			displacement = memory->readW(address);	// при прямой адресации читаются два байта
-			IP++;	// так как было считано два байта, нужно перевести указатель дальше
+			displacement = fetchCodeWord();
 		}
 		break;
 	case 1: // однобайтное смещение
-		IP++;	// переводим указатель на позицию вперёд
-		address = ((dword)CS << 4) + IP;
-		displacement = memory->readB(address);	// читаем байт
+		displacement = fetchCodeByte();
 		break;
 	case 2:	// двухбайтное смещение
-		IP++;
-		address = ((dword)CS << 4) + IP;
-		displacement = memory->readW(address);
-		IP++;
+		displacement = fetchCodeWord();
 		break;
 	}
 	return displacement;
