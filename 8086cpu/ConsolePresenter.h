@@ -2,7 +2,7 @@
 #include "AbstractPresenter.h"
 #include "cpu8086.h"
 #include "Memory.h"
-//#include <thread>
+#include <thread>
 #include <iostream>
 
 class ConsolePresenter : public AbstractPresenter {
