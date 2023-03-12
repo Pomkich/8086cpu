@@ -2,17 +2,16 @@
 
 Memory::Memory() {
 	memset(memory, 0, memory_size);
+	presenter = std::make_shared<EmptyPresenter>();
 }
 
 void Memory::reset() {
 	memset(memory, 0, memory_size);
-	if (presenter != nullptr) {
-		presenter->notifyMemChange();
-		presenter->notifyStkChange();
-	}
+	presenter->notifyMemChange();
+	presenter->notifyStkChange();
 }
 
-void Memory::initPresenter(std::shared_ptr<ConsolePresenter> p_pres) {
+void Memory::initPresenter(std::shared_ptr<AbstractPresenter> p_pres) {
 	presenter = p_pres;
 }
 
@@ -30,24 +29,18 @@ word Memory::readStack(dword address) {
 
 void Memory::writeB(dword address, byte val) {
 	memory[address] = val;
-	if (presenter != nullptr) {
-		presenter->notifyMemChange();
-	}
+	presenter->notifyMemChange();
 }
 
 void Memory::writeW(dword address, word val) {
 	// NOTE: следует добавить проверки на выход за пределы
 	memory[address] = (val & 0x00FF);		// нижняя часть слова
 	memory[address + 1] = (val >> 8);		// верхняя часть слова
-	if (presenter != nullptr) {
-		presenter->notifyMemChange();
-	}
+	presenter->notifyMemChange();
 }
 
 void Memory::writeStack(dword address, word val) {
 	memory[address] = (val & 0x00FF);
 	memory[address - 1] = (val >> 8);
-	if (presenter != nullptr) {
-		presenter->notifyStkChange();
-	}
+	presenter->notifyStkChange();
 }
