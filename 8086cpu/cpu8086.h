@@ -9,8 +9,6 @@
 
 class ConsolePresenter;
 
-static enum class Flag { O = 11, D = 10, I = 9, T = 8, S = 7, Z = 6, A = 4, P = 2, C = 0 };	// bits of flags register
-
 // замена текста препроцессором для более удобного
 // обращения к верхней и нижней частей регистров
 #define L low_high[0]
@@ -54,6 +52,7 @@ public:
 	void initOpTable();
 	void initMemory(std::shared_ptr<Memory> mem);
 	void initPresenter(std::shared_ptr<AbstractPresenter> p_pres);
+	word getRegVal(RegId reg_id);	// чтение значения из регистра
 
 public: // private
 	// фунции для проверки флагов
