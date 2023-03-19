@@ -98,6 +98,12 @@ private:
 	void OR_R_IN_W();		// логическое сложение в 16-битный регист
 	void OR_A_B();
 	void OR_A_W();
+	void ADC_R_OUT_B();
+	void ADC_R_OUT_W();
+	void ADC_R_IN_B();
+	void ADC_R_IN_W();
+	void ADC_A_B();
+	void ADC_A_W();
 	void INC_R(word& reg);	// инкремент регистра
 	void DEC_R(word& reg);	// декремент регистра
 	void PUSH_R(word& reg);	// push 16 битного регистра в стек

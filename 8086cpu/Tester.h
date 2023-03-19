@@ -44,6 +44,12 @@ public:
 	void OR_R_IN_W_Test();
 	void OR_A_B_Test();
 	void OR_A_W_Test();
+	void ADC_R_OUT_B_Test();
+	void ADC_R_OUT_W_Test();
+	void ADC_R_IN_B_Test();
+	void ADC_R_IN_W_Test();
+	void ADC_A_B_Test();
+	void ADC_A_W_Test();
 	void INC_R_Test();
 	void DEC_R_Test();
 	void PUSH_R_Test();

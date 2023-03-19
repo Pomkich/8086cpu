@@ -307,6 +307,15 @@ void cpu8086::initOpTable() {
 	opcode_table[0x0C] = std::bind(&cpu8086::OR_A_B, this);
 	opcode_table[0x0D] = std::bind(&cpu8086::OR_A_W, this);
 	opcode_table[0x0E] = std::bind(&cpu8086::PUSH_R, this, std::ref(CS));
+	// сложение с carry битом
+	opcode_table[0x10] = std::bind(&cpu8086::ADC_R_OUT_B, this);
+	opcode_table[0x11] = std::bind(&cpu8086::ADC_R_OUT_W, this);
+	opcode_table[0x12] = std::bind(&cpu8086::ADC_R_IN_B, this);
+	opcode_table[0x13] = std::bind(&cpu8086::ADC_R_IN_W, this);
+	opcode_table[0x14] = std::bind(&cpu8086::ADC_A_B, this);
+	opcode_table[0x15] = std::bind(&cpu8086::ADC_A_W, this);
+	opcode_table[0x16] = std::bind(&cpu8086::PUSH_R, this, std::ref(SS));
+	opcode_table[0x17] = std::bind(&cpu8086::POP_R, this, std::ref(SS));
 	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
 	opcode_table[0x41] = std::bind(&cpu8086::INC_R, this, std::ref(B.X));
@@ -694,6 +703,163 @@ void cpu8086::OR_A_W() {
 	remFlag(Flag::C);
 	testFlagAAdd(prev_val, A.X);
 	remFlag(Flag::O);
+}
+
+void cpu8086::ADC_R_OUT_B() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	byte& first_reg = getRegB(reg);
+
+	// переменные нужны для проверки флагов
+	byte prev_val = 0;
+	byte new_val = 0;
+	bool prev_sig_bit = getFlag(Flag::S);
+
+	if (mod == 3) {	// регистровая адресация
+		byte& second_reg = getRegB(rm);
+		second_reg += first_reg + getFlag(Flag::C);	// по идее такое невозможно
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readB(address);
+		new_val = prev_val + first_reg + getFlag(Flag::C);
+		memory->writeB(address, new_val);
+	}
+	testFlagZ(new_val);
+	testFlagSB(new_val);
+	testFlagPB(new_val);
+	testFlagCAddB(prev_val, new_val);
+	testFlagAAdd(prev_val, new_val);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
+void cpu8086::ADC_R_OUT_W() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	word& first_reg = getRegW(reg);
+
+	// переменные нужны для проверки флагов
+	word prev_val = 0;
+	word new_val = 0;
+	bool prev_sig_bit = getFlag(Flag::S);
+
+	if (mod == 3) {	// регистровая адресация
+		word& second_reg = getRegW(rm);
+		second_reg += first_reg + getFlag(Flag::C);	// по идее такое невозможно
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readW(address);
+		new_val = prev_val + first_reg + getFlag(Flag::C);
+		memory->writeW(address, new_val);
+	}
+	testFlagZ(new_val);
+	testFlagSW(new_val);
+	testFlagPW(new_val);
+	testFlagCAddW(prev_val, new_val);
+	testFlagAAdd(prev_val, new_val);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
+void cpu8086::ADC_R_IN_B() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+	// определяем регистр для байтов
+	byte& first_reg = getRegB(reg);
+
+	// переменные нужны для проверки флагов
+	byte prev_val = first_reg;
+	bool prev_sig_bit = getFlag(Flag::S);
+
+	if (mod == 3) {	// регистровая адресация
+		byte& second_reg = getRegB(rm);
+		first_reg += second_reg + getFlag(Flag::C);
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		first_reg += memory->readB(address) + getFlag(Flag::C);
+	}
+	// установка флагов
+	testFlagZ(first_reg);
+	testFlagSB(first_reg);
+	testFlagPB(first_reg);
+	testFlagCAddB(prev_val, first_reg);
+	testFlagAAdd(prev_val, first_reg);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
+void cpu8086::ADC_R_IN_W() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	word& first_reg = getRegW(reg);
+
+	// переменные нужны для проверки флагов
+	word prev_val = first_reg;
+	bool prev_sig_bit = getFlag(Flag::S);
+
+	if (mod == 3) {	// регистровая адресация
+		word& second_reg = getRegW(rm);
+		first_reg += second_reg;
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		first_reg += memory->readW(address) + getFlag(Flag::C);
+	}
+	testFlagZ(first_reg);
+	testFlagSW(first_reg);
+	testFlagPW(first_reg);
+	testFlagCAddW(prev_val, first_reg);
+	testFlagAAdd(prev_val, first_reg);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
+void cpu8086::ADC_A_B() {
+	byte data = fetchCodeByte();
+
+	byte prev_val = A.L;
+	bool prev_sig_bit = getFlag(Flag::S);
+	A.L += data + getFlag(Flag::C);
+
+	testFlagZ(A.L);
+	testFlagSB(A.L);
+	testFlagPB(A.L);
+	testFlagCAddB(prev_val, A.L);
+	testFlagAAdd(prev_val, A.L);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
+}
+
+void cpu8086::ADC_A_W() {
+	word data = fetchCodeWord();
+
+	word prev_val = A.X;
+	bool prev_sig_bit = getFlag(Flag::S);
+	A.X += data + getFlag(Flag::C);
+
+	testFlagZ(A.X);
+	testFlagSW(A.X);
+	testFlagPW(A.X);
+	testFlagCAddW(prev_val, A.X);
+	testFlagAAdd(prev_val, A.X);
+	testFlagO(prev_sig_bit, getFlag(Flag::S));
 }
 
 void cpu8086::INC_R(word& reg) {
