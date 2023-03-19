@@ -567,9 +567,9 @@ void cpu8086::OR_R_OUT_B() {
 	testFlagZ(new_val);
 	testFlagSB(new_val);
 	testFlagPB(new_val);
-	testFlagCAddB(prev_val, new_val);
+	remFlag(Flag::C);
 	testFlagAAdd(prev_val, new_val);
-	testFlagO(prev_sig_bit, getFlag(Flag::S));
+	remFlag(Flag::O);
 }
 
 void cpu8086::OR_R_OUT_W() {
@@ -600,9 +600,9 @@ void cpu8086::OR_R_OUT_W() {
 	testFlagZ(new_val);
 	testFlagSW(new_val);
 	testFlagPW(new_val);
-	testFlagCAddW(prev_val, new_val);
+	remFlag(Flag::C);
 	testFlagAAdd(prev_val, new_val);
-	testFlagO(prev_sig_bit, getFlag(Flag::S));
+	remFlag(Flag::O);
 }
 
 void cpu8086::OR_R_IN_B() {
@@ -631,9 +631,9 @@ void cpu8086::OR_R_IN_B() {
 	testFlagZ(first_reg);
 	testFlagSB(first_reg);
 	testFlagPB(first_reg);
-	testFlagCAddB(prev_val, first_reg);
+	remFlag(Flag::C);
 	testFlagAAdd(prev_val, first_reg);
-	testFlagO(prev_sig_bit, getFlag(Flag::S));
+	remFlag(Flag::O);
 }
 
 void cpu8086::OR_R_IN_W() {
@@ -661,9 +661,9 @@ void cpu8086::OR_R_IN_W() {
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
 	testFlagPW(first_reg);
-	testFlagCAddW(prev_val, first_reg);
+	remFlag(Flag::C);
 	testFlagAAdd(prev_val, first_reg);
-	testFlagO(prev_sig_bit, getFlag(Flag::S));
+	remFlag(Flag::O);
 }
 
 void cpu8086::OR_A_B() {
@@ -676,9 +676,9 @@ void cpu8086::OR_A_B() {
 	testFlagZ(A.L);
 	testFlagSB(A.L);
 	testFlagPB(A.L);
-	testFlagCAddB(prev_val, A.L);
+	remFlag(Flag::C);
 	testFlagAAdd(prev_val, A.L);
-	testFlagO(prev_sig_bit, getFlag(Flag::S));
+	remFlag(Flag::O);
 }
 
 void cpu8086::OR_A_W() {
@@ -691,9 +691,9 @@ void cpu8086::OR_A_W() {
 	testFlagZ(A.X);
 	testFlagSW(A.X);
 	testFlagPW(A.X);
-	testFlagCAddW(prev_val, A.X);
+	remFlag(Flag::C);
 	testFlagAAdd(prev_val, A.X);
-	testFlagO(prev_sig_bit, getFlag(Flag::S));
+	remFlag(Flag::O);
 }
 
 void cpu8086::INC_R(word& reg) {
