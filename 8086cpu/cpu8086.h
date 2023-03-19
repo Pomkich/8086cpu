@@ -92,10 +92,16 @@ private:
 	void ADD_R_IN_W();		// сложение в 16-битный регист
 	void ADD_A_B();
 	void ADD_A_W();
-	void INC_R(word& reg);
-	void DEC_R(word& reg);
-	void PUSH_R(word& reg);
-	void POP_R(word& reg);
+	void OR_R_OUT_B();		// логическое сложение из байтового регистрар
+	void OR_R_OUT_W();		// логическое сложение из 16-битного регистра
+	void OR_R_IN_B();		// логическое сложение в байтовый регистр
+	void OR_R_IN_W();		// логическое сложение в 16-битный регист
+	void OR_A_B();
+	void OR_A_W();
+	void INC_R(word& reg);	// инкремент регистра
+	void DEC_R(word& reg);	// декремент регистра
+	void PUSH_R(word& reg);	// push 16 битного регистра в стек
+	void POP_R(word& reg);	// pop 16 битного регистра из стека
 	void MOV_R_OUT_B();
 	void MOV_R_OUT_W();
 	void MOV_R_IN_B();
