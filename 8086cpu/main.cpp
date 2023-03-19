@@ -11,7 +11,7 @@ int main() {
 	Tester test;
 	test.RunTests();
 
-	std::shared_ptr<cpu8086> cpu_pt = std::make_shared<cpu8086>();
+	/*std::shared_ptr<cpu8086> cpu_pt = std::make_shared<cpu8086>();
 	std::shared_ptr<Memory> mem_pt = std::make_shared<Memory>();
 	std::shared_ptr<AbstractPresenter> presenter_pt = std::make_shared<ConsolePresenter>(cpu_pt, mem_pt);
 	cpu_pt->initMemory(mem_pt);
@@ -40,7 +40,7 @@ int main() {
 	// всего загружено 4 команды, 4 раза выполняем цикл
 	for (int i = 0; i < 4; i++) {
 		cpu_pt->clock();
-	}
+	}*/
 	
 
 	return 0;

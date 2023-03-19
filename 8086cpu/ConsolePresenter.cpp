@@ -8,19 +8,19 @@ ConsolePresenter::ConsolePresenter(std::shared_ptr<cpu8086> p_cpu, std::shared_p
 void ConsolePresenter::notifyRegChange() {
 	system("cls");
 	Render();
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
 void ConsolePresenter::notifyMemChange() {
 	system("cls");
 	Render();
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
 void ConsolePresenter::notifyStkChange() {
 	system("cls");
 	Render();
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
 void ConsolePresenter::Render() {
