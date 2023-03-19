@@ -409,6 +409,7 @@ void Tester::OR_R_IN_W_Test() {
 	// run opcode
 	cpu_pt->clock();
 	assert(cpu_pt->C.X == 0x3523);
+	assert(cpu_pt->getFlag(Flag::C) == false);
 
 	// adding value to register from register
 	cpu_pt->reset();
