@@ -586,7 +586,7 @@ void cpu8086::OR_R_OUT_B() {
 	testFlagSB(new_val);
 	testFlagPB(new_val);
 	remFlag(Flag::C);
-	testFlagAAdd(prev_val, new_val);
+	(new_val > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -619,7 +619,7 @@ void cpu8086::OR_R_OUT_W() {
 	testFlagSW(new_val);
 	testFlagPW(new_val);
 	remFlag(Flag::C);
-	testFlagAAdd(prev_val, new_val);
+	(new_val > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -650,7 +650,7 @@ void cpu8086::OR_R_IN_B() {
 	testFlagSB(first_reg);
 	testFlagPB(first_reg);
 	remFlag(Flag::C);
-	testFlagAAdd(prev_val, first_reg);
+	(first_reg > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -680,7 +680,7 @@ void cpu8086::OR_R_IN_W() {
 	testFlagSW(first_reg);
 	testFlagPW(first_reg);
 	remFlag(Flag::C);
-	testFlagAAdd(prev_val, first_reg);
+	(first_reg > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -695,7 +695,7 @@ void cpu8086::OR_A_B() {
 	testFlagSB(A.L);
 	testFlagPB(A.L);
 	remFlag(Flag::C);
-	testFlagAAdd(prev_val, A.L);
+	(A.L > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -710,7 +710,7 @@ void cpu8086::OR_A_W() {
 	testFlagSW(A.X);
 	testFlagPW(A.X);
 	remFlag(Flag::C);
-	testFlagAAdd(prev_val, A.X);
+	(A.X > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
