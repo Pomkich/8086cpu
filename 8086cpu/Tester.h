@@ -68,6 +68,12 @@ public:
 	void SUB_R_IN_W_Test();
 	void SUB_A_B_Test();
 	void SUB_A_W_Test();
+	void XOR_R_OUT_B_Test();
+	void XOR_R_OUT_W_Test();
+	void XOR_R_IN_B_Test();
+	void XOR_R_IN_W_Test();
+	void XOR_A_B_Test();
+	void XOR_A_W_Test();
 	void INC_R_Test();
 	void DEC_R_Test();
 	void PUSH_R_Test();
