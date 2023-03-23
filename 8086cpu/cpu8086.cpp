@@ -1392,7 +1392,7 @@ void cpu8086::XOR_R_OUT_B() {
 	testFlagSB(new_val);
 	testFlagPB(new_val);
 	remFlag(Flag::C);
-	(new_val != prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(new_val > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -1425,7 +1425,7 @@ void cpu8086::XOR_R_OUT_W() {
 	testFlagSW(new_val);
 	testFlagPW(new_val);
 	remFlag(Flag::C);
-	(new_val != prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(new_val > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -1456,7 +1456,7 @@ void cpu8086::XOR_R_IN_B() {
 	testFlagSB(first_reg);
 	testFlagPB(first_reg);
 	remFlag(Flag::C);
-	(first_reg != prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(first_reg > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -1486,7 +1486,7 @@ void cpu8086::XOR_R_IN_W() {
 	testFlagSW(first_reg);
 	testFlagPW(first_reg);
 	remFlag(Flag::C);
-	(first_reg != prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(first_reg > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -1501,7 +1501,7 @@ void cpu8086::XOR_A_B() {
 	testFlagSB(A.L);
 	testFlagPB(A.L);
 	remFlag(Flag::C);
-	(A.L != prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(A.L > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -1516,7 +1516,7 @@ void cpu8086::XOR_A_W() {
 	testFlagSW(A.X);
 	testFlagPW(A.X);
 	remFlag(Flag::C);
-	(A.X != prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(A.X > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 

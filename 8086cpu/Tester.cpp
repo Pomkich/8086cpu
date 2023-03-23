@@ -1131,6 +1131,25 @@ void Tester::XOR_R_OUT_B_Test() {
 	// run opcode
 	cpu_pt->clock();
 	assert(mem_pt->readB(0x01064) == 0x07);
+	assert(cpu_pt->getFlag(Flag::A) == true);
+	// adding value from register to memory by address
+	cpu_pt->reset();
+	mem_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->DS = 0x0100;
+	cpu_pt->B.L = 0x32;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x30);	// opcode: XOR
+	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
+	mem_pt->writeB(0x10002, 0x64);	// displacement low
+	mem_pt->writeB(0x10003, 0x00);	// displacement high
+	mem_pt->writeB(0x01064, 0x32);	// value in memory: 35
+	// run opcode
+	cpu_pt->clock();
+	assert(mem_pt->readB(0x01064) == 0x00);
+	assert(cpu_pt->getFlag(Flag::A) == false);
 }
 
 void Tester::XOR_R_OUT_W_Test() {
