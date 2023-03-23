@@ -116,6 +116,12 @@ private:
 	void AND_R_IN_W();		// логическое умножение в 16-битный регист
 	void AND_A_B();
 	void AND_A_W();
+	void SUB_R_OUT_B();		// вычитание
+	void SUB_R_OUT_W();
+	void SUB_R_IN_B();
+	void SUB_R_IN_W();
+	void SUB_A_B();
+	void SUB_A_W();
 	void INC_R(word& reg);	// инкремент регистра
 	void DEC_R(word& reg);	// декремент регистра
 	void PUSH_R(word& reg);	// push 16 битного регистра в стек
