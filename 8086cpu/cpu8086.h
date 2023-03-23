@@ -122,6 +122,12 @@ private:
 	void SUB_R_IN_W();
 	void SUB_A_B();
 	void SUB_A_W();
+	void XOR_R_OUT_B();		// логическое исключение
+	void XOR_R_OUT_W();		
+	void XOR_R_IN_B();		
+	void XOR_R_IN_W();		
+	void XOR_A_B();
+	void XOR_A_W();
 	void INC_R(word& reg);	// инкремент регистра
 	void DEC_R(word& reg);	// декремент регистра
 	void PUSH_R(word& reg);	// push 16 битного регистра в стек
