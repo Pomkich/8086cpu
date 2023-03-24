@@ -62,18 +62,17 @@ public:
 
 private:
 	// фунции для проверки флагов
-	void testFlagZ(word src_op);
-	void testFlagSB(byte src_op);
-	void testFlagSW(word src_op);
-	void testFlagPB(byte val);
-	void testFlagPW(word val);
-	void testFlagCAddB(byte prev_val, byte src_op);	// для работы со словами
-	void testFlagCSubB(byte prev_val, byte src_op);
-	void testFlagCAddW(word prev_val, word src_op);	// для работы со словами
-	void testFlagCSubW(word prev_val, word src_op);
-	void testFlagAAdd(word prev_val, word src_op);
-	void testFlagASub(word prev_val, word src_op);
-	void testFlagO(word prev_val, word src_op, OpType type);
+	void testFlagZ(word new_val);
+	void testFlagSB(byte new_val);
+	void testFlagSW(word new_val);
+	void testFlagP(byte val);
+	void testFlagCAddB(byte prev_val, byte new_val);	// для работы со словами
+	void testFlagCSubB(byte prev_val, byte new_val);
+	void testFlagCAddW(word prev_val, word new_val);	// для работы со словами
+	void testFlagCSubW(word prev_val, word new_val);
+	void testFlagAAdd(word prev_val, word new_val);
+	void testFlagASub(word prev_val, word new_val);
+	void testFlagO(word prev_val, word new_val, OpType type);
 
 	// функции-помощники адресации
 	word fetchEA(byte mod, byte rm, word disp);	// получение эффективного адреса в зависимости от типа адресации

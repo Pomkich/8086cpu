@@ -170,15 +170,15 @@ void Tester::FlagATest() {
 
 void Tester::FlagPTest() {
 	// byte values
-	cpu_pt->testFlagPB(0xF0);
+	cpu_pt->testFlagP(0xF0);
 	assert(cpu_pt->getFlag(Flag::P) == true);
-	cpu_pt->testFlagPB(0xF1);
+	cpu_pt->testFlagP(0xF1);
 	assert(cpu_pt->getFlag(Flag::P) == false);
 
 	// word values
-	cpu_pt->testFlagPW(0xFF00);
+	cpu_pt->testFlagP(0xFF00);
 	assert(cpu_pt->getFlag(Flag::P) == true);
-	cpu_pt->testFlagPW(0xFF01);
+	cpu_pt->testFlagP(0xFF01);
 	assert(cpu_pt->getFlag(Flag::P) == false);
 }
 
