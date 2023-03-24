@@ -66,10 +66,8 @@ private:
 	void testFlagSB(byte new_val);
 	void testFlagSW(word new_val);
 	void testFlagP(byte val);
-	void testFlagCAddB(byte prev_val, byte new_val);	// для работы со словами
-	void testFlagCSubB(byte prev_val, byte new_val);
-	void testFlagCAddW(word prev_val, word new_val);	// для работы со словами
-	void testFlagCSubW(word prev_val, word new_val);
+	void testFlagCAdd(word prev_val, word new_val);	// для работы со словами
+	void testFlagCSub(word prev_val, word new_val);
 	void testFlagAAdd(word prev_val, word new_val);
 	void testFlagASub(word prev_val, word new_val);
 	void testFlagO(word prev_val, word new_val, OpType type);
