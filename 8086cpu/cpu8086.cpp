@@ -1549,12 +1549,12 @@ void cpu8086::DEC_R(word& reg) {
 void cpu8086::PUSH_R(word& reg) {
 	SP -= 2;	// стек растёт вниз
 	address = ((dword)SS << 4) + SP;	// получение физического адреса вершины стека
-	memory->writeStack(address, reg);	
+	memory->writeW(address, reg);	
 }
 
 void cpu8086::POP_R(word& reg) {
 	address = ((dword)SS << 4) + SP;
-	reg = memory->readStack(address);
+	reg = memory->readW(address);
 	SP += 2;
 }
 
