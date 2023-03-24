@@ -129,14 +129,14 @@ void Tester::FlagOTest() {
 
 void Tester::FlagSTest() {
 	// byte values
-	cpu_pt->testFlagSB(0b10000000);
+	cpu_pt->testFlagS(0b10000000, OpType::Byte);
 	assert(cpu_pt->getFlag(Flag::S) == true);
-	cpu_pt->testFlagSB(0b00101100);
+	cpu_pt->testFlagS(0b00101100, OpType::Byte);
 	assert(cpu_pt->getFlag(Flag::S) == false);
 	// word values
-	cpu_pt->testFlagSW(0xFFFF);
+	cpu_pt->testFlagS(0xFFFF, OpType::Word);
 	assert(cpu_pt->getFlag(Flag::S) == true);
-	cpu_pt->testFlagSW(0x0FFF);
+	cpu_pt->testFlagS(0x0FFF, OpType::Word);
 	assert(cpu_pt->getFlag(Flag::S) == false);
 }
 

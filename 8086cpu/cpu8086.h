@@ -63,8 +63,7 @@ public:
 private:
 	// фунции для проверки флагов
 	void testFlagZ(word new_val);
-	void testFlagSB(byte new_val);
-	void testFlagSW(word new_val);
+	void testFlagS(word new_val, OpType type);
 	void testFlagP(byte val);
 	void testFlagCAdd(word prev_val, word new_val);	// для работы со словами
 	void testFlagCSub(word prev_val, word new_val);

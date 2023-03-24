@@ -96,11 +96,15 @@ void cpu8086::testFlagZ(word new_val) {
 	(new_val == 0) ? setFlag(Flag::Z) : remFlag(Flag::Z);
 }
 
-void cpu8086::testFlagSB(byte new_val) {
-	(new_val >> (sizeof(byte) * 8 - 1) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
-}
-void cpu8086::testFlagSW(word new_val) {
-	(new_val >> (sizeof(word) * 8 - 1) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
+void cpu8086::testFlagS(word new_val, OpType type) {
+	switch (type) {
+		case OpType::Byte:
+			(new_val >> (sizeof(byte) * 8 - 1) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
+			break;
+		case OpType::Word:
+			(new_val >> (sizeof(word) * 8 - 1) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
+			break;
+	}
 }
 
 void cpu8086::testFlagP(byte val) {
@@ -446,7 +450,7 @@ void cpu8086::ADD_R_OUT_B() {
 		memory->writeB(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSB(new_val);
+	testFlagS(new_val, OpType::Byte);
 	testFlagP(new_val);
 	testFlagCAdd(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
@@ -479,7 +483,7 @@ void cpu8086::ADD_R_OUT_W() {
 		memory->writeW(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSW(new_val);
+	testFlagS(new_val, OpType::Word);
 	testFlagP(new_val);
 	testFlagCAdd(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
@@ -510,7 +514,7 @@ void cpu8086::ADD_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(first_reg);
-	testFlagSB(first_reg);
+	testFlagS(first_reg, OpType::Byte);
 	testFlagP(first_reg);
 	testFlagCAdd(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
@@ -540,7 +544,7 @@ void cpu8086::ADD_R_IN_W() {
 		first_reg += memory->readW(address);
 	}
 	testFlagZ(first_reg);
-	testFlagSW(first_reg);
+	testFlagS(first_reg, OpType::Word);
 	testFlagP(first_reg);
 	testFlagCAdd(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
@@ -555,7 +559,7 @@ void cpu8086::ADD_A_B() {
 	A.L += data;
 
 	testFlagZ(A.L);
-	testFlagSB(A.L);
+	testFlagS(A.L, OpType::Byte);
 	testFlagP(A.L);
 	testFlagCAdd(prev_val, A.L);
 	testFlagAAdd(prev_val, A.L);
@@ -570,7 +574,7 @@ void cpu8086::ADD_A_W() {
 	A.X += data;
 
 	testFlagZ(A.X);
-	testFlagSW(A.X);
+	testFlagS(A.X, OpType::Word);
 	testFlagP(A.X);
 	testFlagCAdd(prev_val, A.X);
 	testFlagAAdd(prev_val, A.X);
@@ -603,7 +607,7 @@ void cpu8086::OR_R_OUT_B() {
 		memory->writeB(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSB(new_val);
+	testFlagS(new_val, OpType::Byte);
 	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -636,7 +640,7 @@ void cpu8086::OR_R_OUT_W() {
 		memory->writeW(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSW(new_val);
+	testFlagS(new_val, OpType::Word);
 	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -667,7 +671,7 @@ void cpu8086::OR_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(first_reg);
-	testFlagSB(first_reg);
+	testFlagS(first_reg, OpType::Byte);
 	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -697,7 +701,7 @@ void cpu8086::OR_R_IN_W() {
 		first_reg |= memory->readW(address);
 	}
 	testFlagZ(first_reg);
-	testFlagSW(first_reg);
+	testFlagS(first_reg, OpType::Word);
 	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -712,7 +716,7 @@ void cpu8086::OR_A_B() {
 	A.L |= data;
 
 	testFlagZ(A.L);
-	testFlagSB(A.L);
+	testFlagS(A.L, OpType::Byte);
 	testFlagP(A.L);
 	remFlag(Flag::C);
 	(A.L > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -727,7 +731,7 @@ void cpu8086::OR_A_W() {
 	A.X |= data;
 
 	testFlagZ(A.X);
-	testFlagSW(A.X);
+	testFlagS(A.X, OpType::Word);
 	testFlagP(A.X);
 	remFlag(Flag::C);
 	(A.X > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -760,7 +764,7 @@ void cpu8086::ADC_R_OUT_B() {
 		memory->writeB(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSB(new_val);
+	testFlagS(new_val, OpType::Byte);
 	testFlagP(new_val);
 	testFlagCAdd(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
@@ -793,7 +797,7 @@ void cpu8086::ADC_R_OUT_W() {
 		memory->writeW(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSW(new_val);
+	testFlagS(new_val, OpType::Word);
 	testFlagP(new_val);
 	testFlagCAdd(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
@@ -824,7 +828,7 @@ void cpu8086::ADC_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(first_reg);
-	testFlagSB(first_reg);
+	testFlagS(first_reg, OpType::Byte);
 	testFlagP(first_reg);
 	testFlagCAdd(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
@@ -854,7 +858,7 @@ void cpu8086::ADC_R_IN_W() {
 		first_reg += memory->readW(address) + getFlag(Flag::C);
 	}
 	testFlagZ(first_reg);
-	testFlagSW(first_reg);
+	testFlagS(first_reg, OpType::Word);
 	testFlagP(first_reg);
 	testFlagCAdd(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
@@ -869,7 +873,7 @@ void cpu8086::ADC_A_B() {
 	A.L += data + getFlag(Flag::C);
 
 	testFlagZ(A.L);
-	testFlagSB(A.L);
+	testFlagS(A.L, OpType::Byte);
 	testFlagP(A.L);
 	testFlagCAdd(prev_val, A.L);
 	testFlagAAdd(prev_val, A.L);
@@ -884,7 +888,7 @@ void cpu8086::ADC_A_W() {
 	A.X += data + getFlag(Flag::C);
 
 	testFlagZ(A.X);
-	testFlagSW(A.X);
+	testFlagS(A.X, OpType::Word);
 	testFlagP(A.X);
 	testFlagCAdd(prev_val, A.X);
 	testFlagAAdd(prev_val, A.X);
@@ -917,7 +921,7 @@ void cpu8086::SBB_R_OUT_B() {
 		memory->writeB(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSB(new_val);
+	testFlagS(new_val, OpType::Byte);
 	testFlagP(new_val);
 	testFlagCSub(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
@@ -950,7 +954,7 @@ void cpu8086::SBB_R_OUT_W() {
 		memory->writeW(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSW(new_val);
+	testFlagS(new_val, OpType::Word);
 	testFlagP(new_val);
 	testFlagCSub(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
@@ -981,7 +985,7 @@ void cpu8086::SBB_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(first_reg);
-	testFlagSB(first_reg);
+	testFlagS(first_reg, OpType::Byte);
 	testFlagP(first_reg);
 	testFlagCSub(prev_val, first_reg);
 	testFlagASub(prev_val, first_reg);
@@ -1011,7 +1015,7 @@ void cpu8086::SBB_R_IN_W() {
 		first_reg = first_reg - memory->readW(address) - getFlag(Flag::C);
 	}
 	testFlagZ(first_reg);
-	testFlagSW(first_reg);
+	testFlagS(first_reg, OpType::Word);
 	testFlagP(first_reg);
 	testFlagCSub(prev_val, first_reg);
 	testFlagASub(prev_val, first_reg);
@@ -1026,7 +1030,7 @@ void cpu8086::SBB_A_B() {
 	A.L = A.L - data - getFlag(Flag::C);
 
 	testFlagZ(A.L);
-	testFlagSB(A.L);
+	testFlagS(A.L, OpType::Byte);
 	testFlagP(A.L);
 	testFlagCSub(prev_val, A.L);
 	testFlagASub(prev_val, A.L);
@@ -1041,7 +1045,7 @@ void cpu8086::SBB_A_W() {
 	A.X = A.X - data - getFlag(Flag::C);
 
 	testFlagZ(A.X);
-	testFlagSW(A.X);
+	testFlagS(A.X, OpType::Word);
 	testFlagP(A.X);
 	testFlagCSub(prev_val, A.X);
 	testFlagASub(prev_val, A.X);
@@ -1074,7 +1078,7 @@ void cpu8086::AND_R_OUT_B() {
 		memory->writeB(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSB(new_val);
+	testFlagS(new_val, OpType::Byte);
 	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1107,7 +1111,7 @@ void cpu8086::AND_R_OUT_W() {
 		memory->writeW(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSW(new_val);
+	testFlagS(new_val, OpType::Word);
 	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1138,7 +1142,7 @@ void cpu8086::AND_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(first_reg);
-	testFlagSB(first_reg);
+	testFlagS(first_reg, OpType::Byte);
 	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg & prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1168,7 +1172,7 @@ void cpu8086::AND_R_IN_W() {
 		first_reg &= memory->readW(address);
 	}
 	testFlagZ(first_reg);
-	testFlagSW(first_reg);
+	testFlagS(first_reg, OpType::Word);
 	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1183,7 +1187,7 @@ void cpu8086::AND_A_B() {
 	A.L &= data;
 
 	testFlagZ(A.L);
-	testFlagSB(A.L);
+	testFlagS(A.L, OpType::Byte);
 	testFlagP(A.L);
 	remFlag(Flag::C);
 	(A.L == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1198,7 +1202,7 @@ void cpu8086::AND_A_W() {
 	A.X &= data;
 
 	testFlagZ(A.X);
-	testFlagSW(A.X);
+	testFlagS(A.X, OpType::Word);
 	testFlagP(A.X);
 	remFlag(Flag::C);
 	(A.X == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1231,7 +1235,7 @@ void cpu8086::SUB_R_OUT_B() {
 		memory->writeB(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSB(new_val);
+	testFlagS(new_val, OpType::Byte);
 	testFlagP(new_val);
 	testFlagCSub(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
@@ -1264,7 +1268,7 @@ void cpu8086::SUB_R_OUT_W() {
 		memory->writeW(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSW(new_val);
+	testFlagS(new_val, OpType::Word);
 	testFlagP(new_val);
 	testFlagCSub(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
@@ -1295,7 +1299,7 @@ void cpu8086::SUB_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(first_reg);
-	testFlagSB(first_reg);
+	testFlagS(first_reg, OpType::Byte);
 	testFlagP(first_reg);
 	testFlagCSub(prev_val, first_reg);
 	testFlagASub(prev_val, first_reg);
@@ -1325,7 +1329,7 @@ void cpu8086::SUB_R_IN_W() {
 		first_reg = first_reg - memory->readW(address);
 	}
 	testFlagZ(first_reg);
-	testFlagSW(first_reg);
+	testFlagS(first_reg, OpType::Word);
 	testFlagP(first_reg);
 	testFlagCSub(prev_val, first_reg);
 	testFlagASub(prev_val, first_reg);
@@ -1340,7 +1344,7 @@ void cpu8086::SUB_A_B() {
 	A.L = A.L - data;
 
 	testFlagZ(A.L);
-	testFlagSB(A.L);
+	testFlagS(A.L, OpType::Byte);
 	testFlagP(A.L);
 	testFlagCSub(prev_val, A.L);
 	testFlagASub(prev_val, A.L);
@@ -1355,7 +1359,7 @@ void cpu8086::SUB_A_W() {
 	A.X = A.X - data;
 
 	testFlagZ(A.X);
-	testFlagSW(A.X);
+	testFlagS(A.X, OpType::Word);
 	testFlagP(A.X);
 	testFlagCSub(prev_val, A.X);
 	testFlagASub(prev_val, A.X);
@@ -1388,7 +1392,7 @@ void cpu8086::XOR_R_OUT_B() {
 		memory->writeB(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSB(new_val);
+	testFlagS(new_val, OpType::Byte);
 	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1421,7 +1425,7 @@ void cpu8086::XOR_R_OUT_W() {
 		memory->writeW(address, new_val);
 	}
 	testFlagZ(new_val);
-	testFlagSW(new_val);
+	testFlagS(new_val, OpType::Word);
 	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1452,7 +1456,7 @@ void cpu8086::XOR_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(first_reg);
-	testFlagSB(first_reg);
+	testFlagS(first_reg, OpType::Byte);
 	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1482,7 +1486,7 @@ void cpu8086::XOR_R_IN_W() {
 		first_reg ^= memory->readW(address);
 	}
 	testFlagZ(first_reg);
-	testFlagSW(first_reg);
+	testFlagS(first_reg, OpType::Word);
 	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1497,7 +1501,7 @@ void cpu8086::XOR_A_B() {
 	A.L ^= data;
 
 	testFlagZ(A.L);
-	testFlagSB(A.L);
+	testFlagS(A.L, OpType::Byte);
 	testFlagP(A.L);
 	remFlag(Flag::C);
 	(A.L > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1512,7 +1516,7 @@ void cpu8086::XOR_A_W() {
 	A.X ^= data;
 
 	testFlagZ(A.X);
-	testFlagSW(A.X);
+	testFlagS(A.X, OpType::Word);
 	testFlagP(A.X);
 	remFlag(Flag::C);
 	(A.X > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
@@ -1545,7 +1549,7 @@ void cpu8086::CMP_R_OUT_B() {
 		new_val = prev_val - first_reg;
 	}
 	testFlagZ(new_val);
-	testFlagSB(new_val);
+	testFlagS(new_val, OpType::Byte);
 	testFlagP(new_val);
 	testFlagCSub(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
@@ -1578,7 +1582,7 @@ void cpu8086::CMP_R_OUT_W() {
 		new_val = prev_val - first_reg;
 	}
 	testFlagZ(new_val);
-	testFlagSW(new_val);
+	testFlagS(new_val, OpType::Word);
 	testFlagP(new_val);
 	testFlagCSub(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
@@ -1610,7 +1614,7 @@ void cpu8086::CMP_R_IN_B() {
 	}
 	// установка флагов
 	testFlagZ(temp);
-	testFlagSB(temp);
+	testFlagS(temp, OpType::Byte);
 	testFlagP(temp);
 	testFlagCSub(prev_val, temp);
 	testFlagASub(prev_val, temp);
@@ -1641,7 +1645,7 @@ void cpu8086::CMP_R_IN_W() {
 		temp = first_reg - memory->readW(address);
 	}
 	testFlagZ(temp);
-	testFlagSW(temp);
+	testFlagS(temp, OpType::Word);
 	testFlagP(temp);
 	testFlagCSub(prev_val, temp);
 	testFlagASub(prev_val, temp);
@@ -1657,7 +1661,7 @@ void cpu8086::CMP_A_B() {
 	temp = A.L - data;
 
 	testFlagZ(temp);
-	testFlagSB(temp);
+	testFlagS(temp, OpType::Byte);
 	testFlagP(temp);
 	testFlagCSub(prev_val, temp);
 	testFlagASub(prev_val, temp);
@@ -1673,7 +1677,7 @@ void cpu8086::CMP_A_W() {
 	temp = A.X - data;
 
 	testFlagZ(temp);
-	testFlagSW(temp);
+	testFlagS(temp, OpType::Word);
 	testFlagP(temp);
 	testFlagCSub(prev_val, temp);
 	testFlagASub(prev_val, temp);
@@ -1685,7 +1689,7 @@ void cpu8086::INC_R(word& reg) {
 	reg++;
 	// affected flags
 	testFlagZ(reg);
-	testFlagSW(reg);
+	testFlagS(reg, OpType::Word);
 	testFlagP(reg);
 	testFlagAAdd(prev_val, reg);
 	testFlagO(prev_val, reg, OpType::Word);
@@ -1696,7 +1700,7 @@ void cpu8086::DEC_R(word& reg) {
 	reg--;
 	// affected flags
 	testFlagZ(reg);
-	testFlagSW(reg);
+	testFlagS(reg, OpType::Word);
 	testFlagP(reg);
 	testFlagASub(prev_val, reg);
 	testFlagO(prev_val, reg, OpType::Word);
