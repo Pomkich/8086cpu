@@ -74,6 +74,12 @@ public:
 	void XOR_R_IN_W_Test();
 	void XOR_A_B_Test();
 	void XOR_A_W_Test();
+	void CMP_R_OUT_B_Test();
+	void CMP_R_OUT_W_Test();
+	void CMP_R_IN_B_Test();
+	void CMP_R_IN_W_Test();
+	void CMP_A_B_Test();
+	void CMP_A_W_Test();
 	void INC_R_Test();
 	void DEC_R_Test();
 	void PUSH_R_Test();
