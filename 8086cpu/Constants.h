@@ -23,3 +23,7 @@ static enum class RegId {
 	CS, DS, SS, ES,
 	IP
 };
+
+static enum OpType {
+	Byte, Word
+};

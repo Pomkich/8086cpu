@@ -109,15 +109,21 @@ void Tester::MemoryCheckBytePlacement() {
 }
 
 void Tester::FlagOTest() {
-	// overflow occured
-	cpu_pt->testFlagO(1, 0);
+	// overflow occured byte
+	cpu_pt->testFlagO(0x7F, 0x80, OpType::Byte);
 	assert(cpu_pt->getFlag(Flag::O) == 1);
-	cpu_pt->testFlagO(0, 1);
+	cpu_pt->testFlagO(0x80, 0x7F, OpType::Byte);
 	assert(cpu_pt->getFlag(Flag::O) == 1);
-	// overflow didn't occured
-	cpu_pt->testFlagO(1, 1);
+	// overflow occured word
+	cpu_pt->testFlagO(0x7FFF, 0x8000, OpType::Word);
+	assert(cpu_pt->getFlag(Flag::O) == 1);
+	cpu_pt->testFlagO(0x8000, 0x7FFF, OpType::Word);
+	assert(cpu_pt->getFlag(Flag::O) == 1);
+
+	// overflow didn't occured byte
+	cpu_pt->testFlagO(0x32, 0x44, OpType::Byte);
 	assert(cpu_pt->getFlag(Flag::O) == 0);
-	cpu_pt->testFlagO(0, 0);
+	cpu_pt->testFlagO(0x91, 0x85, OpType::Byte);
 	assert(cpu_pt->getFlag(Flag::O) == 0);
 }
 

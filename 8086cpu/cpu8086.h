@@ -73,7 +73,7 @@ private:
 	void testFlagCSubW(word prev_val, word src_op);
 	void testFlagAAdd(word prev_val, word src_op);
 	void testFlagASub(word prev_val, word src_op);
-	void testFlagO(bool prev_sig_bit, bool now_sig_bit);
+	void testFlagO(word prev_val, word src_op, OpType type);
 
 	// функции-помощники адресации
 	word fetchEA(byte mod, byte rm, word disp);	// получение эффективного адреса в зависимости от типа адресации
