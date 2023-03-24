@@ -1318,7 +1318,7 @@ void Tester::PUSH_R_Test() {
 	cpu_pt->A.X = 0x1234;
 	cpu_pt->clock();
 	// stack grows down
-	assert(mem_pt->readB(0x10002) == 0x34 && mem_pt->readB(0x10001) == 0x12);
+	assert(mem_pt->readB(0x10003) == 0x12 && mem_pt->readB(0x10002) == 0x34);
 }
 
 void Tester::POP_R_Test() {
@@ -1331,8 +1331,8 @@ void Tester::POP_R_Test() {
 	cpu_pt->SS = 0x1000;
 	cpu_pt->SP = 0x0004;
 	mem_pt->writeB(0x40001, 0x58);
+	mem_pt->writeB(0x10005, 0xFF);
 	mem_pt->writeB(0x10004, 0x35);
-	mem_pt->writeB(0x10003, 0xFF);
 	cpu_pt->A.X = 0x1234;
 	cpu_pt->clock();
 
