@@ -128,6 +128,12 @@ private:
 	void XOR_R_IN_W();		
 	void XOR_A_B();
 	void XOR_A_W();
+	void CMP_R_OUT_B();		// сравнение
+	void CMP_R_OUT_W();
+	void CMP_R_IN_B();
+	void CMP_R_IN_W();
+	void CMP_A_B();
+	void CMP_A_W();
 	void INC_R(word& reg);	// инкремент регистра
 	void DEC_R(word& reg);	// декремент регистра
 	void PUSH_R(word& reg);	// push 16 битного регистра в стек
