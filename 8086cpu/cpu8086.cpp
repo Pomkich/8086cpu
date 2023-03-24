@@ -103,19 +103,9 @@ void cpu8086::testFlagSW(word new_val) {
 	(new_val >> (sizeof(word) * 8 - 1) & 1) ? setFlag(Flag::S) : remFlag(Flag::S);
 }
 
-void cpu8086::testFlagPB(byte val) {
+void cpu8086::testFlagP(byte val) {
 	word set_bits = 0;
 	for (int i = 0; i < sizeof(byte) * 8; i++) {
-		if ((val & 1) == 1) set_bits++;
-		val = val >> 1;
-	}
-	if (set_bits % 2 == 0) setFlag(Flag::P);	// parity bit set
-	else remFlag(Flag::P);
-}
-
-void cpu8086::testFlagPW(word val) {
-	word set_bits = 0;
-	for (int i = 0; i < sizeof(word) * 8; i++) {
 		if ((val & 1) == 1) set_bits++;
 		val = val >> 1;
 	}
@@ -449,7 +439,7 @@ void cpu8086::ADD_R_OUT_B() {
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
 	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -467,7 +457,7 @@ void cpu8086::ADD_R_OUT_B() {
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
-	testFlagPB(new_val);
+	testFlagP(new_val);
 	testFlagCAddB(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Byte);
@@ -482,7 +472,7 @@ void cpu8086::ADD_R_OUT_W() {
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
 	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -500,7 +490,7 @@ void cpu8086::ADD_R_OUT_W() {
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
-	testFlagPW(new_val);
+	testFlagP(new_val);
 	testFlagCAddW(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Word);
@@ -514,7 +504,7 @@ void cpu8086::ADD_R_IN_B() {
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -531,7 +521,7 @@ void cpu8086::ADD_R_IN_B() {
 	// установка флагов
 	testFlagZ(first_reg);
 	testFlagSB(first_reg);
-	testFlagPB(first_reg);
+	testFlagP(first_reg);
 	testFlagCAddB(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
 	testFlagO(prev_val, first_reg, OpType::Byte);
@@ -545,7 +535,7 @@ void cpu8086::ADD_R_IN_W() {
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -561,7 +551,7 @@ void cpu8086::ADD_R_IN_W() {
 	}
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
-	testFlagPW(first_reg);
+	testFlagP(first_reg);
 	testFlagCAddW(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
 	testFlagO(prev_val, first_reg, OpType::Word);
@@ -571,12 +561,12 @@ void cpu8086::ADD_A_B() {
 	byte data = fetchCodeByte();
 
 	byte prev_val = A.L;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.L += data;
 
 	testFlagZ(A.L);
 	testFlagSB(A.L);
-	testFlagPB(A.L);
+	testFlagP(A.L);
 	testFlagCAddB(prev_val, A.L);
 	testFlagAAdd(prev_val, A.L);
 	testFlagO(prev_val, A.L, OpType::Byte);
@@ -586,12 +576,12 @@ void cpu8086::ADD_A_W() {
 	word data = fetchCodeWord();
 
 	word prev_val = A.X;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.X += data;
 
 	testFlagZ(A.X);
 	testFlagSW(A.X);
-	testFlagPW(A.X);
+	testFlagP(A.X);
 	testFlagCAddW(prev_val, A.X);
 	testFlagAAdd(prev_val, A.X);
 	testFlagO(prev_val, A.X, OpType::Word);
@@ -606,7 +596,7 @@ void cpu8086::OR_R_OUT_B() {
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
 	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -624,7 +614,7 @@ void cpu8086::OR_R_OUT_B() {
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
-	testFlagPB(new_val);
+	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -639,7 +629,7 @@ void cpu8086::OR_R_OUT_W() {
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
 	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -657,7 +647,7 @@ void cpu8086::OR_R_OUT_W() {
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
-	testFlagPW(new_val);
+	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -671,7 +661,7 @@ void cpu8086::OR_R_IN_B() {
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -688,7 +678,7 @@ void cpu8086::OR_R_IN_B() {
 	// установка флагов
 	testFlagZ(first_reg);
 	testFlagSB(first_reg);
-	testFlagPB(first_reg);
+	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -702,7 +692,7 @@ void cpu8086::OR_R_IN_W() {
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -718,7 +708,7 @@ void cpu8086::OR_R_IN_W() {
 	}
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
-	testFlagPW(first_reg);
+	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -728,12 +718,12 @@ void cpu8086::OR_A_B() {
 	byte data = fetchCodeByte();
 
 	byte prev_val = A.L;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.L |= data;
 
 	testFlagZ(A.L);
 	testFlagSB(A.L);
-	testFlagPB(A.L);
+	testFlagP(A.L);
 	remFlag(Flag::C);
 	(A.L > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -743,12 +733,12 @@ void cpu8086::OR_A_W() {
 	word data = fetchCodeWord();
 
 	word prev_val = A.X;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.X |= data;
 
 	testFlagZ(A.X);
 	testFlagSW(A.X);
-	testFlagPW(A.X);
+	testFlagP(A.X);
 	remFlag(Flag::C);
 	(A.X > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -763,7 +753,7 @@ void cpu8086::ADC_R_OUT_B() {
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
 	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -781,7 +771,7 @@ void cpu8086::ADC_R_OUT_B() {
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
-	testFlagPB(new_val);
+	testFlagP(new_val);
 	testFlagCAddB(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Byte);
@@ -796,7 +786,7 @@ void cpu8086::ADC_R_OUT_W() {
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
 	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -814,7 +804,7 @@ void cpu8086::ADC_R_OUT_W() {
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
-	testFlagPW(new_val);
+	testFlagP(new_val);
 	testFlagCAddW(prev_val, new_val);
 	testFlagAAdd(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Word);
@@ -828,7 +818,7 @@ void cpu8086::ADC_R_IN_B() {
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -845,7 +835,7 @@ void cpu8086::ADC_R_IN_B() {
 	// установка флагов
 	testFlagZ(first_reg);
 	testFlagSB(first_reg);
-	testFlagPB(first_reg);
+	testFlagP(first_reg);
 	testFlagCAddB(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
 	testFlagO(prev_val, first_reg, OpType::Byte);
@@ -859,7 +849,7 @@ void cpu8086::ADC_R_IN_W() {
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -875,7 +865,7 @@ void cpu8086::ADC_R_IN_W() {
 	}
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
-	testFlagPW(first_reg);
+	testFlagP(first_reg);
 	testFlagCAddW(prev_val, first_reg);
 	testFlagAAdd(prev_val, first_reg);
 	testFlagO(prev_val, first_reg, OpType::Word);
@@ -885,12 +875,12 @@ void cpu8086::ADC_A_B() {
 	byte data = fetchCodeByte();
 
 	byte prev_val = A.L;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.L += data + getFlag(Flag::C);
 
 	testFlagZ(A.L);
 	testFlagSB(A.L);
-	testFlagPB(A.L);
+	testFlagP(A.L);
 	testFlagCAddB(prev_val, A.L);
 	testFlagAAdd(prev_val, A.L);
 	testFlagO(prev_val, A.L, OpType::Byte);
@@ -900,12 +890,12 @@ void cpu8086::ADC_A_W() {
 	word data = fetchCodeWord();
 
 	word prev_val = A.X;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.X += data + getFlag(Flag::C);
 
 	testFlagZ(A.X);
 	testFlagSW(A.X);
-	testFlagPW(A.X);
+	testFlagP(A.X);
 	testFlagCAddW(prev_val, A.X);
 	testFlagAAdd(prev_val, A.X);
 	testFlagO(prev_val, A.X, OpType::Word);
@@ -920,7 +910,7 @@ void cpu8086::SBB_R_OUT_B() {
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
 	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -938,7 +928,7 @@ void cpu8086::SBB_R_OUT_B() {
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
-	testFlagPB(new_val);
+	testFlagP(new_val);
 	testFlagCSubB(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Byte);
@@ -953,7 +943,7 @@ void cpu8086::SBB_R_OUT_W() {
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
 	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -971,7 +961,7 @@ void cpu8086::SBB_R_OUT_W() {
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
-	testFlagPW(new_val);
+	testFlagP(new_val);
 	testFlagCSubW(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Word);
@@ -985,7 +975,7 @@ void cpu8086::SBB_R_IN_B() {
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1002,7 +992,7 @@ void cpu8086::SBB_R_IN_B() {
 	// установка флагов
 	testFlagZ(first_reg);
 	testFlagSB(first_reg);
-	testFlagPB(first_reg);
+	testFlagP(first_reg);
 	testFlagCSubB(prev_val, first_reg);
 	testFlagASub(prev_val, first_reg);
 	testFlagO(prev_val, first_reg, OpType::Byte);
@@ -1016,7 +1006,7 @@ void cpu8086::SBB_R_IN_W() {
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1032,7 +1022,7 @@ void cpu8086::SBB_R_IN_W() {
 	}
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
-	testFlagPW(first_reg);
+	testFlagP(first_reg);
 	testFlagCSubW(prev_val, first_reg);
 	testFlagASub(prev_val, first_reg);
 	testFlagO(prev_val, first_reg, OpType::Word);
@@ -1042,12 +1032,12 @@ void cpu8086::SBB_A_B() {
 	byte data = fetchCodeByte();
 
 	byte prev_val = A.L;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.L = A.L - data - getFlag(Flag::C);
 
 	testFlagZ(A.L);
 	testFlagSB(A.L);
-	testFlagPB(A.L);
+	testFlagP(A.L);
 	testFlagCSubB(prev_val, A.L);
 	testFlagASub(prev_val, A.L);
 	testFlagO(prev_val, A.L, OpType::Byte);
@@ -1057,12 +1047,12 @@ void cpu8086::SBB_A_W() {
 	word data = fetchCodeWord();
 
 	word prev_val = A.X;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.X = A.X - data - getFlag(Flag::C);
 
 	testFlagZ(A.X);
 	testFlagSW(A.X);
-	testFlagPW(A.X);
+	testFlagP(A.X);
 	testFlagCSubW(prev_val, A.X);
 	testFlagASub(prev_val, A.X);
 	testFlagO(prev_val, A.X, OpType::Word);
@@ -1077,7 +1067,7 @@ void cpu8086::AND_R_OUT_B() {
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
 	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1095,7 +1085,7 @@ void cpu8086::AND_R_OUT_B() {
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
-	testFlagPB(new_val);
+	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1110,7 +1100,7 @@ void cpu8086::AND_R_OUT_W() {
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
 	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1128,7 +1118,7 @@ void cpu8086::AND_R_OUT_W() {
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
-	testFlagPW(new_val);
+	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1142,7 +1132,7 @@ void cpu8086::AND_R_IN_B() {
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1159,7 +1149,7 @@ void cpu8086::AND_R_IN_B() {
 	// установка флагов
 	testFlagZ(first_reg);
 	testFlagSB(first_reg);
-	testFlagPB(first_reg);
+	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg & prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1173,7 +1163,7 @@ void cpu8086::AND_R_IN_W() {
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1189,7 +1179,7 @@ void cpu8086::AND_R_IN_W() {
 	}
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
-	testFlagPW(first_reg);
+	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1199,12 +1189,12 @@ void cpu8086::AND_A_B() {
 	byte data = fetchCodeByte();
 
 	byte prev_val = A.L;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.L &= data;
 
 	testFlagZ(A.L);
 	testFlagSB(A.L);
-	testFlagPB(A.L);
+	testFlagP(A.L);
 	remFlag(Flag::C);
 	(A.L == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1214,12 +1204,12 @@ void cpu8086::AND_A_W() {
 	word data = fetchCodeWord();
 
 	word prev_val = A.X;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.X &= data;
 
 	testFlagZ(A.X);
 	testFlagSW(A.X);
-	testFlagPW(A.X);
+	testFlagP(A.X);
 	remFlag(Flag::C);
 	(A.X == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1234,7 +1224,7 @@ void cpu8086::SUB_R_OUT_B() {
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
 	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1252,7 +1242,7 @@ void cpu8086::SUB_R_OUT_B() {
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
-	testFlagPB(new_val);
+	testFlagP(new_val);
 	testFlagCSubB(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Byte);
@@ -1267,7 +1257,7 @@ void cpu8086::SUB_R_OUT_W() {
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
 	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1285,7 +1275,7 @@ void cpu8086::SUB_R_OUT_W() {
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
-	testFlagPW(new_val);
+	testFlagP(new_val);
 	testFlagCSubW(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Word);
@@ -1299,7 +1289,7 @@ void cpu8086::SUB_R_IN_B() {
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1316,7 +1306,7 @@ void cpu8086::SUB_R_IN_B() {
 	// установка флагов
 	testFlagZ(first_reg);
 	testFlagSB(first_reg);
-	testFlagPB(first_reg);
+	testFlagP(first_reg);
 	testFlagCSubB(prev_val, first_reg);
 	testFlagASub(prev_val, first_reg);
 	testFlagO(prev_val, first_reg, OpType::Byte);
@@ -1330,7 +1320,7 @@ void cpu8086::SUB_R_IN_W() {
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1346,7 +1336,7 @@ void cpu8086::SUB_R_IN_W() {
 	}
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
-	testFlagPW(first_reg);
+	testFlagP(first_reg);
 	testFlagCSubW(prev_val, first_reg);
 	testFlagASub(prev_val, first_reg);
 	testFlagO(prev_val, first_reg, OpType::Word);
@@ -1356,12 +1346,12 @@ void cpu8086::SUB_A_B() {
 	byte data = fetchCodeByte();
 
 	byte prev_val = A.L;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.L = A.L - data;
 
 	testFlagZ(A.L);
 	testFlagSB(A.L);
-	testFlagPB(A.L);
+	testFlagP(A.L);
 	testFlagCSubB(prev_val, A.L);
 	testFlagASub(prev_val, A.L);
 	testFlagO(prev_val, A.L, OpType::Byte);
@@ -1371,12 +1361,12 @@ void cpu8086::SUB_A_W() {
 	word data = fetchCodeWord();
 
 	word prev_val = A.X;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.X = A.X - data;
 
 	testFlagZ(A.X);
 	testFlagSW(A.X);
-	testFlagPW(A.X);
+	testFlagP(A.X);
 	testFlagCSubW(prev_val, A.X);
 	testFlagASub(prev_val, A.X);
 	testFlagO(prev_val, A.X, OpType::Word);
@@ -1391,7 +1381,7 @@ void cpu8086::XOR_R_OUT_B() {
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
 	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1409,7 +1399,7 @@ void cpu8086::XOR_R_OUT_B() {
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
-	testFlagPB(new_val);
+	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1424,7 +1414,7 @@ void cpu8086::XOR_R_OUT_W() {
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
 	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1442,7 +1432,7 @@ void cpu8086::XOR_R_OUT_W() {
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
-	testFlagPW(new_val);
+	testFlagP(new_val);
 	remFlag(Flag::C);
 	(new_val > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1456,7 +1446,7 @@ void cpu8086::XOR_R_IN_B() {
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1473,7 +1463,7 @@ void cpu8086::XOR_R_IN_B() {
 	// установка флагов
 	testFlagZ(first_reg);
 	testFlagSB(first_reg);
-	testFlagPB(first_reg);
+	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1487,7 +1477,7 @@ void cpu8086::XOR_R_IN_W() {
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1503,7 +1493,7 @@ void cpu8086::XOR_R_IN_W() {
 	}
 	testFlagZ(first_reg);
 	testFlagSW(first_reg);
-	testFlagPW(first_reg);
+	testFlagP(first_reg);
 	remFlag(Flag::C);
 	(first_reg > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1513,12 +1503,12 @@ void cpu8086::XOR_A_B() {
 	byte data = fetchCodeByte();
 
 	byte prev_val = A.L;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.L ^= data;
 
 	testFlagZ(A.L);
 	testFlagSB(A.L);
-	testFlagPB(A.L);
+	testFlagP(A.L);
 	remFlag(Flag::C);
 	(A.L > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1528,12 +1518,12 @@ void cpu8086::XOR_A_W() {
 	word data = fetchCodeWord();
 
 	word prev_val = A.X;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	A.X ^= data;
 
 	testFlagZ(A.X);
 	testFlagSW(A.X);
-	testFlagPW(A.X);
+	testFlagP(A.X);
 	remFlag(Flag::C);
 	(A.X > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
@@ -1549,7 +1539,7 @@ void cpu8086::CMP_R_OUT_B() {
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
 	byte new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1566,7 +1556,7 @@ void cpu8086::CMP_R_OUT_B() {
 	}
 	testFlagZ(new_val);
 	testFlagSB(new_val);
-	testFlagPB(new_val);
+	testFlagP(new_val);
 	testFlagCSubB(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Byte);
@@ -1582,7 +1572,7 @@ void cpu8086::CMP_R_OUT_W() {
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
 	word new_val = 0;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1599,7 +1589,7 @@ void cpu8086::CMP_R_OUT_W() {
 	}
 	testFlagZ(new_val);
 	testFlagSW(new_val);
-	testFlagPW(new_val);
+	testFlagP(new_val);
 	testFlagCSubW(prev_val, new_val);
 	testFlagASub(prev_val, new_val);
 	testFlagO(prev_val, new_val, OpType::Word);
@@ -1614,7 +1604,7 @@ void cpu8086::CMP_R_IN_B() {
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
@@ -1631,7 +1621,7 @@ void cpu8086::CMP_R_IN_B() {
 	// установка флагов
 	testFlagZ(temp);
 	testFlagSB(temp);
-	testFlagPB(temp);
+	testFlagP(temp);
 	testFlagCSubB(prev_val, temp);
 	testFlagASub(prev_val, temp);
 	testFlagO(prev_val, temp, OpType::Byte);
@@ -1646,7 +1636,7 @@ void cpu8086::CMP_R_IN_W() {
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
@@ -1662,7 +1652,7 @@ void cpu8086::CMP_R_IN_W() {
 	}
 	testFlagZ(temp);
 	testFlagSW(temp);
-	testFlagPW(temp);
+	testFlagP(temp);
 	testFlagCSubW(prev_val, temp);
 	testFlagASub(prev_val, temp);
 	testFlagO(prev_val, temp, OpType::Word);
@@ -1673,12 +1663,12 @@ void cpu8086::CMP_A_B() {
 	byte temp = 0;	// временная переменная с которой выполняется сравнение
 
 	byte prev_val = A.L;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	temp = A.L - data;
 
 	testFlagZ(temp);
 	testFlagSB(temp);
-	testFlagPB(temp);
+	testFlagP(temp);
 	testFlagCSubB(prev_val, temp);
 	testFlagASub(prev_val, temp);
 	testFlagO(prev_val, temp, OpType::Byte);
@@ -1689,12 +1679,12 @@ void cpu8086::CMP_A_W() {
 	word temp = 0;	// временная переменная с которой выполняется сравнение
 
 	word prev_val = A.X;
-	bool prev_sig_bit = getFlag(Flag::S);
+	
 	temp = A.X - data;
 
 	testFlagZ(temp);
 	testFlagSW(temp);
-	testFlagPW(temp);
+	testFlagP(temp);
 	testFlagCSubW(prev_val, temp);
 	testFlagASub(prev_val, temp);
 	testFlagO(prev_val, temp, OpType::Word);
@@ -1706,7 +1696,7 @@ void cpu8086::INC_R(word& reg) {
 	// affected flags
 	testFlagZ(reg);
 	testFlagSW(reg);
-	testFlagPW(reg);
+	testFlagP(reg);
 	testFlagAAdd(prev_val, reg);
 	testFlagO(prev_val, reg, OpType::Word);
 }
@@ -1717,7 +1707,7 @@ void cpu8086::DEC_R(word& reg) {
 	// affected flags
 	testFlagZ(reg);
 	testFlagSW(reg);
-	testFlagPW(reg);
+	testFlagP(reg);
 	testFlagASub(prev_val, reg);
 	testFlagO(prev_val, reg, OpType::Word);
 }
