@@ -8,19 +8,19 @@ ConsolePresenter::ConsolePresenter(std::shared_ptr<cpu8086> p_cpu, std::shared_p
 void ConsolePresenter::notifyRegChange() {
 	system("cls");
 	Render();
-	std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
 void ConsolePresenter::notifyMemChange() {
 	system("cls");
 	Render();
-	std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
 void ConsolePresenter::notifyStkChange() {
 	system("cls");
 	Render();
-	std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 }
 
 void ConsolePresenter::Render() {
@@ -44,6 +44,12 @@ void ConsolePresenter::Render() {
 	std::cout << "DI: " << cpu_pt->getRegVal(RegId::DI) << "    \t\t" << mem_pt->readW(stack_begin + 10) << std::endl;
 	std::cout << "DS: " << cpu_pt->getRegVal(RegId::DS) << "    \t\t" << mem_pt->readW(stack_begin + 11) << std::endl;
 	std::cout << "ES: " << cpu_pt->getRegVal(RegId::ES) << "    \t\t" << mem_pt->readW(stack_begin + 12) << std::endl;
+
+	std::cout << "flag register" << std::endl;
+	std::cout << "OSZAPC" << std::endl;
+	std::cout <<
+		cpu_pt->getFlag(Flag::O) << cpu_pt->getFlag(Flag::S) << cpu_pt->getFlag(Flag::Z)
+		<< cpu_pt->getFlag(Flag::A) << cpu_pt->getFlag(Flag::P) << cpu_pt->getFlag(Flag::C) << std::endl;
 
 	std::cout << "memory dump" << std::endl;
 	for (int i = 0; i < 4; i++) {

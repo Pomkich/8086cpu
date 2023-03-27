@@ -141,13 +141,13 @@ void cpu8086::testFlagO(word prev_val, word new_val, OpType type) {
 	switch (type) {
 	case OpType::Byte:
 		if (((prev_val >> sizeof(byte) * 8 - 1)) != 
-			((new_val >> sizeof(byte) * 8 - 1)))
+			((new_val >> sizeof(byte) * 8 - 1)) && !getFlag(Flag::C))
 			setFlag(Flag::O);
 		else remFlag(Flag::O);
 		break;
 	case OpType::Word:
 		if (((prev_val >> sizeof(word) * 8 - 1)) != 
-			((new_val >> sizeof(word) * 8 - 1)))
+			((new_val >> sizeof(word) * 8 - 1)) && !getFlag(Flag::C))
 			setFlag(Flag::O);
 		else remFlag(Flag::O);
 		break;
