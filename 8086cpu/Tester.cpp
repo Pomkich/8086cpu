@@ -72,6 +72,7 @@ void Tester::RunTests() {
 	CMP_R_IN_W_Test();
 	CMP_A_B_Test();
 	CMP_A_W_Test();
+	AAS_Test();
 	INC_R_Test();
 	DEC_R_Test();
 	PUSH_R_Test();
@@ -1511,6 +1512,27 @@ void Tester::CMP_A_W_Test() {
 
 	assert(cpu_pt->A.X == 0x3211);
 	assert(cpu_pt->getFlag(Flag::C) == true);
+}
+
+void Tester::AAS_Test() {
+	// adding value accumulator word
+	cpu_pt->reset();
+	mem_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->A.L = 0;
+	cpu_pt->A.H = 0;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x2C);		// opcode: SUB
+	mem_pt->writeB(0x10001, 0x78);
+	mem_pt->writeB(0x10002, 0x3F);		// opcode: AAS
+	// run opcodes
+	cpu_pt->clock();
+	cpu_pt->clock();
+
+	assert(cpu_pt->A.L == 0x02);
+	assert(cpu_pt->A.H == 0xFF);
 }
 
 
