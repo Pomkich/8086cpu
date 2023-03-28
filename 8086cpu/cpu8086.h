@@ -119,6 +119,7 @@ private:
 	void SUB_R_IN_W();
 	void SUB_A_B();
 	void SUB_A_W();
+	void DAS();				// decimal adjust for substraction
 	void XOR_R_OUT_B();		// логическое исключение
 	void XOR_R_OUT_W();		
 	void XOR_R_IN_B();		

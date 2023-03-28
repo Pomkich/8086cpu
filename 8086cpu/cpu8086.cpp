@@ -337,6 +337,8 @@ void cpu8086::initOpTable() {
 	opcode_table[0x2B] = std::bind(&cpu8086::SUB_R_IN_W, this);
 	opcode_table[0x2C] = std::bind(&cpu8086::SUB_A_B, this);
 	opcode_table[0x2D] = std::bind(&cpu8086::SUB_A_W, this);
+	// DAS
+	opcode_table[0x2F] = std::bind(&cpu8086::DAS, this);
 	// логическое исключение
 	opcode_table[0x30] = std::bind(&cpu8086::XOR_R_OUT_B, this);
 	opcode_table[0x31] = std::bind(&cpu8086::XOR_R_OUT_W, this);
@@ -1382,6 +1384,22 @@ void cpu8086::SUB_A_W() {
 	testFlagCSub(prev_val, A.X);
 	testFlagASub(prev_val, A.X);
 	testFlagO(prev_val, A.X, OpType::Word);
+}
+
+void cpu8086::DAS() {
+	byte prev_val = A.L;
+	if ((A.L & 0xF) > 9 || getFlag(Flag::A)) {
+		A.L -= 6;
+		setFlag(Flag::A);
+	}
+	if (A.L > 0x9F || getFlag(Flag::C)) {
+		A.L -= 0x60;
+		setFlag(Flag::C);
+	}
+	testFlagZ(A.L);
+	testFlagS(A.L, OpType::Byte);
+	testFlagP(A.L);
+	testFlagO(prev_val, A.L, OpType::Byte);
 }
 
 void cpu8086::XOR_R_OUT_B() {

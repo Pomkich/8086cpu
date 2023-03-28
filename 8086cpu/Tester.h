@@ -69,6 +69,7 @@ public:
 	void SUB_R_IN_W_Test();
 	void SUB_A_B_Test();
 	void SUB_A_W_Test();
+	void DAS_Test();
 	void XOR_R_OUT_B_Test();
 	void XOR_R_OUT_W_Test();
 	void XOR_R_IN_B_Test();

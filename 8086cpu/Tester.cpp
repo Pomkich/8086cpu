@@ -58,6 +58,7 @@ void Tester::RunTests() {
 	SUB_R_IN_W_Test();
 	SUB_A_B_Test();
 	SUB_A_W_Test();
+	DAS_Test();
 	XOR_R_OUT_B_Test();
 	XOR_R_OUT_W_Test();
 	XOR_R_IN_B_Test();
@@ -972,10 +973,13 @@ void Tester::DAA_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0xE0;
+	cpu_pt->A.L = 0;
 	// initialize memory
-	mem_pt->writeB(0x10000, 0x27);		// opcode: DAA
-	// run opcode
+	mem_pt->writeB(0x10000, 0x04);		// opcode: ADD
+	mem_pt->writeB(0x10001, 0xE0);		// opcode: 
+	mem_pt->writeB(0x10002, 0x27);		// opcode: DAA
+	// run opcodes
+	cpu_pt->clock();
 	cpu_pt->clock();
 
 	assert(cpu_pt->A.L == 0x40);
@@ -1140,6 +1144,25 @@ void Tester::SUB_A_W_Test() {
 	cpu_pt->clock();
 
 	assert(cpu_pt->A.X == 0xFD00);
+}
+
+void Tester::DAS_Test() {
+	// adding value accumulator word
+	cpu_pt->reset();
+	mem_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->A.L = 0;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x2C);		// opcode: SUB
+	mem_pt->writeB(0x10001, 0xE0);
+	mem_pt->writeB(0x10002, 0x2F);		// opcode: DAS
+	// run opcodes
+	cpu_pt->clock();
+	cpu_pt->clock();
+
+	assert(cpu_pt->A.L == 0xC0);
 }
 
 void Tester::XOR_R_OUT_B_Test() {
