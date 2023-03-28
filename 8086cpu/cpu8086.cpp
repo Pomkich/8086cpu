@@ -355,6 +355,8 @@ void cpu8086::initOpTable() {
 	opcode_table[0x3B] = std::bind(&cpu8086::CMP_R_IN_W, this);
 	opcode_table[0x3C] = std::bind(&cpu8086::CMP_A_B, this);
 	opcode_table[0x3D] = std::bind(&cpu8086::CMP_A_W, this);
+	// AAS
+	opcode_table[0x3F] = std::bind(&cpu8086::AAS, this);
 	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
 	opcode_table[0x41] = std::bind(&cpu8086::INC_R, this, std::ref(B.X));
@@ -1735,6 +1737,21 @@ void cpu8086::CMP_A_W() {
 	testFlagCSub(prev_val, temp);
 	testFlagASub(prev_val, temp);
 	testFlagO(prev_val, temp, OpType::Word);
+}
+
+void cpu8086::AAS() {
+	byte prev_val = A.L;
+	if ((A.L & 0x0F) > 9 || getFlag(Flag::A)) {
+		A.L -= 6;
+		A.H -= 1;
+		setFlag(Flag::A);
+		setFlag(Flag::C);
+	}
+	A.L = A.L & 0x0F;
+	testFlagZ(A.L);
+	testFlagS(A.L, OpType::Byte);
+	testFlagP(A.L);
+	testFlagO(prev_val, A.L, OpType::Byte);
 }
 
 void cpu8086::INC_R(word& reg) {

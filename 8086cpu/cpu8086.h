@@ -133,6 +133,7 @@ private:
 	void CMP_R_IN_W();
 	void CMP_A_B();
 	void CMP_A_W();
+	void AAS();				// ASCII adjust for substraction
 	void INC_R(word& reg);	// инкремент регистра
 	void DEC_R(word& reg);	// декремент регистра
 	void PUSH_R(word& reg);	// push 16 битного регистра в стек

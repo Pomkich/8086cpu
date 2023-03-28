@@ -83,6 +83,7 @@ public:
 	void CMP_R_IN_W_Test();
 	void CMP_A_B_Test();
 	void CMP_A_W_Test();
+	void AAS_Test();
 	void INC_R_Test();
 	void DEC_R_Test();
 	void PUSH_R_Test();

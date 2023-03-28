@@ -26,9 +26,9 @@ int main() {
 	cpu_pt->setRegVal(RegId::DS, 0x2000);
 	cpu_pt->setRegVal(RegId::SS, 0x3000);
 	// загрузка программы в память
-	mem_pt->writeB(0x10000, 0x04);		// opcode: sub
-	mem_pt->writeB(0x10001, 0xFA);
-	mem_pt->writeB(0x10002, 0x37);
+	mem_pt->writeB(0x10000, 0x2c);		// opcode: sub
+	mem_pt->writeB(0x10001, 0x78);
+	mem_pt->writeB(0x10002, 0x3F);
 	// mem_pt->writeB(0x10003, 0x2D);
 	// mem_pt->writeB(0x10004, 0x01);
 	// mem_pt->writeB(0x10005, 0x00);
