@@ -112,6 +112,7 @@ private:
 	void AND_R_IN_W();		// логическое умножение в 16-битный регист
 	void AND_A_B();
 	void AND_A_W();
+	void DAA();				// decimal adjust for addition
 	void SUB_R_OUT_B();		// вычитание
 	void SUB_R_OUT_W();
 	void SUB_R_IN_B();

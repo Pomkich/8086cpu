@@ -51,6 +51,7 @@ void Tester::RunTests() {
 	AND_R_IN_W_Test();
 	AND_A_B_Test();
 	AND_A_W_Test();
+	DAA_Test();
 	SUB_R_OUT_B_Test();
 	SUB_R_OUT_W_Test();
 	SUB_R_IN_B_Test();
@@ -962,6 +963,22 @@ void Tester::AND_A_W_Test() {
 	cpu_pt->clock();
 
 	assert(cpu_pt->A.X == 0x3011);
+}
+
+void Tester::DAA_Test() {
+	// adding value accumulator word
+	cpu_pt->reset();
+	mem_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->A.L = 0xE0;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x27);		// opcode: DAA
+	// run opcode
+	cpu_pt->clock();
+
+	assert(cpu_pt->A.L == 0x40);
 }
 
 void Tester::SUB_R_OUT_B_Test() {

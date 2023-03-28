@@ -62,6 +62,7 @@ public:
 	void AND_R_IN_W_Test();
 	void AND_A_B_Test();
 	void AND_A_W_Test();
+	void DAA_Test();
 	void SUB_R_OUT_B_Test();
 	void SUB_R_OUT_W_Test();
 	void SUB_R_IN_B_Test();
