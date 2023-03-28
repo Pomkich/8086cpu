@@ -26,20 +26,20 @@ int main() {
 	cpu_pt->setRegVal(RegId::DS, 0x2000);
 	cpu_pt->setRegVal(RegId::SS, 0x3000);
 	// загрузка программы в память
-	mem_pt->writeB(0x10000, 0xB8);
-	mem_pt->writeB(0x10001, 0x00);
-	mem_pt->writeB(0x10002, 0x00);
-	mem_pt->writeB(0x10003, 0x2D);
-	mem_pt->writeB(0x10004, 0x01);
-	mem_pt->writeB(0x10005, 0x00);
-	mem_pt->writeB(0x10006, 0xB8);
-	mem_pt->writeB(0x10007, 0xFF);
-	mem_pt->writeB(0x10008, 0xFF);
-	mem_pt->writeB(0x10009, 0x05);
-	mem_pt->writeB(0x1000A, 0x01);
-	mem_pt->writeB(0x1000B, 0x00);
+	mem_pt->writeB(0x10000, 0x04);
+	mem_pt->writeB(0x10001, 0xE0);
+	mem_pt->writeB(0x10002, 0x27);
+	// mem_pt->writeB(0x10003, 0x2D);
+	// mem_pt->writeB(0x10004, 0x01);
+	// mem_pt->writeB(0x10005, 0x00);
+	// mem_pt->writeB(0x10006, 0xB8);
+	// mem_pt->writeB(0x10007, 0xFF);
+	// mem_pt->writeB(0x10008, 0xFF);
+	// mem_pt->writeB(0x10009, 0x05);
+	// mem_pt->writeB(0x1000A, 0x01);
+	// mem_pt->writeB(0x1000B, 0x00);
 	// всего загружено 4 команды, 4 раза выполняем цикл
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 2; i++) {
 		cpu_pt->clock();
 	}
 	
