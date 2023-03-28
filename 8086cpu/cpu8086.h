@@ -126,6 +126,7 @@ private:
 	void XOR_R_IN_W();		
 	void XOR_A_B();
 	void XOR_A_W();
+	void AAA();				// ASCII adjust for addition
 	void CMP_R_OUT_B();		// сравнение
 	void CMP_R_OUT_W();
 	void CMP_R_IN_B();

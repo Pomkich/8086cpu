@@ -65,6 +65,7 @@ void Tester::RunTests() {
 	XOR_R_IN_W_Test();
 	XOR_A_B_Test();
 	XOR_A_W_Test();
+	AAA_Test();
 	CMP_R_OUT_B_Test();
 	CMP_R_OUT_W_Test();
 	CMP_R_IN_B_Test();
@@ -1326,6 +1327,27 @@ void Tester::XOR_A_W_Test() {
 	cpu_pt->clock();
 
 	assert(cpu_pt->A.X == 0x0700);
+}
+
+void Tester::AAA_Test() {
+	// adding value accumulator word
+	cpu_pt->reset();
+	mem_pt->reset();
+	// initialize registers
+	cpu_pt->CS = 0x1000;
+	cpu_pt->IP = 0x0000;
+	cpu_pt->A.L = 0;
+	cpu_pt->A.H = 0;
+	// initialize memory
+	mem_pt->writeB(0x10000, 0x04);		// opcode: ADD
+	mem_pt->writeB(0x10001, 0xFA);		// opcode: 
+	mem_pt->writeB(0x10002, 0x37);		// opcode: AAA
+	// run opcodes
+	cpu_pt->clock();
+	cpu_pt->clock();
+
+	assert(cpu_pt->A.L == 0x00);
+	assert(cpu_pt->A.H == 0x01);
 }
 
 void Tester::CMP_R_OUT_B_Test() {
