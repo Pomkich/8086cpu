@@ -359,36 +359,36 @@ void cpu8086::initOpTable() {
 	opcode_table[0x3F] = std::bind(&cpu8086::AAS, this);
 	// инкремент регистров
 	opcode_table[0x40] = std::bind(&cpu8086::INC_R, this, std::ref(A.X));
-	opcode_table[0x41] = std::bind(&cpu8086::INC_R, this, std::ref(B.X));
-	opcode_table[0x42] = std::bind(&cpu8086::INC_R, this, std::ref(C.X));
-	opcode_table[0x43] = std::bind(&cpu8086::INC_R, this, std::ref(D.X));
+	opcode_table[0x41] = std::bind(&cpu8086::INC_R, this, std::ref(C.X));
+	opcode_table[0x42] = std::bind(&cpu8086::INC_R, this, std::ref(D.X));
+	opcode_table[0x43] = std::bind(&cpu8086::INC_R, this, std::ref(B.X));
 	opcode_table[0x44] = std::bind(&cpu8086::INC_R, this, std::ref(SP));
 	opcode_table[0x45] = std::bind(&cpu8086::INC_R, this, std::ref(BP));
 	opcode_table[0x46] = std::bind(&cpu8086::INC_R, this, std::ref(SI));
 	opcode_table[0x47] = std::bind(&cpu8086::INC_R, this, std::ref(DI));
 	// декремент регистров
 	opcode_table[0x48] = std::bind(&cpu8086::DEC_R, this, std::ref(A.X));
-	opcode_table[0x49] = std::bind(&cpu8086::DEC_R, this, std::ref(B.X));
-	opcode_table[0x4A] = std::bind(&cpu8086::DEC_R, this, std::ref(C.X));
-	opcode_table[0x4B] = std::bind(&cpu8086::DEC_R, this, std::ref(D.X));
+	opcode_table[0x49] = std::bind(&cpu8086::DEC_R, this, std::ref(C.X));
+	opcode_table[0x4A] = std::bind(&cpu8086::DEC_R, this, std::ref(D.X));
+	opcode_table[0x4B] = std::bind(&cpu8086::DEC_R, this, std::ref(B.X));
 	opcode_table[0x4C] = std::bind(&cpu8086::DEC_R, this, std::ref(SP));
 	opcode_table[0x4D] = std::bind(&cpu8086::DEC_R, this, std::ref(BP));
 	opcode_table[0x4E] = std::bind(&cpu8086::DEC_R, this, std::ref(SI));
 	opcode_table[0x4F] = std::bind(&cpu8086::DEC_R, this, std::ref(DI));
 	// запись в стек
 	opcode_table[0x50] = std::bind(&cpu8086::PUSH_R, this, std::ref(A.X));
-	opcode_table[0x51] = std::bind(&cpu8086::PUSH_R, this, std::ref(B.X));
-	opcode_table[0x52] = std::bind(&cpu8086::PUSH_R, this, std::ref(C.X));
-	opcode_table[0x53] = std::bind(&cpu8086::PUSH_R, this, std::ref(D.X));
+	opcode_table[0x51] = std::bind(&cpu8086::PUSH_R, this, std::ref(C.X));
+	opcode_table[0x52] = std::bind(&cpu8086::PUSH_R, this, std::ref(D.X));
+	opcode_table[0x53] = std::bind(&cpu8086::PUSH_R, this, std::ref(B.X));
 	opcode_table[0x54] = std::bind(&cpu8086::PUSH_R, this, std::ref(SP));
 	opcode_table[0x55] = std::bind(&cpu8086::PUSH_R, this, std::ref(BP));
 	opcode_table[0x56] = std::bind(&cpu8086::PUSH_R, this, std::ref(SI));
 	opcode_table[0x57] = std::bind(&cpu8086::PUSH_R, this, std::ref(DI));
 	// чтение из стека
 	opcode_table[0x58] = std::bind(&cpu8086::POP_R, this, std::ref(A.X));
-	opcode_table[0x59] = std::bind(&cpu8086::POP_R, this, std::ref(B.X));
-	opcode_table[0x5A] = std::bind(&cpu8086::POP_R, this, std::ref(C.X));
-	opcode_table[0x5B] = std::bind(&cpu8086::POP_R, this, std::ref(D.X));
+	opcode_table[0x59] = std::bind(&cpu8086::POP_R, this, std::ref(C.X));
+	opcode_table[0x5A] = std::bind(&cpu8086::POP_R, this, std::ref(D.X));
+	opcode_table[0x5B] = std::bind(&cpu8086::POP_R, this, std::ref(B.X));
 	opcode_table[0x5C] = std::bind(&cpu8086::POP_R, this, std::ref(SP));
 	opcode_table[0x5D] = std::bind(&cpu8086::POP_R, this, std::ref(BP));
 	opcode_table[0x5E] = std::bind(&cpu8086::POP_R, this, std::ref(SI));
