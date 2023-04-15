@@ -88,6 +88,7 @@ public:
 	void DEC_R_Test();
 	void PUSH_R_Test();
 	void POP_R_Test();
+	void JMP_COND_Test();
 	void MOV_R_OUT_B_Test();
 	void MOV_R_OUT_W_Test();
 	void MOV_R_IN_B_Test();

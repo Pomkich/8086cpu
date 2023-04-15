@@ -77,6 +77,7 @@ void Tester::RunTests() {
 	DEC_R_Test();
 	PUSH_R_Test();
 	POP_R_Test();
+	JMP_COND_Test();
 	MOV_R_OUT_B_Test();
 	MOV_R_OUT_W_Test();
 	MOV_R_IN_B_Test();
@@ -1544,7 +1545,7 @@ void Tester::INC_R_Test() {
 	cpu_pt->IP = 0x0000;
 	cpu_pt->B.X = 0x35;
 	// initialize memory
-	mem_pt->writeB(0x10000, 0x41);
+	mem_pt->writeB(0x10000, 0x43);
 	// run command
 	cpu_pt->clock();
 	assert(cpu_pt->B.X == 0x36);
@@ -1558,7 +1559,7 @@ void Tester::DEC_R_Test() {
 	cpu_pt->IP = 0x0000;
 	cpu_pt->B.X = 0x35;
 	// initialize memory
-	mem_pt->writeB(0x10000, 0x49);
+	mem_pt->writeB(0x10000, 0x4B);
 	// run command
 	cpu_pt->clock();
 	assert(cpu_pt->B.X == 0x34);
@@ -1596,6 +1597,47 @@ void Tester::POP_R_Test() {
 	cpu_pt->clock();
 
 	assert(cpu_pt->A.X == 0xFF35);
+}
+
+void Tester::JMP_COND_Test() {
+	// JNZ condition test, Z is false
+	cpu_pt->reset();
+	mem_pt->reset();
+	cpu_pt->C.X = 0;
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	mem_pt->writeB(0x40001, 0x41);	// inc cx
+	mem_pt->writeB(0x40002, 0xB9);	// mov cx
+	mem_pt->writeB(0x40003, 0x20);	// 32
+	mem_pt->writeB(0x40004, 0x00);	// high order empty byte
+	mem_pt->writeB(0x40005, 0x75);	// jnz check
+	mem_pt->writeB(0x40006, 0xFA);	// increment to IP
+
+	for (int i = 0; i < 4; i++) {
+		cpu_pt->clock();
+	}
+	assert(cpu_pt->C.X == 33);
+
+	// JNZ condition test, Z is true
+	cpu_pt->reset();
+	mem_pt->reset();
+	cpu_pt->C.X = 0;
+	// initialize code segment
+	cpu_pt->CS = 0x4000;
+	cpu_pt->IP = 0x0001;
+	mem_pt->writeB(0x40001, 0x41);
+	mem_pt->writeB(0x40002, 0xB9);
+	mem_pt->writeB(0x40003, 0x20);
+	mem_pt->writeB(0x40004, 0x00);
+	mem_pt->writeB(0x40005, 0x75);
+	mem_pt->writeB(0x40006, 0xFA);
+
+	for (int i = 0; i < 4; i++) {
+		cpu_pt->clock();
+		cpu_pt->setFlag(Flag::Z);
+	}
+	assert(cpu_pt->C.X == 32);
 }
 
 void Tester::MOV_R_OUT_B_Test() {
