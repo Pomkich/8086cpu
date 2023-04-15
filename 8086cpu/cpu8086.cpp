@@ -393,6 +393,39 @@ void cpu8086::initOpTable() {
 	opcode_table[0x5D] = std::bind(&cpu8086::POP_R, this, std::ref(BP));
 	opcode_table[0x5E] = std::bind(&cpu8086::POP_R, this, std::ref(SI));
 	opcode_table[0x5F] = std::bind(&cpu8086::POP_R, this, std::ref(DI));
+	// условный переход
+	opcode_table[0x70] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return getFlag(Flag::O); });	// JO
+	opcode_table[0x71] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return !getFlag(Flag::O); }); // JNO
+	opcode_table[0x72] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return getFlag(Flag::C); });	// JB/JNAE
+	opcode_table[0x73] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return !getFlag(Flag::C); }); // JNB/JAE
+	opcode_table[0x74] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return getFlag(Flag::Z); });	// JE/JZ
+	opcode_table[0x75] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return !getFlag(Flag::Z); }); // JNE/JNZ
+	opcode_table[0x76] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return (getFlag(Flag::C) || getFlag(Flag::Z)); });	// JBE/JNA
+	opcode_table[0x77] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return !(getFlag(Flag::C) || getFlag(Flag::Z)); });	// JA/JNBE
+	opcode_table[0x78] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return getFlag(Flag::S); });	// JS
+	opcode_table[0x79] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return !getFlag(Flag::S); });	// JNS
+	opcode_table[0x7A] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return getFlag(Flag::P); });	// JP/JPE
+	opcode_table[0x7B] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return !getFlag(Flag::P); });	// JNP/JPO
+	opcode_table[0x7C] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return (getFlag(Flag::S) ^ getFlag(Flag::O)); });		// JL/JNGE
+	opcode_table[0x7D] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return !(getFlag(Flag::S) ^ getFlag(Flag::O)); });	// JNL/JGE
+	opcode_table[0x7E] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return ((getFlag(Flag::S) ^ getFlag(Flag::O)) || getFlag(Flag::Z)); });	// JLE/JNG
+	opcode_table[0x7F] = std::bind(&cpu8086::JMP_COND, this, 
+		[&] { return !((getFlag(Flag::S) ^ getFlag(Flag::O)) || getFlag(Flag::Z)); });	// JNLE/JG
 	// помещение значения из регистра в память
 	opcode_table[0x88] = std::bind(&cpu8086::MOV_R_OUT_B, this);
 	opcode_table[0x89] = std::bind(&cpu8086::MOV_R_OUT_W, this);
@@ -1786,6 +1819,14 @@ void cpu8086::POP_R(word& reg) {
 	address = ((dword)SS << 4) + SP;
 	reg = memory->readW(address);
 	SP += 2;
+}
+
+void cpu8086::JMP_COND(std::function<bool()> condition) {
+	// приводим к типу со знаком чтобы можно было вычитать
+	char short_label = std::make_signed_t<char>(fetchCodeByte());
+	if (condition()) {	// проверка условия
+		IP += short_label;	// условный переход
+	}
 }
 
 void cpu8086::MOV_R_IMM_B(byte& reg) {
