@@ -426,6 +426,8 @@ void cpu8086::initOpTable() {
 		[&] { return ((getFlag(Flag::S) ^ getFlag(Flag::O)) || getFlag(Flag::Z)); });	// JLE/JNG
 	opcode_table[0x7F] = std::bind(&cpu8086::JMP_COND, this, 
 		[&] { return !((getFlag(Flag::S) ^ getFlag(Flag::O)) || getFlag(Flag::Z)); });	// JNLE/JG
+	// прямое значение
+	opcode_table[0x80] = std::bind(&cpu8086::IMMED_B, this);
 	// помещение значения из регистра в память
 	opcode_table[0x88] = std::bind(&cpu8086::MOV_R_OUT_B, this);
 	opcode_table[0x89] = std::bind(&cpu8086::MOV_R_OUT_W, this);
@@ -1827,6 +1829,194 @@ void cpu8086::JMP_COND(std::function<bool()> condition) {
 	if (condition()) {	// проверка условия
 		IP += short_label;	// условный переход
 	}
+}
+
+void cpu8086::IMMED_B() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	byte& first_reg = getRegB(rm);
+
+	// переменные нужны для проверки флагов
+	byte prev_val = 0;
+	byte new_val = 0;
+	byte data = 0;	// константа, которая идёт после команды
+
+	if (mod == 3) {	// регистровая адресация
+		data = fetchCodeByte();
+		prev_val = first_reg;
+		switch (reg) {
+		case 0:		// ADD
+			first_reg = first_reg + data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			testFlagCAdd(prev_val, first_reg);
+			testFlagAAdd(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Byte);
+			break;
+		case 1:		// OR
+			first_reg = first_reg | data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			remFlag(Flag::C);
+			(first_reg > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+			remFlag(Flag::O);
+			break;
+		case 2:		// ADC
+			first_reg = first_reg + data + getFlag(Flag::C);
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			testFlagCAdd(prev_val, first_reg);
+			testFlagAAdd(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Byte);
+			break;
+		case 3:		// SBB
+			first_reg = first_reg - data - getFlag(Flag::C);
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			testFlagCSub(prev_val, first_reg);
+			testFlagASub(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Byte);
+			break;
+		case 4:		// AND
+			first_reg = first_reg & data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			remFlag(Flag::C);
+			(first_reg & prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+			remFlag(Flag::O);
+			break;
+		case 5:		// SUB
+			first_reg = first_reg - data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			testFlagCSub(prev_val, first_reg);
+			testFlagASub(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Byte);
+			break;
+		case 6:		// XOR
+			first_reg = first_reg ^ data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			remFlag(Flag::C);
+			(first_reg > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
+			remFlag(Flag::O);
+			break;
+		case 7: {		// CMP
+			byte temp = first_reg;
+			temp = first_reg - data;
+			testFlagZ(temp);
+			testFlagS(temp, OpType::Byte);
+			testFlagP(temp);
+			testFlagCSub(prev_val, temp);
+			testFlagASub(prev_val, temp);
+			testFlagO(prev_val, temp, OpType::Byte);
+			break;
+		}
+		default: return;
+		}
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readB(address);
+		data = fetchCodeByte();
+
+		switch (reg) {
+		case 0:		// ADD
+			new_val = prev_val + data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			testFlagCAdd(prev_val, new_val);
+			testFlagAAdd(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Byte);
+			break;
+		case 1:		// OR
+			new_val = prev_val | data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			remFlag(Flag::C);
+			(new_val > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+			remFlag(Flag::O);
+			break;
+		case 2:		// ADC
+			new_val = prev_val + data + getFlag(Flag::C);
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			testFlagCAdd(prev_val, new_val);
+			testFlagAAdd(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Byte);
+			break;
+		case 3:		// SBB
+			new_val = prev_val - data - getFlag(Flag::C);
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			testFlagCSub(prev_val, new_val);
+			testFlagASub(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Byte);
+			break;
+		case 4:		// AND
+			new_val = prev_val & data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			remFlag(Flag::C);
+			(new_val & prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+			remFlag(Flag::O);
+			break;
+		case 5:		// SUB
+			new_val = prev_val - data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			testFlagCSub(prev_val, new_val);
+			testFlagASub(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Byte);
+			break;
+		case 6:		// XOR
+			new_val = prev_val ^ data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			remFlag(Flag::C);
+			(new_val > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
+			remFlag(Flag::O);
+			break;
+		case 7: {	// CMP
+			byte temp = first_reg;
+			new_val = prev_val;	// что бы не менять значение в памяти
+			temp = prev_val - data;
+			testFlagZ(temp);
+			testFlagS(temp, OpType::Byte);
+			testFlagP(temp);
+			testFlagCSub(prev_val, temp);
+			testFlagASub(prev_val, temp);
+			testFlagO(prev_val, temp, OpType::Byte);
+			break;
+		}
+		default: return;
+		}
+
+		memory->writeB(address, new_val);
+	}
+}
+
+void cpu8086::IMMED_W() {
+
 }
 
 void cpu8086::MOV_R_IMM_B(byte& reg) {
