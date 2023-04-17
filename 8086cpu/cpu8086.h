@@ -139,6 +139,8 @@ private:
 	void PUSH_R(word& reg);	// push 16 битного регистра в стек
 	void POP_R(word& reg);	// pop 16 битного регистра из стека
 	void JMP_COND(std::function<bool()> condition);	// переход по условию, условие - аргумент
+	void IMMED_B();
+	void IMMED_W();
 	void MOV_R_OUT_B();
 	void MOV_R_OUT_W();
 	void MOV_R_IN_B();

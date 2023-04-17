@@ -26,11 +26,11 @@ int main() {
 	cpu_pt->setRegVal(RegId::DS, 0x2000);
 	cpu_pt->setRegVal(RegId::SS, 0x3000);
 	// загрузка программы в память
-	mem_pt->writeB(0x10000, 0xB0);		// opcode: sub
+	mem_pt->writeB(0x10000, 0xB3);		// opcode: sub
 	mem_pt->writeB(0x10001, 0x20);
-	mem_pt->writeB(0x10002, 0x40);
-	mem_pt->writeB(0x10003, 0x75);
-	mem_pt->writeB(0x10004, 0xFD);
+	mem_pt->writeB(0x10002, 0x80);
+	mem_pt->writeB(0x10003, 0xC3);
+	mem_pt->writeB(0x10004, 0xC8);
 	// mem_pt->writeB(0x10006, 0xB8);
 	// mem_pt->writeB(0x10007, 0xFF);
 	// mem_pt->writeB(0x10008, 0xFF);
@@ -38,9 +38,9 @@ int main() {
 	// mem_pt->writeB(0x1000A, 0x01);
 	// mem_pt->writeB(0x1000B, 0x00);
 	// всего загружено 4 команды, 4 раза выполняем цикл
-	/*for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 2; i++) {
 		cpu_pt->clock();
-	}*/
+	}
 	
 
 	return 0;
