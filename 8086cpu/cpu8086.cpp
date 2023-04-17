@@ -429,6 +429,8 @@ void cpu8086::initOpTable() {
 	// прямое значение
 	opcode_table[0x80] = std::bind(&cpu8086::IMMED_B, this);
 	opcode_table[0x81] = std::bind(&cpu8086::IMMED_W, this);
+	opcode_table[0x82] = std::bind(&cpu8086::IMMED_B_SX, this);
+	opcode_table[0x83] = std::bind(&cpu8086::IMMED_W_SX, this);
 	// помещение значения из регистра в память
 	opcode_table[0x88] = std::bind(&cpu8086::MOV_R_OUT_B, this);
 	opcode_table[0x89] = std::bind(&cpu8086::MOV_R_OUT_W, this);
@@ -2180,6 +2182,273 @@ void cpu8086::IMMED_W() {
 			remFlag(Flag::C);
 			(new_val > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 			remFlag(Flag::O);
+			break;
+		case 7: {	// CMP
+			word temp = first_reg;
+			new_val = prev_val;	// что бы не менять значение в памяти
+			temp = prev_val - data;
+			testFlagZ(temp);
+			testFlagS(temp, OpType::Word);
+			testFlagP(temp);
+			testFlagCSub(prev_val, temp);
+			testFlagASub(prev_val, temp);
+			testFlagO(prev_val, temp, OpType::Word);
+			break;
+		}
+		default: return;
+		}
+
+		memory->writeW(address, new_val);
+	}
+}
+
+void cpu8086::IMMED_B_SX() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	byte& first_reg = getRegB(rm);
+
+	// переменные нужны для проверки флагов
+	byte prev_val = 0;
+	byte new_val = 0;
+	byte data = 0;	// константа, которая идёт после команды
+
+	if (mod == 3) {	// регистровая адресация
+		data = fetchCodeByte();
+		prev_val = first_reg;
+		switch (reg) {
+		case 0:		// ADD
+			first_reg = first_reg + data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			testFlagCAdd(prev_val, first_reg);
+			testFlagAAdd(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Byte);
+			break;
+		case 1:		// not used
+			return;
+		case 2:		// ADC
+			first_reg = first_reg + data + getFlag(Flag::C);
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			testFlagCAdd(prev_val, first_reg);
+			testFlagAAdd(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Byte);
+			break;
+		case 3:		// SBB
+			first_reg = first_reg - data - getFlag(Flag::C);
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			testFlagCSub(prev_val, first_reg);
+			testFlagASub(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Byte);
+			break;
+		case 4:		// not used
+			return;
+		case 5:		// SUB
+			first_reg = first_reg - data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Byte);
+			testFlagP(first_reg);
+			testFlagCSub(prev_val, first_reg);
+			testFlagASub(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Byte);
+			break;
+		case 6:		// not used
+			return;
+		case 7: {		// CMP
+			byte temp = first_reg;
+			temp = first_reg - data;
+			testFlagZ(temp);
+			testFlagS(temp, OpType::Byte);
+			testFlagP(temp);
+			testFlagCSub(prev_val, temp);
+			testFlagASub(prev_val, temp);
+			testFlagO(prev_val, temp, OpType::Byte);
+			break;
+		}
+		default: return;
+		}
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readB(address);
+		data = fetchCodeByte();
+
+		switch (reg) {
+		case 0:		// ADD
+			new_val = prev_val + data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			testFlagCAdd(prev_val, new_val);
+			testFlagAAdd(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Byte);
+			break;
+		case 2:		// ADC
+			new_val = prev_val + data + getFlag(Flag::C);
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			testFlagCAdd(prev_val, new_val);
+			testFlagAAdd(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Byte);
+			break;
+		case 3:		// SBB
+			new_val = prev_val - data - getFlag(Flag::C);
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			testFlagCSub(prev_val, new_val);
+			testFlagASub(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Byte);
+			break;
+		case 5:		// SUB
+			new_val = prev_val - data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Byte);
+			testFlagP(new_val);
+			testFlagCSub(prev_val, new_val);
+			testFlagASub(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Byte);
+			break;
+		case 7: {	// CMP
+			byte temp = first_reg;
+			new_val = prev_val;	// что бы не менять значение в памяти
+			temp = prev_val - data;
+			testFlagZ(temp);
+			testFlagS(temp, OpType::Byte);
+			testFlagP(temp);
+			testFlagCSub(prev_val, temp);
+			testFlagASub(prev_val, temp);
+			testFlagO(prev_val, temp, OpType::Byte);
+			break;
+		}
+		default: return;
+		}
+
+		memory->writeB(address, new_val);
+	}
+}
+
+void cpu8086::IMMED_W_SX() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	word& first_reg = getRegW(rm);
+
+	// переменные нужны для проверки флагов
+	word prev_val = 0;
+	word new_val = 0;
+	char data = 0;	// константа, которая идёт после команды
+
+	if (mod == 3) {	// регистровая адресация
+		data = std::make_signed_t<char>(fetchCodeByte());
+
+		prev_val = first_reg;
+		switch (reg) {
+		case 0:		// ADD
+			first_reg = first_reg + data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Word);
+			testFlagP(first_reg);
+			testFlagCAdd(prev_val, first_reg);
+			testFlagAAdd(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Word);
+			break;
+		case 2:		// ADC
+			first_reg = first_reg + data + getFlag(Flag::C);
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Word);
+			testFlagP(first_reg);
+			testFlagCAdd(prev_val, first_reg);
+			testFlagAAdd(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Word);
+			break;
+		case 3:		// SBB
+			first_reg = first_reg - data - getFlag(Flag::C);
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Word);
+			testFlagP(first_reg);
+			testFlagCSub(prev_val, first_reg);
+			testFlagASub(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Word);
+			break;
+		case 5:		// SUB
+			first_reg = first_reg - data;
+			testFlagZ(first_reg);
+			testFlagS(first_reg, OpType::Word);
+			testFlagP(first_reg);
+			testFlagCSub(prev_val, first_reg);
+			testFlagASub(prev_val, first_reg);
+			testFlagO(prev_val, first_reg, OpType::Word);
+			break;
+		case 7: {		// CMP
+			word temp = first_reg;
+			temp = first_reg - data;
+			testFlagZ(temp);
+			testFlagS(temp, OpType::Word);
+			testFlagP(temp);
+			testFlagCSub(prev_val, temp);
+			testFlagASub(prev_val, temp);
+			testFlagO(prev_val, temp, OpType::Word);
+			break;
+		}
+		default: return;
+		}
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		prev_val = memory->readW(address);
+		data = std::make_signed_t<char>(fetchCodeByte());
+
+		switch (reg) {
+		case 0:		// ADD
+			new_val = prev_val + data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Word);
+			testFlagP(new_val);
+			testFlagCAdd(prev_val, new_val);
+			testFlagAAdd(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Word);
+			break;
+		case 2:		// ADC
+			new_val = prev_val + data + getFlag(Flag::C);
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Word);
+			testFlagP(new_val);
+			testFlagCAdd(prev_val, new_val);
+			testFlagAAdd(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Word);
+			break;
+		case 3:		// SBB
+			new_val = prev_val - data - getFlag(Flag::C);
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Word);
+			testFlagP(new_val);
+			testFlagCSub(prev_val, new_val);
+			testFlagASub(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Word);
+			break;
+		case 5:		// SUB
+			new_val = prev_val - data;
+			testFlagZ(new_val);
+			testFlagS(new_val, OpType::Word);
+			testFlagP(new_val);
+			testFlagCSub(prev_val, new_val);
+			testFlagASub(prev_val, new_val);
+			testFlagO(prev_val, new_val, OpType::Word);
 			break;
 		case 7: {	// CMP
 			word temp = first_reg;

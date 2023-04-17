@@ -141,6 +141,8 @@ private:
 	void JMP_COND(std::function<bool()> condition);	// переход по условию, условие - аргумент
 	void IMMED_B();
 	void IMMED_W();
+	void IMMED_B_SX();
+	void IMMED_W_SX();
 	void MOV_R_OUT_B();
 	void MOV_R_OUT_W();
 	void MOV_R_IN_B();
