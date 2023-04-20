@@ -19,15 +19,15 @@
     <Filter Include="Исходные файлы\emulator">
       <UniqueIdentifier>{86f7963b-7416-4a1f-9163-36945ea671e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\gui">
+      <UniqueIdentifier>{45086c15-b215-4e5e-9538-728524381bbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\gui">
+      <UniqueIdentifier>{d3e41045-e077-413a-91e3-85c7b519d9b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConsolePresenter.cpp">
-      <Filter>Исходные файлы\emulator</Filter>
-    </ClCompile>
     <ClCompile Include="cpu8086.cpp">
-      <Filter>Исходные файлы\emulator</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
       <Filter>Исходные файлы\emulator</Filter>
     </ClCompile>
     <ClCompile Include="Memory.cpp">
@@ -36,17 +36,14 @@
     <ClCompile Include="Tester.cpp">
       <Filter>Исходные файлы\emulator</Filter>
     </ClCompile>
+    <ClCompile Include="ConsolePresenter.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AbstractPresenter.h">
-      <Filter>Файлы заголовков\emulator</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsolePresenter.h">
-      <Filter>Файлы заголовков\emulator</Filter>
-    </ClInclude>
-    <ClInclude Include="Constants.h">
-      <Filter>Файлы заголовков\emulator</Filter>
-    </ClInclude>
     <ClInclude Include="cpu8086.h">
       <Filter>Файлы заголовков\emulator</Filter>
     </ClInclude>
@@ -55,6 +52,15 @@
     </ClInclude>
     <ClInclude Include="Tester.h">
       <Filter>Файлы заголовков\emulator</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractPresenter.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsolePresenter.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
