@@ -137,7 +137,9 @@
   <ItemGroup>
     <ClCompile Include="ConsolePresenter.cpp" />
     <ClCompile Include="cpu8086.cpp" />
+    <ClCompile Include="EmulatorApp.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="Tester.cpp" />
   </ItemGroup>
@@ -146,6 +148,8 @@
     <ClInclude Include="ConsolePresenter.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="cpu8086.h" />
+    <ClInclude Include="EmulatorApp.h" />
+    <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Tester.h" />
   </ItemGroup>

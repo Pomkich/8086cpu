@@ -42,6 +42,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="MainFrame.cpp">
+      <Filter>Исходные файлы\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="EmulatorApp.cpp">
+      <Filter>Исходные файлы\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cpu8086.h">
@@ -61,6 +67,12 @@
     </ClInclude>
     <ClInclude Include="Constants.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrame.h">
+      <Filter>Файлы заголовков\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="EmulatorApp.h">
+      <Filter>Файлы заголовков\gui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
