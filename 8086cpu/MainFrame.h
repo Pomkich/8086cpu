@@ -1,5 +1,6 @@
 #pragma once
 #include <wx/wx.h>
+#include "GraphicConstants.h"
 
 class MainFrame : public wxFrame {
 private:
@@ -14,6 +15,10 @@ private:
 	wxBoxSizer* mem_field_sizer;
 	// регистры
 	wxTextCtrl* AH_field, *AL_field;
+	// код
+	wxTextCtrl* code_editor;
+	// память
+	wxTextCtrl* mem_dump;
 
 public:
 	MainFrame();
