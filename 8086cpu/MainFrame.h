@@ -14,7 +14,19 @@ private:
 	wxBoxSizer* code_field_sizer;
 	wxBoxSizer* mem_field_sizer;
 	// регистры
-	wxTextCtrl* AH_field, *AL_field;
+	wxTextCtrl* AH_field, * AL_field;
+	wxTextCtrl* BH_field, * BL_field;
+	wxTextCtrl* CH_field, * CL_field;
+	wxTextCtrl* DH_field, * DL_field;
+	wxTextCtrl* CS_field;
+	wxTextCtrl* IP_field;
+	wxTextCtrl* SS_field;
+	wxTextCtrl* SP_field;
+	wxTextCtrl* BP_field;
+	wxTextCtrl* SI_field;
+	wxTextCtrl* DI_field;
+	wxTextCtrl* DS_field;
+	wxTextCtrl* ES_field;
 	// код
 	wxTextCtrl* code_editor;
 	// память
