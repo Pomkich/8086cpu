@@ -149,6 +149,7 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="cpu8086.h" />
     <ClInclude Include="EmulatorApp.h" />
+    <ClInclude Include="GraphicConstants.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Tester.h" />

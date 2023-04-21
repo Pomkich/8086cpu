@@ -36,9 +36,6 @@
     <ClCompile Include="Tester.cpp">
       <Filter>Исходные файлы\emulator</Filter>
     </ClCompile>
-    <ClCompile Include="ConsolePresenter.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
       <Filter>Исходные файлы\gui</Filter>
     </ClCompile>
     <ClCompile Include="EmulatorApp.cpp">
+      <Filter>Исходные файлы\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsolePresenter.cpp">
       <Filter>Исходные файлы\gui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,19 +59,22 @@
     <ClInclude Include="Tester.h">
       <Filter>Файлы заголовков\emulator</Filter>
     </ClInclude>
-    <ClInclude Include="AbstractPresenter.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="ConsolePresenter.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Constants.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="MainFrame.h">
       <Filter>Файлы заголовков\gui</Filter>
     </ClInclude>
     <ClInclude Include="EmulatorApp.h">
+      <Filter>Файлы заголовков\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsolePresenter.h">
+      <Filter>Файлы заголовков\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractPresenter.h">
+      <Filter>Файлы заголовков\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Файлы заголовков\emulator</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicConstants.h">
       <Filter>Файлы заголовков\gui</Filter>
     </ClInclude>
   </ItemGroup>
