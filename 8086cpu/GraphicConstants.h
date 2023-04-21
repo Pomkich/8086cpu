@@ -7,7 +7,7 @@ namespace GraphConst {
 	const int flag_field_height = 20;
 	const int byte_field_width = 30;
 	const int byte_field_height = 20;
-	const int word_field_width = 60;
+	const int word_field_width = 40;
 	const int word_field_height = byte_field_height;
 
 	const int screen_width = 800;
