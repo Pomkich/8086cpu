@@ -27,6 +27,7 @@ private:
 	wxTextCtrl* DI_field;
 	wxTextCtrl* DS_field;
 	wxTextCtrl* ES_field;
+	wxTextCtrl* O_field, * S_field, * Z_field, * P_field, * C_field, * A_field;
 	// код
 	wxTextCtrl* code_editor;
 	// память

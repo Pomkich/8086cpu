@@ -134,6 +134,31 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	ES_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
 	temp_sizer->Add(ES_field, 1, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
+	// flag register
+	reg_field_sizer->Add(new wxStaticText(this, wxID_ANY, "Регистр флагов"), 0, wxALIGN_CENTER);
+	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
+	temp_sizer->Add(new wxStaticText(this, wxID_ANY, " O "), 1, wxALIGN_CENTER);
+	temp_sizer->Add(new wxStaticText(this, wxID_ANY, " S "), 1, wxALIGN_CENTER);
+	temp_sizer->Add(new wxStaticText(this, wxID_ANY, " Z "), 1, wxALIGN_CENTER);
+	temp_sizer->Add(new wxStaticText(this, wxID_ANY, " P "), 1, wxALIGN_CENTER);
+	temp_sizer->Add(new wxStaticText(this, wxID_ANY, " C "), 1, wxALIGN_CENTER);
+	temp_sizer->Add(new wxStaticText(this, wxID_ANY, " A "), 1, wxALIGN_CENTER);
+	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
+	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
+	O_field = new wxTextCtrl(this, wxID_ANY, "0", wxDefaultPosition, wxSize(GraphConst::flag_field_width, GraphConst::flag_field_height));
+	S_field = new wxTextCtrl(this, wxID_ANY, "0", wxDefaultPosition, wxSize(GraphConst::flag_field_width, GraphConst::flag_field_height));
+	Z_field = new wxTextCtrl(this, wxID_ANY, "0", wxDefaultPosition, wxSize(GraphConst::flag_field_width, GraphConst::flag_field_height));
+	P_field = new wxTextCtrl(this, wxID_ANY, "0", wxDefaultPosition, wxSize(GraphConst::flag_field_width, GraphConst::flag_field_height));
+	C_field = new wxTextCtrl(this, wxID_ANY, "0", wxDefaultPosition, wxSize(GraphConst::flag_field_width, GraphConst::flag_field_height));
+	A_field = new wxTextCtrl(this, wxID_ANY, "0", wxDefaultPosition, wxSize(GraphConst::flag_field_width, GraphConst::flag_field_height));
+	temp_sizer->Add(O_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(S_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(Z_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(P_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(C_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(A_field, 1, wxALIGN_CENTER);
+	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
+
 	// REGISTER SIZER END
 
 	// CODE SIZER START
