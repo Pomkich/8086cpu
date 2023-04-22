@@ -13,6 +13,12 @@ private:
 	wxBoxSizer* reg_field_sizer;
 	wxBoxSizer* code_field_sizer;
 	wxBoxSizer* mem_field_sizer;
+	// кнопки
+	wxButton* clock_button;
+	wxButton* run_button;
+	wxButton* stop_button;
+	wxButton* load_button;
+	wxButton* compile_button;
 	// регистры
 	wxTextCtrl* AH_field, * AL_field;
 	wxTextCtrl* BH_field, * BL_field;

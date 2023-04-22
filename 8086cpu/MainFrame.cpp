@@ -11,13 +11,23 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	code_field_sizer = new wxBoxSizer(wxVERTICAL);
 	mem_field_sizer = new wxBoxSizer(wxVERTICAL);
 
-	auto button = new wxButton(this, wxID_ANY, "button");
-	buttons_sizer->Add(button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	// BUTTON SIZER START
+	clock_button = new wxButton(this, wxID_ANY, "Шаг");
+	run_button = new wxButton(this, wxID_ANY, "Старт");
+	stop_button = new wxButton(this, wxID_ANY, "Стоп");
+	load_button = new wxButton(this, wxID_ANY, "Загрузить");
+	compile_button = new wxButton(this, wxID_ANY, "Компилировать");
+	buttons_sizer->Add(clock_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(run_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(stop_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(load_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(compile_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	// BUTTON SIZER END
 
 	// REGISTER SIZER START
 	reg_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "Регистры"),
-		0, wxALIGN_CENTER);
+		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	// AX
 	auto temp_sizer = new wxBoxSizer(wxHORIZONTAL);
 	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "AX: "),
@@ -158,13 +168,12 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	temp_sizer->Add(C_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(A_field, 1, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
-
 	// REGISTER SIZER END
 
 	// CODE SIZER START
 	code_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "Код программы"),
-		0, wxALIGN_CENTER);
+		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	code_editor = new wxTextCtrl(this, wxID_ANY, "");
 	code_field_sizer->Add(code_editor, 1, wxEXPAND);
 	// CODE SIZER END
