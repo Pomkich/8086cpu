@@ -18,7 +18,6 @@ private:
 	wxButton* run_button;
 	wxButton* stop_button;
 	wxButton* load_button;
-	wxButton* compile_button;
 	// регистры
 	wxTextCtrl* AH_field, * AL_field;
 	wxTextCtrl* BH_field, * BL_field;
@@ -42,4 +41,10 @@ private:
 
 public:
 	MainFrame();
+
+private:
+	// button handlers
+	void OnClockButton(wxCommandEvent& evt);
+
+	wxDECLARE_EVENT_TABLE();
 };

@@ -12,4 +12,8 @@ namespace GraphConst {
 
 	const int screen_width = 800;
 	const int screen_height = 600;
+
+	enum ButtonsIDs {
+		CLOCK, RUN, STOP, LOAD
+	};
 };

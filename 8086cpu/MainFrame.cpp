@@ -1,6 +1,10 @@
 #include "MainFrame.h"
 #include <iostream>
 
+wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
+	EVT_BUTTON(GraphConst::ButtonsIDs::CLOCK, MainFrame::OnClockButton)
+wxEND_EVENT_TABLE()
+
 MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	SetSize(800, 600);
 
@@ -12,16 +16,14 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	mem_field_sizer = new wxBoxSizer(wxVERTICAL);
 
 	// BUTTON SIZER START
-	clock_button = new wxButton(this, wxID_ANY, "Шаг");
-	run_button = new wxButton(this, wxID_ANY, "Старт");
-	stop_button = new wxButton(this, wxID_ANY, "Стоп");
-	load_button = new wxButton(this, wxID_ANY, "Загрузить");
-	compile_button = new wxButton(this, wxID_ANY, "Компилировать");
+	clock_button = new wxButton(this, GraphConst::ButtonsIDs::CLOCK, "Шаг");
+	run_button = new wxButton(this, GraphConst::ButtonsIDs::RUN, "Старт");
+	stop_button = new wxButton(this, GraphConst::ButtonsIDs::STOP, "Стоп");
+	load_button = new wxButton(this, GraphConst::ButtonsIDs::LOAD, "Загрузить");
 	buttons_sizer->Add(clock_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	buttons_sizer->Add(run_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	buttons_sizer->Add(stop_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	buttons_sizer->Add(load_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
-	buttons_sizer->Add(compile_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	// BUTTON SIZER END
 
 	// REGISTER SIZER START
@@ -203,4 +205,9 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 
 	SetSizer(main_sizer);
 	SetBackgroundColour(wxColour(100, 200, 100));
+	CreateStatusBar();
+}
+
+void MainFrame::OnClockButton(wxCommandEvent& evt) {
+	wxLogStatus("clicked");
 }
