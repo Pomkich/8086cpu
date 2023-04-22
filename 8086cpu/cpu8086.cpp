@@ -39,7 +39,7 @@ void cpu8086::clock() {
 	opcode = memory->readB(address);	// получение команды
 	opcode_table[opcode]();				// выполнение команды
 	IP++;								// установка счётчика на следующую команду
-	presenter->notifyRegChange();		// оповещение презентатора об изменениях
+	presenter->Render();		// оповещение презентатора об изменениях
 }
 
 void cpu8086::initMemory(std::shared_ptr<Memory> mem) {
@@ -48,6 +48,24 @@ void cpu8086::initMemory(std::shared_ptr<Memory> mem) {
 
 void cpu8086::initPresenter(AbstractPresenter* p_pres) {
 	presenter = p_pres;
+}
+
+void cpu8086::loadTestProgram() {
+	// инициализация сегментов
+	setRegVal(RegId::CS, 0x1000);
+	setRegVal(RegId::DS, 0x2000);
+	setRegVal(RegId::SS, 0x3000);
+	// загрузка программы в память
+	memory->writeB(0x10000, 0xB8);	// MOV AX, 12345
+	memory->writeB(0x10001, 0x39);	// MOV BX, 5000
+	memory->writeB(0x10002, 0x30);	// SUB AX, BX
+	memory->writeB(0x10003, 0xBB);	// XOR AX, BX
+	memory->writeB(0x10004, 0x88);
+	memory->writeB(0x10005, 0x13);
+	memory->writeB(0x10006, 0x2B);
+	memory->writeB(0x10007, 0xC3);
+	memory->writeB(0x10008, 0x33);
+	memory->writeB(0x10009, 0xC3);
 }
 
 word cpu8086::getRegVal(RegId reg_id) {

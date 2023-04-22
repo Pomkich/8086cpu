@@ -6,6 +6,7 @@
 #include "Memory.h"
 #include "AbstractPresenter.h"
 #include "ConsolePresenter.h"
+#include <sstream>
 
 class ConsolePresenter;
 
@@ -52,6 +53,7 @@ public:
 	void initOpTable();
 	void initMemory(std::shared_ptr<Memory> mem);
 	void initPresenter(AbstractPresenter* p_pres);
+	void loadTestProgram();
 	// функции работы с регистрами
 	word getRegVal(RegId reg_id);
 	void setRegVal(RegId reg_id, word value);	

@@ -50,7 +50,7 @@ public:
 	void notifyMemChange() override {};
 	void notifyStkChange() override {};
 
-	void Render() override {};
+	void Render();
 
 private:
 	// button handlers
