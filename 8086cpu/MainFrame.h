@@ -32,6 +32,7 @@ private:
 	wxTextCtrl* code_editor;
 	// память
 	wxTextCtrl* mem_dump;
+	wxTextCtrl* start_address;
 
 public:
 	MainFrame();

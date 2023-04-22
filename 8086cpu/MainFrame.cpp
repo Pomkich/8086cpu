@@ -173,7 +173,14 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	mem_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "Память"),
 		0, wxALIGN_CENTER);
+	start_address = new wxTextCtrl(this, wxID_ANY, "");
+	mem_field_sizer->Add(new wxStaticText(this, wxID_ANY, "Начальный адрес"), 
+		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	mem_field_sizer->Add(start_address,
+		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+
 	mem_dump = new wxTextCtrl(this, wxID_ANY, "");
+	mem_dump->SetEditable(false);	// значения в памяти нельзя менять из интерфейса
 	mem_field_sizer->Add(mem_dump, 1, wxEXPAND);
 	// MEMORY SIZER END
 
