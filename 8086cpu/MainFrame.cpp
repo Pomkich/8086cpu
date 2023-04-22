@@ -3,6 +3,14 @@
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::CLOCK, MainFrame::OnClockButton)
+	EVT_TEXT(GraphConst::FieldIDs::AH, MainFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::AL, MainFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::BH, MainFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::BL, MainFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::CH, MainFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::CL, MainFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::DH, MainFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::DL, MainFrame::OnByteFieldChange)
 wxEND_EVENT_TABLE()
 
 MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
@@ -34,9 +42,9 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	auto temp_sizer = new wxBoxSizer(wxHORIZONTAL);
 	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "AX: "),
 		1, wxALIGN_CENTER);
-	AH_field = new wxTextCtrl(this, wxID_ANY, "00");
+	AH_field = new wxTextCtrl(this, GraphConst::FieldIDs::AH, "00");
 	AH_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
-	AL_field = new wxTextCtrl(this, wxID_ANY, "00");
+	AL_field = new wxTextCtrl(this, GraphConst::FieldIDs::AL, "00");
 	AL_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
 	temp_sizer->Add(AH_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(AL_field, 1, wxALIGN_CENTER);
@@ -45,9 +53,9 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
 	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "BX: "),
 		1, wxALIGN_CENTER);
-	BH_field = new wxTextCtrl(this, wxID_ANY, "00");
+	BH_field = new wxTextCtrl(this, GraphConst::FieldIDs::BH, "00");
 	BH_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
-	BL_field = new wxTextCtrl(this, wxID_ANY, "00");
+	BL_field = new wxTextCtrl(this, GraphConst::FieldIDs::BL, "00");
 	BL_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
 	temp_sizer->Add(BH_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(BL_field, 1, wxALIGN_CENTER);
@@ -56,9 +64,9 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
 	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "CX: "),
 		1, wxALIGN_CENTER);
-	CH_field = new wxTextCtrl(this, wxID_ANY, "00");
+	CH_field = new wxTextCtrl(this, GraphConst::FieldIDs::CH, "00");
 	CH_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
-	CL_field = new wxTextCtrl(this, wxID_ANY, "00");
+	CL_field = new wxTextCtrl(this, GraphConst::FieldIDs::CL, "00");
 	CL_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
 	temp_sizer->Add(CH_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(CL_field, 1, wxALIGN_CENTER);
@@ -67,9 +75,9 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
 	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "DX: "),
 		1, wxALIGN_CENTER);
-	DH_field = new wxTextCtrl(this, wxID_ANY, "00");
+	DH_field = new wxTextCtrl(this, GraphConst::FieldIDs::DH, "00");
 	DH_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
-	DL_field = new wxTextCtrl(this, wxID_ANY, "00");
+	DL_field = new wxTextCtrl(this, GraphConst::FieldIDs::DL, "00");
 	DL_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
 	temp_sizer->Add(DH_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(DL_field, 1, wxALIGN_CENTER);
@@ -209,5 +217,18 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 }
 
 void MainFrame::OnClockButton(wxCommandEvent& evt) {
+	
 	wxLogStatus("clicked");
+}
+
+void MainFrame::OnByteFieldChange(wxCommandEvent& evt) {
+	wxLogStatus(evt.GetString());
+}
+
+void MainFrame::OnWordFieldChange(wxCommandEvent& evt) {
+	wxLogStatus(evt.GetString());
+}
+
+void MainFrame::OnFlagFieldChange(wxCommandEvent& evt) {
+	wxLogStatus(evt.GetString());
 }

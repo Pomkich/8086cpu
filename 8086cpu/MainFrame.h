@@ -45,6 +45,9 @@ public:
 private:
 	// button handlers
 	void OnClockButton(wxCommandEvent& evt);
+	void OnByteFieldChange(wxCommandEvent& evt);
+	void OnWordFieldChange(wxCommandEvent& evt);
+	void OnFlagFieldChange(wxCommandEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 };

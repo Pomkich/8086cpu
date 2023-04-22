@@ -16,4 +16,15 @@ namespace GraphConst {
 	enum ButtonsIDs {
 		CLOCK, RUN, STOP, LOAD
 	};
+
+	enum FieldIDs {
+		AL, AH,
+		BL, BH,
+		CL, CH,
+		DL, DH,
+		SP, BP, SI, DI,
+		CS, DS, SS, ES,
+		IP,
+		O, S, Z, P, C, A
+	};
 };
