@@ -20,7 +20,7 @@ cpu8086::cpu8086() {
 	opcode = 0;
 	address = 0;
 
-	presenter = std::make_shared<EmptyPresenter>();
+	presenter = new EmptyPresenter();
 }
 
 // сброс состояния процессора
@@ -46,7 +46,7 @@ void cpu8086::initMemory(std::shared_ptr<Memory> mem) {
 	memory = mem;
 }
 
-void cpu8086::initPresenter(std::shared_ptr<AbstractPresenter> p_pres) {
+void cpu8086::initPresenter(AbstractPresenter* p_pres) {
 	presenter = p_pres;
 }
 

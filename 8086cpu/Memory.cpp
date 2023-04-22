@@ -2,7 +2,7 @@
 
 Memory::Memory() {
 	memset(memory, 0, memory_size);
-	presenter = std::make_shared<EmptyPresenter>();
+	presenter = new EmptyPresenter();
 }
 
 void Memory::reset() {
@@ -11,7 +11,7 @@ void Memory::reset() {
 	presenter->notifyStkChange();
 }
 
-void Memory::initPresenter(std::shared_ptr<AbstractPresenter> p_pres) {
+void Memory::initPresenter(AbstractPresenter* p_pres) {
 	presenter = p_pres;
 }
 

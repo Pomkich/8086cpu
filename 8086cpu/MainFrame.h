@@ -1,8 +1,11 @@
 #pragma once
 #include <wx/wx.h>
 #include "GraphicConstants.h"
+#include "AbstractPresenter.h"
+#include "cpu8086.h"
+#include "Memory.h"
 
-class MainFrame : public wxFrame {
+class MainFrame : public wxFrame, public AbstractPresenter {
 private:
 	wxPanel* panel;
 	wxButton* cycle_button;
@@ -41,6 +44,13 @@ private:
 
 public:
 	MainFrame();
+	void initEmulator();
+
+	void notifyRegChange() override {};
+	void notifyMemChange() override {};
+	void notifyStkChange() override {};
+
+	void Render() override {};
 
 private:
 	// button handlers

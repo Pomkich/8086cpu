@@ -10,12 +10,12 @@ class ConsolePresenter;
 class Memory {
 private:
 	byte memory[memory_size];
-	std::shared_ptr<AbstractPresenter> presenter;
+	AbstractPresenter* presenter;
 
 public:
 	Memory();
 	void reset();
-	void initPresenter(std::shared_ptr<AbstractPresenter> p_pres);
+	void initPresenter(AbstractPresenter* p_pres);
 
 	byte readB(dword address);
 	word readW(dword address);

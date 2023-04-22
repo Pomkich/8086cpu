@@ -216,6 +216,15 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	CreateStatusBar();
 }
 
+void MainFrame::initEmulator() {
+	cpu_pt = std::make_shared<cpu8086>();
+	mem_pt = std::make_shared<Memory>();
+	cpu_pt->initOpTable();
+	cpu_pt->initMemory(mem_pt);
+	cpu_pt->initPresenter(this);
+	mem_pt->initPresenter(this);
+}
+
 void MainFrame::OnClockButton(wxCommandEvent& evt) {
 	
 	wxLogStatus("clicked");

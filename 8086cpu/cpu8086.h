@@ -41,7 +41,7 @@ private:
 	// указатель на физическое адресное пространство
 	std::shared_ptr<Memory> memory;
 	// указатель на презентатор
-	std::shared_ptr<AbstractPresenter> presenter;
+	AbstractPresenter* presenter;
 
 	friend class Tester;
 
@@ -51,7 +51,7 @@ public:
 	void clock();	// выполнение одной команды
 	void initOpTable();
 	void initMemory(std::shared_ptr<Memory> mem);
-	void initPresenter(std::shared_ptr<AbstractPresenter> p_pres);
+	void initPresenter(AbstractPresenter* p_pres);
 	// функции работы с регистрами
 	word getRegVal(RegId reg_id);
 	void setRegVal(RegId reg_id, word value);	

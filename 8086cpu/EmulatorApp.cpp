@@ -3,6 +3,7 @@
 
 bool EmulatorApp::OnInit() {
 	MainFrame* frame = new MainFrame();
+	frame->initEmulator();
 	frame->Show();
 	return true;
 }
