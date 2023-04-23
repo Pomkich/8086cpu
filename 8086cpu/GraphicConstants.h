@@ -9,9 +9,16 @@ namespace GraphConst {
 	const int byte_field_height = 20;
 	const int word_field_width = 40;
 	const int word_field_height = byte_field_height;
+	const int memory_cols = 16;
+	const int memory_rows = 16;
+	const int row_label_size = 40;
+	const int col_label_size = 16;
+
 
 	const int screen_width = 800;
 	const int screen_height = 600;
+
+
 
 	enum ButtonsIDs {
 		CLOCK, RUN, STOP, LOAD

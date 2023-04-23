@@ -13,8 +13,15 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_TEXT(GraphConst::FieldIDs::DL, MainFrame::OnByteFieldChange)
 wxEND_EVENT_TABLE()
 
+// вспомогательная функция
+std::string int_to_hex(dword i) {
+	std::stringstream stream;
+	stream << std::hex << i;
+	return stream.str();
+}
+
 MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
-	SetSize(800, 600);
+	SetSize(GraphConst::screen_width, GraphConst::screen_height);
 
 	main_sizer = new wxBoxSizer(wxVERTICAL);
 	buttons_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -192,21 +199,31 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	mem_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "Память"),
 		0, wxALIGN_CENTER);
-	start_address = new wxTextCtrl(this, wxID_ANY, "");
+	start_address = new wxTextCtrl(this, wxID_ANY, "00000");
 	mem_field_sizer->Add(new wxStaticText(this, wxID_ANY, "Начальный адрес"), 
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	mem_field_sizer->Add(start_address,
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 
-	mem_dump = new wxTextCtrl(this, wxID_ANY, "");
-	mem_dump->SetEditable(false);	// значения в памяти нельзя менять из интерфейса
-	mem_field_sizer->Add(mem_dump, 1, wxEXPAND);
+	mem_dump = new wxGrid(this, wxID_ANY);
+	mem_dump->CreateGrid(GraphConst::memory_rows, GraphConst::memory_cols);
+	for (int i = 0; i < GraphConst::memory_cols; i++) {
+		mem_dump->SetColLabelValue(i, "00");
+	}
+	for (int i = 0; i < GraphConst::memory_rows; i++) {
+		mem_dump->SetRowLabelValue(i, "0000" + int_to_hex(i));
+	}
+	mem_dump->SetRowLabelSize(GraphConst::row_label_size);
+	mem_dump->SetColLabelSize(GraphConst::col_label_size);
+	mem_dump->AutoSizeColumns();
+	mem_dump->HideColLabels();
+	mem_field_sizer->Add(mem_dump, 0, wxEXPAND);
 	// MEMORY SIZER END
 
 
 	fields_sizer->Add(reg_field_sizer, 1, wxEXPAND | wxALL, GraphConst::base_border);
 	fields_sizer->Add(code_field_sizer, 2, wxEXPAND | wxALL, GraphConst::base_border);
-	fields_sizer->Add(mem_field_sizer, 1, wxEXPAND | wxALL, GraphConst::base_border);
+	fields_sizer->Add(mem_field_sizer, 2, wxEXPAND | wxALL, GraphConst::base_border);
 
 	main_sizer->Add(buttons_sizer, 1, wxEXPAND | wxALL, GraphConst::base_border);
 	main_sizer->Add(fields_sizer, 7, wxEXPAND | wxALL, GraphConst::base_border);
@@ -228,15 +245,12 @@ void MainFrame::initEmulator() {
 	Render();
 }
 
-// вспомогательная функция
-std::string int_to_hex(dword i) {
-	std::stringstream stream;
-	stream << std::hex << i;
-	return stream.str();
+void MainFrame::Render() {
+	updateRegisters();
+	updateMemory();
 }
 
-void MainFrame::Render() {
-	// register update
+void MainFrame::updateRegisters() {
 	AH_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::AH)));
 	AL_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::AL)));
 	BH_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::BH)));
@@ -261,6 +275,30 @@ void MainFrame::Render() {
 	P_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::P)));
 	C_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::C)));
 	A_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::A)));
+}
+
+void MainFrame::updateMemory() {
+	/*int address = 0;
+	start_address->GetLabelText().ToInt(&address);
+	const int rows = 32;
+	const int columns = 16;
+	mem_dump->Clear();
+	mem_dump->AppendText("_____ 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n");
+	for (int row = 0; row < rows; row++) {
+		std::string line = "_____ ";
+		mem_dump->AppendText("_____ ");
+		for (int column = 0; column < columns; column++) {
+			int value = mem_pt->readW(address + columns * row + column);
+			if (value < 0x10) {
+				mem_dump->AppendText("0" + int_to_hex(value));
+			}
+			else {
+				mem_dump->AppendText(int_to_hex(value));
+			}
+			mem_dump->AppendText(" ");
+		}
+		mem_dump->AppendText("\n");
+	}*/
 }
 
 void MainFrame::OnClockButton(wxCommandEvent& evt) {

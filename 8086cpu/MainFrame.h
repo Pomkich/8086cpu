@@ -1,9 +1,11 @@
 #pragma once
 #include <wx/wx.h>
+#include <wx/grid.h>
 #include "GraphicConstants.h"
 #include "AbstractPresenter.h"
 #include "cpu8086.h"
 #include "Memory.h"
+#include <string>
 
 class MainFrame : public wxFrame, public AbstractPresenter {
 private:
@@ -39,7 +41,7 @@ private:
 	// код
 	wxTextCtrl* code_editor;
 	// память
-	wxTextCtrl* mem_dump;
+	wxGrid* mem_dump;
 	wxTextCtrl* start_address;
 
 public:
@@ -53,6 +55,10 @@ public:
 	void Render();
 
 private:
+	// update functions
+	void updateRegisters();
+	void updateMemory();
+
 	// button handlers
 	void OnClockButton(wxCommandEvent& evt);
 	void OnByteFieldChange(wxCommandEvent& evt);
