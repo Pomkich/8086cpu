@@ -14,11 +14,29 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_TEXT(GraphConst::FieldIDs::DL, MainFrame::OnByteFieldChange)
 wxEND_EVENT_TABLE()
 
-// вспомогательна€ функци€
+// вспомогательные функции
 std::string int_to_hex(dword i) {
 	std::stringstream stream;
 	stream << std::hex << i;
 	return stream.str();
+}
+
+int hex_to_int(std::string hexVal) {
+	int len = hexVal.size();
+	int base = 1;
+	int dec_val = 0;
+
+	for (int i = len - 1; i >= 0; i--) {
+		if (hexVal[i] >= '0' && hexVal[i] <= '9') {
+			dec_val += (int(hexVal[i]) - 48) * base;
+			base = base * 16;
+		}
+		else if (hexVal[i] >= 'A' && hexVal[i] <= 'F') {
+			dec_val += (int(hexVal[i]) - 55) * base;
+			base = base * 16;
+		}
+	}
+	return dec_val;
 }
 
 MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
@@ -281,7 +299,7 @@ void MainFrame::updateRegisters() {
 
 void MainFrame::updateMemory() {
 	int address = 0;
-	start_address->GetLabelText().ToInt(&address);
+	address = hex_to_int(start_address->GetLabelText().ToStdString());
 
 	// перезапись левых €чеек-подсказок
 	for (int row = 0; row < GraphConst::memory_rows; row++) {
@@ -306,7 +324,7 @@ void MainFrame::updateMemory() {
 }
 
 void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
-	start_address->SetLabel(evt.GetString());
+	start_address->SetLabel(evt.GetString().MakeUpper());
 	updateMemory();
 	wxLogStatus(start_address->GetLabel());
 }
