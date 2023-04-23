@@ -303,7 +303,7 @@ void MainFrame::updateMemory() {
 
 	// перезапись левых €чеек-подсказок
 	for (int row = 0; row < GraphConst::memory_rows; row++) {
-		std::string value = int_to_hex(address + row);
+		std::string value = int_to_hex(address + row * 0x10);
 		// заполнение до 5 символов
 		value.insert(0, 5 - value.length(), '0');
 		mem_dump->SetRowLabelValue(row, value);
