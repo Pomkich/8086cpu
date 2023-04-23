@@ -25,6 +25,7 @@ namespace GraphConst {
 	};
 
 	enum FieldIDs {
+		START_ADDRESS,
 		AL, AH,
 		BL, BH,
 		CL, CH,

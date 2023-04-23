@@ -60,6 +60,7 @@ private:
 	void updateMemory();
 
 	// button handlers
+	void OnStartAddressChange(wxCommandEvent& evt);
 	void OnClockButton(wxCommandEvent& evt);
 	void OnByteFieldChange(wxCommandEvent& evt);
 	void OnWordFieldChange(wxCommandEvent& evt);

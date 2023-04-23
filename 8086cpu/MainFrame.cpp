@@ -3,6 +3,7 @@
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::CLOCK, MainFrame::OnClockButton)
+	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, MainFrame::OnStartAddressChange)
 	EVT_TEXT(GraphConst::FieldIDs::AH, MainFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::AL, MainFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::BH, MainFrame::OnByteFieldChange)
@@ -199,7 +200,8 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	mem_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "ѕам€ть"),
 		0, wxALIGN_CENTER);
-	start_address = new wxTextCtrl(this, wxID_ANY, "00000");
+	start_address = new wxTextCtrl(this, GraphConst::FieldIDs::START_ADDRESS, "00000", 
+		wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 	mem_field_sizer->Add(new wxStaticText(this, wxID_ANY, "Ќачальный адрес"), 
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	mem_field_sizer->Add(start_address,
@@ -281,6 +283,14 @@ void MainFrame::updateMemory() {
 	int address = 0;
 	start_address->GetLabelText().ToInt(&address);
 
+	// перезапись левых €чеек-подсказок
+	for (int row = 0; row < GraphConst::memory_rows; row++) {
+		std::string value = int_to_hex(address + row);
+		// заполнение до 5 символов
+		value.insert(0, 5 - value.length(), '0');
+		mem_dump->SetRowLabelValue(row, value);
+	}
+
 	// заполнение €чеек пам€ти
 	for (int row = 0; row < GraphConst::memory_rows; row++) {
 		for (int col = 0; col < GraphConst::memory_cols; col++) {
@@ -293,6 +303,12 @@ void MainFrame::updateMemory() {
 			}
 		}
 	}
+}
+
+void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
+	start_address->SetLabel(evt.GetString());
+	updateMemory();
+	wxLogStatus(start_address->GetLabel());
 }
 
 void MainFrame::OnClockButton(wxCommandEvent& evt) {
