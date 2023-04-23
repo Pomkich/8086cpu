@@ -278,27 +278,21 @@ void MainFrame::updateRegisters() {
 }
 
 void MainFrame::updateMemory() {
-	/*int address = 0;
+	int address = 0;
 	start_address->GetLabelText().ToInt(&address);
-	const int rows = 32;
-	const int columns = 16;
-	mem_dump->Clear();
-	mem_dump->AppendText("_____ 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n");
-	for (int row = 0; row < rows; row++) {
-		std::string line = "_____ ";
-		mem_dump->AppendText("_____ ");
-		for (int column = 0; column < columns; column++) {
-			int value = mem_pt->readW(address + columns * row + column);
+
+	// заполнение €чеек пам€ти
+	for (int row = 0; row < GraphConst::memory_rows; row++) {
+		for (int col = 0; col < GraphConst::memory_cols; col++) {
+			int value = mem_pt->readW(address + col * GraphConst::memory_cols + col);
 			if (value < 0x10) {
-				mem_dump->AppendText("0" + int_to_hex(value));
+				mem_dump->SetCellValue(row, col, "0" + std::to_string(value));
 			}
 			else {
-				mem_dump->AppendText(int_to_hex(value));
+				mem_dump->SetCellValue(row, col, std::to_string(value));
 			}
-			mem_dump->AppendText(" ");
 		}
-		mem_dump->AppendText("\n");
-	}*/
+	}
 }
 
 void MainFrame::OnClockButton(wxCommandEvent& evt) {
