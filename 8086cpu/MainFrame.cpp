@@ -312,12 +312,12 @@ void MainFrame::updateMemory() {
 	// заполнение €чеек пам€ти
 	for (int row = 0; row < GraphConst::memory_rows; row++) {
 		for (int col = 0; col < GraphConst::memory_cols; col++) {
-			int value = mem_pt->readW(address + col * GraphConst::memory_cols + col);
+			int value = mem_pt->readB(address + (row * GraphConst::memory_cols) + col);
 			if (value < 0x10) {
-				mem_dump->SetCellValue(row, col, "0" + std::to_string(value));
+				mem_dump->SetCellValue(row, col, "0" + int_to_hex(value));
 			}
 			else {
-				mem_dump->SetCellValue(row, col, std::to_string(value));
+				mem_dump->SetCellValue(row, col, int_to_hex(value));
 			}
 		}
 	}
