@@ -39,7 +39,7 @@ void cpu8086::clock() {
 	opcode = memory->readB(address);	// получение команды
 	opcode_table[opcode]();				// выполнение команды
 	IP++;								// установка счётчика на следующую команду
-	presenter->Render();		// оповещение презентатора об изменениях
+	presenter->notifyRegChange();		// оповещение презентатора об изменениях
 }
 
 void cpu8086::initMemory(std::shared_ptr<Memory> mem) {

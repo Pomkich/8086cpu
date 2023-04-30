@@ -48,16 +48,13 @@ public:
 	MainFrame();
 	void initEmulator();
 
-	void notifyRegChange() override {};
-	void notifyMemChange() override {};
+	void notifyRegChange() override;
+	void notifyMemChange() override;
 	void notifyStkChange() override {};
 
 	void Render();
 
 private:
-	// update functions
-	void updateRegisters();
-	void updateMemory();
 
 	// button handlers
 	void OnStartAddressChange(wxCommandEvent& evt);

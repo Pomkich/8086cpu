@@ -210,7 +210,8 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	code_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "Код программы"),
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
-	code_editor = new wxTextCtrl(this, wxID_ANY, "");
+	code_editor = new wxTextCtrl(this, wxID_ANY, "MOV AX, 12345\nMOV BX, 5000\nSUB AX, BX\nXOR AX, BX", 
+		wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
 	code_field_sizer->Add(code_editor, 1, wxEXPAND);
 	// CODE SIZER END
 
@@ -266,11 +267,11 @@ void MainFrame::initEmulator() {
 }
 
 void MainFrame::Render() {
-	updateRegisters();
-	updateMemory();
+	notifyRegChange();
+	notifyMemChange();
 }
 
-void MainFrame::updateRegisters() {
+void MainFrame::notifyRegChange() {
 	AH_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::AH)));
 	AL_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::AL)));
 	BH_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::BH)));
@@ -297,7 +298,7 @@ void MainFrame::updateRegisters() {
 	A_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::A)));
 }
 
-void MainFrame::updateMemory() {
+void MainFrame::notifyMemChange() {
 	int address = 0;
 	address = hex_to_int(start_address->GetLabelText().ToStdString());
 
@@ -325,7 +326,7 @@ void MainFrame::updateMemory() {
 
 void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
 	start_address->SetLabel(evt.GetString().MakeUpper());
-	updateMemory();
+	notifyMemChange();
 	wxLogStatus(start_address->GetLabel());
 }
 
