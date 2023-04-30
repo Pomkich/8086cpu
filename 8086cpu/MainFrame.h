@@ -6,11 +6,10 @@
 #include "cpu8086.h"
 #include "Memory.h"
 #include <string>
+#include <fstream>
 
 class MainFrame : public wxFrame, public AbstractPresenter {
 private:
-	wxPanel* panel;
-	wxButton* cycle_button;
 	// sizers
 	wxBoxSizer* main_sizer;
 	wxBoxSizer* buttons_sizer;
@@ -43,6 +42,9 @@ private:
 	// память
 	wxGrid* mem_dump;
 	wxTextCtrl* start_address;
+
+	// путь к файлу с программой
+	wxString source_path;
 
 public:
 	MainFrame();
