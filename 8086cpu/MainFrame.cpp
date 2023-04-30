@@ -211,7 +211,7 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	code_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "Код программы"),
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
-	code_editor = new wxTextCtrl(this, wxID_ANY, "MOV AX, 12345\nMOV BX, 5000\nSUB AX, BX\nXOR AX, BX", 
+	code_editor = new wxTextCtrl(this, GraphConst::CODE_FIELD, wxEmptyString, 
 		wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
 	code_field_sizer->Add(code_editor, 1, wxEXPAND);
 	// CODE SIZER END
@@ -301,7 +301,7 @@ void MainFrame::notifyRegChange() {
 
 void MainFrame::notifyMemChange() {
 	int address = 0;
-	address = hex_to_int(start_address->GetLabelText().ToStdString());
+	address = hex_to_int(start_address->GetValue().ToStdString());
 
 	// перезапись левых ячеек-подсказок
 	for (int row = 0; row < GraphConst::memory_rows; row++) {
@@ -326,9 +326,9 @@ void MainFrame::notifyMemChange() {
 }
 
 void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
-	start_address->SetLabel(evt.GetString().MakeUpper());
+	start_address->SetValue(evt.GetString().MakeUpper());
 	notifyMemChange();
-	wxLogStatus(start_address->GetLabel());
+	wxLogStatus(start_address->GetValue());
 }
 
 void MainFrame::OnClockButton(wxCommandEvent& evt) {
@@ -336,6 +336,7 @@ void MainFrame::OnClockButton(wxCommandEvent& evt) {
 	wxLogStatus("clicked");
 }
 
+// загрузить исходный код программы
 void MainFrame::OnLoadButton(wxCommandEvent& evt) {
 	wxFileDialog
 		openFileDialog(this, _("Загрузить исходный код"), "", "",
@@ -349,7 +350,7 @@ void MainFrame::OnLoadButton(wxCommandEvent& evt) {
 	std::ifstream stream(source_path.ToStdString());
 	std::string line;
 	code_editor->Clear();
-	// записываем исходный код
+	// читаем файл и записываем исходный код
 	while (std::getline(stream, line)) {
 		code_editor->AppendText(line);
 		code_editor->AppendText('\n');
@@ -359,11 +360,15 @@ void MainFrame::OnLoadButton(wxCommandEvent& evt) {
 	wxLogStatus(source_path);
 }
 
+// скомплиировать исходный код
 void MainFrame::OnRunButton(wxCommandEvent& evt) {
+	// записываем то, что находится в поле кода в файл
+	std::string text = code_editor->GetValue().ToStdString();
+	std::ofstream temp("temp.asm");
+	temp << text;
+	temp.close();
 
-
-
-	// код запуска ассемблера
+	// код запуска компилятора с записанным файлом
 	STARTUPINFOA si;
 	PROCESS_INFORMATION pi;
 
