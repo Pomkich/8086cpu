@@ -3,6 +3,7 @@
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::CLOCK, MainFrame::OnClockButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, MainFrame::OnLoadButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, MainFrame::OnStartAddressChange)
 	EVT_TEXT(GraphConst::FieldIDs::AH, MainFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::AL, MainFrame::OnByteFieldChange)
@@ -333,6 +334,17 @@ void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
 void MainFrame::OnClockButton(wxCommandEvent& evt) {
 	cpu_pt->clock();
 	wxLogStatus("clicked");
+}
+
+void MainFrame::OnLoadButton(wxCommandEvent& evt) {
+	wxFileDialog
+		openFileDialog(this, _("Загрузить исходный код"), "", "",
+			"ASM files (*.asm)|*.asm", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return;     // the user changed idea...
+
+	wxLogStatus(openFileDialog.GetPath());
 }
 
 void MainFrame::OnByteFieldChange(wxCommandEvent& evt) {
