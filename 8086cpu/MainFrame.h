@@ -7,6 +7,8 @@
 #include "Memory.h"
 #include <string>
 #include <fstream>
+#include <Windows.h>
+#include <iostream>
 
 class MainFrame : public wxFrame, public AbstractPresenter {
 private:
@@ -62,6 +64,7 @@ private:
 	void OnStartAddressChange(wxCommandEvent& evt);
 	void OnClockButton(wxCommandEvent& evt);
 	void OnLoadButton(wxCommandEvent& evt);
+	void OnRunButton(wxCommandEvent& evt);
 	void OnByteFieldChange(wxCommandEvent& evt);
 	void OnWordFieldChange(wxCommandEvent& evt);
 	void OnFlagFieldChange(wxCommandEvent& evt);

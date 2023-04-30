@@ -1,9 +1,9 @@
 #include "MainFrame.h"
-#include <iostream>
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::CLOCK, MainFrame::OnClockButton)
 	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, MainFrame::OnLoadButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::RUN, MainFrame::OnRunButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, MainFrame::OnStartAddressChange)
 	EVT_TEXT(GraphConst::FieldIDs::AH, MainFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::AL, MainFrame::OnByteFieldChange)
@@ -357,6 +357,38 @@ void MainFrame::OnLoadButton(wxCommandEvent& evt) {
 	stream.close();
 
 	wxLogStatus(source_path);
+}
+
+void MainFrame::OnRunButton(wxCommandEvent& evt) {
+
+
+
+	// код запуска ассемблера
+	STARTUPINFOA si;
+	PROCESS_INFORMATION pi;
+
+	// set the size of the structures
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	// start the program up
+	CreateProcessA
+	(
+		NULL,   // the path
+		const_cast<LPSTR>(".\\FASM.EXE temp.asm"),  // Command line
+		NULL,                   // Process handle not inheritable
+		NULL,                   // Thread handle not inheritable
+		FALSE,                  // Set handle inheritance to FALSE
+		CREATE_NO_WINDOW,     // Opens file in a separate console
+		NULL,           // Use parent's environment block
+		NULL,           // Use parent's starting directory 
+		&si,            // Pointer to STARTUPINFO structure
+		&pi           // Pointer to PROCESS_INFORMATION structure
+	);
+	// Close process and thread handles.
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
 }
 
 void MainFrame::OnByteFieldChange(wxCommandEvent& evt) {
