@@ -11,6 +11,17 @@ void Memory::reset() {
 	presenter->notifyStkChange();
 }
 
+void Memory::loadProgram(int start_address, std::string file_name) {
+	std::ifstream program(file_name, std::ios::binary);
+	program.seekg(0, std::ios::end);
+	size_t length = program.tellg();
+	program.seekg(0, std::ios::beg);
+	program.unsetf(std::ios::skipws);
+	for (int i = start_address; i < length + start_address; i++) {
+		program >> memory[i];
+	}
+}
+
 void Memory::initPresenter(AbstractPresenter* p_pres) {
 	presenter = p_pres;
 }

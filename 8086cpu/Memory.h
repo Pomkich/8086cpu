@@ -2,6 +2,7 @@
 #include "Constants.h"
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include "AbstractPresenter.h"
 #include "ConsolePresenter.h"
 
@@ -15,7 +16,9 @@ private:
 public:
 	Memory();
 	void reset();
+	void loadProgram(int start_address, std::string file_name);
 	void initPresenter(AbstractPresenter* p_pres);
+
 
 	byte readB(dword address);
 	word readW(dword address);

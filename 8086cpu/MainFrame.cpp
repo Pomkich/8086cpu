@@ -261,7 +261,9 @@ void MainFrame::initEmulator() {
 	cpu_pt->initOpTable();
 	cpu_pt->initMemory(mem_pt);
 	cpu_pt->initPresenter(this);
-	cpu_pt->loadTestProgram();
+	cpu_pt->setRegVal(RegId::CS, 0x1000);
+	cpu_pt->setRegVal(RegId::DS, 0x2000);
+	cpu_pt->setRegVal(RegId::SS, 0x3000);
 	mem_pt->initPresenter(this);
 
 	Render();
@@ -391,9 +393,17 @@ void MainFrame::OnRunButton(wxCommandEvent& evt) {
 		&si,            // Pointer to STARTUPINFO structure
 		&pi           // Pointer to PROCESS_INFORMATION structure
 	);
+
+	// ждём пока программа скомпилируется
+	WaitForSingleObject(pi.hProcess, INFINITE);
+
 	// Close process and thread handles.
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
+
+	// записываем скомпилированную программу в память
+	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
+	notifyMemChange();
 }
 
 void MainFrame::OnByteFieldChange(wxCommandEvent& evt) {
