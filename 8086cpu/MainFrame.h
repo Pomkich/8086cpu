@@ -45,9 +45,6 @@ private:
 	wxGrid* mem_dump;
 	wxTextCtrl* start_address;
 
-	// путь к файлу с программой
-	wxString source_path;
-
 public:
 	MainFrame();
 	void initEmulator();

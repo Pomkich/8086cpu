@@ -347,9 +347,8 @@ void MainFrame::OnLoadButton(wxCommandEvent& evt) {
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;     // the user changed idea...
 
-	source_path = openFileDialog.GetPath();
 	// открываем файл в режиме чтения
-	std::ifstream stream(source_path.ToStdString());
+	std::ifstream stream(openFileDialog.GetPath().ToStdString());
 	std::string line;
 	code_editor->Clear();
 	// читаем файл и записываем исходный код
@@ -358,8 +357,6 @@ void MainFrame::OnLoadButton(wxCommandEvent& evt) {
 		code_editor->AppendText('\n');
 	}
 	stream.close();
-
-	wxLogStatus(source_path);
 }
 
 // скомплиировать исходный код
