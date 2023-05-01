@@ -54,11 +54,15 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	menu = new wxMenuBar();
 	emulator = new wxMenu();
 	labs = new wxMenu();
+	sandbox = new wxMenuItem(emulator, wxID_ANY, "Песочница");
+	reference = new wxMenuItem(emulator, wxID_ANY, "Справка");
 	createLab = new wxMenuItem(labs, wxID_ANY, "Создать лабораторную");
 	testLab = new wxMenuItem(labs, wxID_ANY, "Проверить лабораторную");
-	menu->Append(emulator, "Эмулятор");
+	emulator->Append(sandbox);
+	emulator->Append(reference);
 	labs->Append(createLab);
 	labs->Append(testLab);
+	menu->Append(emulator, "Эмулятор");
 	menu->Append(labs, "Лабораторные");
 	SetMenuBar(menu);
 	// MENU END
