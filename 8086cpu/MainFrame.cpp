@@ -275,30 +275,30 @@ void MainFrame::Render() {
 }
 
 void MainFrame::notifyRegChange() {
-	AH_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::AH)));
-	AL_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::AL)));
-	BH_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::BH)));
-	BL_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::BL)));
-	CH_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::CH)));
-	CL_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::CL)));
-	DH_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::DH)));
-	DL_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::DL)));
-	CS_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::CS)));
-	IP_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::IP)));
-	SS_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::SS)));
-	SP_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::SP)));
-	BP_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::BP)));
-	SI_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::SI)));
-	DI_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::DI)));
-	DS_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::DS)));
-	ES_field->SetLabel(int_to_hex(cpu_pt->getRegVal(RegId::ES)));
+	AH_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::AH)));
+	AL_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::AL)));
+	BH_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::BH)));
+	BL_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::BL)));
+	CH_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::CH)));
+	CL_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::CL)));
+	DH_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::DH)));
+	DL_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::DL)));
+	CS_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::CS)));
+	IP_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::IP)));
+	SS_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::SS)));
+	SP_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::SP)));
+	BP_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::BP)));
+	SI_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::SI)));
+	DI_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::DI)));
+	DS_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::DS)));
+	ES_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::ES)));
 
-	O_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::O)));
-	S_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::S)));
-	Z_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::Z)));
-	P_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::P)));
-	C_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::C)));
-	A_field->SetLabel(std::to_string(cpu_pt->getFlag(Flag::A)));
+	O_field->SetValue(std::to_string(cpu_pt->getFlag(Flag::O)));
+	S_field->SetValue(std::to_string(cpu_pt->getFlag(Flag::S)));
+	Z_field->SetValue(std::to_string(cpu_pt->getFlag(Flag::Z)));
+	P_field->SetValue(std::to_string(cpu_pt->getFlag(Flag::P)));
+	C_field->SetValue(std::to_string(cpu_pt->getFlag(Flag::C)));
+	A_field->SetValue(std::to_string(cpu_pt->getFlag(Flag::A)));
 }
 
 void MainFrame::notifyMemChange() {
