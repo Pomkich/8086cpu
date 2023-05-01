@@ -70,6 +70,10 @@ private:
 	void OnClockButton(wxCommandEvent& evt);
 	void OnLoadButton(wxCommandEvent& evt);
 	void OnRunButton(wxCommandEvent& evt);
+	void OnSandboxButton(wxCommandEvent& evt);
+	void OnReferenceButton(wxCommandEvent& evt);
+	void OnCreateLabButton(wxCommandEvent& evt);
+	void OnTestLabButton(wxCommandEvent& evt);
 	void OnByteFieldChange(wxCommandEvent& evt);
 	void OnWordFieldChange(wxCommandEvent& evt);
 	void OnFlagFieldChange(wxCommandEvent& evt);

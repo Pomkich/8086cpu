@@ -5,6 +5,10 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, MainFrame::OnLoadButton)
 	EVT_BUTTON(GraphConst::ButtonsIDs::RUN, MainFrame::OnRunButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, MainFrame::OnStartAddressChange)
+	EVT_MENU(GraphConst::ButtonsIDs::SANDBOX, MainFrame::OnSandboxButton)
+	EVT_MENU(GraphConst::ButtonsIDs::REFERENCE, MainFrame::OnReferenceButton)
+	EVT_MENU(GraphConst::ButtonsIDs::CREATE_LAB, MainFrame::OnCreateLabButton)
+	EVT_MENU(GraphConst::ButtonsIDs::TEST_LAB, MainFrame::OnTestLabButton)
 	EVT_TEXT(GraphConst::FieldIDs::AH, MainFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::AL, MainFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::BH, MainFrame::OnByteFieldChange)
@@ -54,10 +58,10 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	menu = new wxMenuBar();
 	emulator = new wxMenu();
 	labs = new wxMenu();
-	sandbox = new wxMenuItem(emulator, wxID_ANY, "Песочница");
-	reference = new wxMenuItem(emulator, wxID_ANY, "Справка");
-	createLab = new wxMenuItem(labs, wxID_ANY, "Создать лабораторную");
-	testLab = new wxMenuItem(labs, wxID_ANY, "Проверить лабораторную");
+	sandbox = new wxMenuItem(emulator, GraphConst::ButtonsIDs::SANDBOX, "Песочница");
+	reference = new wxMenuItem(emulator, GraphConst::ButtonsIDs::REFERENCE, "Справка");
+	createLab = new wxMenuItem(labs, GraphConst::ButtonsIDs::CREATE_LAB, "Создать лабораторную");
+	testLab = new wxMenuItem(labs, GraphConst::ButtonsIDs::TEST_LAB, "Проверить лабораторную");
 	emulator->Append(sandbox);
 	emulator->Append(reference);
 	labs->Append(createLab);
@@ -418,6 +422,22 @@ void MainFrame::OnRunButton(wxCommandEvent& evt) {
 	// записываем скомпилированную программу в память
 	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
 	notifyMemChange();
+}
+
+void MainFrame::OnSandboxButton(wxCommandEvent& evt) {
+	wxLogStatus("sandbox");
+}
+
+void MainFrame::OnReferenceButton(wxCommandEvent& evt) {
+	wxLogStatus("ref");
+}
+
+void MainFrame::OnCreateLabButton(wxCommandEvent& evt) {
+	wxLogStatus("create lab");
+}
+
+void MainFrame::OnTestLabButton(wxCommandEvent& evt) {
+	wxLogStatus("test lab");
 }
 
 void MainFrame::OnByteFieldChange(wxCommandEvent& evt) {
