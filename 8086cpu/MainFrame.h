@@ -19,6 +19,12 @@ private:
 	wxBoxSizer* reg_field_sizer;
 	wxBoxSizer* code_field_sizer;
 	wxBoxSizer* mem_field_sizer;
+	// меню
+	wxMenuBar* menu;
+	wxMenu* emulator;
+	wxMenu* labs;
+	wxMenuItem* createLab;
+	wxMenuItem* testLab;
 	// кнопки
 	wxButton* clock_button;
 	wxButton* run_button;

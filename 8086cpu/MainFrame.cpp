@@ -50,6 +50,19 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	code_field_sizer = new wxBoxSizer(wxVERTICAL);
 	mem_field_sizer = new wxBoxSizer(wxVERTICAL);
 
+	// MENU START
+	menu = new wxMenuBar();
+	emulator = new wxMenu();
+	labs = new wxMenu();
+	createLab = new wxMenuItem(labs, wxID_ANY, "Создать лабораторную");
+	testLab = new wxMenuItem(labs, wxID_ANY, "Проверить лабораторную");
+	menu->Append(emulator, "Эмулятор");
+	labs->Append(createLab);
+	labs->Append(testLab);
+	menu->Append(labs, "Лабораторные");
+	SetMenuBar(menu);
+	// MENU END
+
 	// BUTTON SIZER START
 	clock_button = new wxButton(this, GraphConst::ButtonsIDs::CLOCK, "Шаг");
 	run_button = new wxButton(this, GraphConst::ButtonsIDs::RUN, "Старт");
