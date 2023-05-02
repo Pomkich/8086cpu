@@ -9,6 +9,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(GraphConst::ButtonsIDs::REFERENCE, MainFrame::OnReferenceButton)
 	EVT_MENU(GraphConst::ButtonsIDs::CREATE_LAB, MainFrame::OnCreateLabButton)
 	EVT_MENU(GraphConst::ButtonsIDs::TEST_LAB, MainFrame::OnTestLabButton)
+	EVT_CLOSE(MainFrame::OnClose)
 	EVT_TEXT(GraphConst::FieldIDs::AH, MainFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::AL, MainFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::BH, MainFrame::OnByteFieldChange)
@@ -352,6 +353,11 @@ void MainFrame::notifyMemChange() {
 	}
 }
 
+void MainFrame::OnClose(wxCloseEvent& evt) {
+	lab_frame->Destroy();
+	Destroy();
+}
+
 void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
 	start_address->SetValue(evt.GetString().MakeUpper());
 	notifyMemChange();
@@ -438,7 +444,6 @@ void MainFrame::OnReferenceButton(wxCommandEvent& evt) {
 
 void MainFrame::OnCreateLabButton(wxCommandEvent& evt) {
 	lab_frame->Show(true);
-	Show(false);
 	wxLogStatus("create lab");
 }
 

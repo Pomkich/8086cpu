@@ -67,7 +67,7 @@ public:
 	void Render();
 
 private:
-
+	void OnClose(wxCloseEvent& evt);
 	// button handlers
 	void OnStartAddressChange(wxCommandEvent& evt);
 	void OnClockButton(wxCommandEvent& evt);
