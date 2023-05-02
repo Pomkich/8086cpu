@@ -5,15 +5,13 @@
 #include "AbstractPresenter.h"
 #include "cpu8086.h"
 #include "Memory.h"
-#include "CreateLabFrame.h"
 #include <string>
 #include <fstream>
 #include <Windows.h>
 #include <iostream>
 
-class MainFrame : public wxFrame, public AbstractPresenter {
+class CreateLabFrame : public wxFrame, public AbstractPresenter {
 private:
-	CreateLabFrame* lab_frame;
 	// sizers
 	wxBoxSizer* main_sizer;
 	wxBoxSizer* buttons_sizer;
@@ -30,9 +28,7 @@ private:
 	wxMenuItem* createLab;
 	wxMenuItem* testLab;
 	// кнопки
-	wxButton* clock_button;
-	wxButton* run_button;
-	wxButton* stop_button;
+	wxButton* generate_button;
 	wxButton* load_button;
 	// регистры
 	wxTextCtrl* AH_field, * AL_field;
@@ -56,9 +52,8 @@ private:
 	wxTextCtrl* start_address;
 
 public:
-	MainFrame();
+	CreateLabFrame();
 	void initEmulator();
-	void initLabFrame(CreateLabFrame* second_frame);
 
 	void notifyRegChange() override;
 	void notifyMemChange() override;
@@ -70,9 +65,7 @@ private:
 
 	// button handlers
 	void OnStartAddressChange(wxCommandEvent& evt);
-	void OnClockButton(wxCommandEvent& evt);
 	void OnLoadButton(wxCommandEvent& evt);
-	void OnRunButton(wxCommandEvent& evt);
 	void OnSandboxButton(wxCommandEvent& evt);
 	void OnReferenceButton(wxCommandEvent& evt);
 	void OnCreateLabButton(wxCommandEvent& evt);

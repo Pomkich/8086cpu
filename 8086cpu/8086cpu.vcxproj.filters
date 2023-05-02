@@ -48,6 +48,9 @@
     <ClCompile Include="ConsolePresenter.cpp">
       <Filter>Исходные файлы\gui</Filter>
     </ClCompile>
+    <ClCompile Include="CreateLabFrame.cpp">
+      <Filter>Исходные файлы\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cpu8086.h">
@@ -75,6 +78,9 @@
       <Filter>Файлы заголовков\emulator</Filter>
     </ClInclude>
     <ClInclude Include="GraphicConstants.h">
+      <Filter>Файлы заголовков\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateLabFrame.h">
       <Filter>Файлы заголовков\gui</Filter>
     </ClInclude>
   </ItemGroup>
