@@ -43,6 +43,22 @@ private:
 	wxGrid* mem_dump;
 	wxTextCtrl* start_address;
 
+	// checkbox'û 
+	wxCheckBox* AX_check;
+	wxCheckBox* BX_check;
+	wxCheckBox* CX_check;
+	wxCheckBox* DX_check;
+	wxCheckBox* CS_check;
+	wxCheckBox* IP_check;
+	wxCheckBox* SS_check;
+	wxCheckBox* SP_check;
+	wxCheckBox* BP_check;
+	wxCheckBox* SI_check;
+	wxCheckBox* DI_check;
+	wxCheckBox* DS_check;
+	wxCheckBox* ES_check;
+	wxCheckBox* O_check, * S_check, * Z_check, * P_check, * C_check, * A_check;
+
 public:
 	CreateLabFrame();
 	void initEmulator();

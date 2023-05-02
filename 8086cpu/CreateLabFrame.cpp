@@ -68,8 +68,10 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	AH_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
 	AL_field = new wxTextCtrl(this, GraphConst::FieldIDs::AL, "00");
 	AL_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
+	AX_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::AX, "");
 	temp_sizer->Add(AH_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(AL_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(AX_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// BX
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -79,8 +81,10 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	BH_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
 	BL_field = new wxTextCtrl(this, GraphConst::FieldIDs::BL, "00");
 	BL_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
+	BX_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::BX, "");
 	temp_sizer->Add(BH_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(BL_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(BX_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// CX
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -90,8 +94,10 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	CH_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
 	CL_field = new wxTextCtrl(this, GraphConst::FieldIDs::CL, "00");
 	CL_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
+	CX_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::CX, "");
 	temp_sizer->Add(CH_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(CL_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(CX_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// DX
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -101,8 +107,10 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	DH_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
 	DL_field = new wxTextCtrl(this, GraphConst::FieldIDs::DL, "00");
 	DL_field->SetMinSize(wxSize(GraphConst::byte_field_width, GraphConst::byte_field_height));
+	DX_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::DX, "");
 	temp_sizer->Add(DH_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(DL_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(DX_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// CS
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -110,7 +118,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	CS_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	CS_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	CS_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::CS, "");
 	temp_sizer->Add(CS_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(CS_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// IP
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -118,7 +128,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	IP_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	IP_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	IP_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::IP, "");
 	temp_sizer->Add(IP_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(IP_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// SS
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -126,7 +138,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	SS_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	SS_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	SS_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::SS, "");
 	temp_sizer->Add(SS_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(SS_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// SP
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -134,7 +148,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	SP_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	SP_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	SP_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::SP, "");
 	temp_sizer->Add(SP_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(SP_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// BP
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -142,7 +158,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	BP_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	BP_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	BP_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::BP, "");
 	temp_sizer->Add(BP_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(BP_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// SI
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -150,7 +168,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	SI_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	SI_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	SI_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::SI, "");
 	temp_sizer->Add(SI_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(SI_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// DI
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -158,7 +178,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	DI_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	DI_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	DI_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::DI, "");
 	temp_sizer->Add(DI_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(DI_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// DS
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -166,7 +188,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	DS_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	DS_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	DS_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::DS, "");
 	temp_sizer->Add(DS_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(DS_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// ES
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
@@ -174,7 +198,9 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 		1, wxALIGN_CENTER);
 	ES_field = new wxTextCtrl(this, wxID_ANY, "0000");
 	ES_field->SetMinSize(wxSize(GraphConst::word_field_width, GraphConst::word_field_height));
+	ES_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::ES, "");
 	temp_sizer->Add(ES_field, 1, wxALIGN_CENTER);
+	temp_sizer->Add(ES_check, 0, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// flag register
 	reg_field_sizer->Add(new wxStaticText(this, wxID_ANY, "Регистр флагов"), 0, wxALIGN_CENTER);
@@ -199,6 +225,21 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	temp_sizer->Add(P_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(C_field, 1, wxALIGN_CENTER);
 	temp_sizer->Add(A_field, 1, wxALIGN_CENTER);
+	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
+
+	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
+	O_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::O, "");
+	S_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::S, "");
+	Z_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::Z, "");
+	P_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::P, "");
+	C_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::C, "");
+	A_check = new wxCheckBox(this, (int)GraphConst::CheckboxIDs::A, "");
+	temp_sizer->Add(O_check, 1, wxALIGN_CENTER);
+	temp_sizer->Add(S_check, 1, wxALIGN_CENTER);
+	temp_sizer->Add(Z_check, 1, wxALIGN_CENTER);
+	temp_sizer->Add(P_check, 1, wxALIGN_CENTER);
+	temp_sizer->Add(C_check, 1, wxALIGN_CENTER);
+	temp_sizer->Add(A_check, 1, wxALIGN_CENTER);
 	reg_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
 	// REGISTER SIZER END
 

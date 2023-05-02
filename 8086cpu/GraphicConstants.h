@@ -19,6 +19,10 @@ namespace GraphConst {
 	const int screen_height = 600;
 
 
+	enum class CheckboxIDs {
+		AX, BX, CX, DX, SP, BP, SI, DI, CS, DS, SS, ES, IP,
+		O, S, Z, P, C, A
+	};
 
 	enum ButtonsIDs {
 		CLOCK, RUN, STOP, LOAD, TEST_LAB, CREATE_LAB, SANDBOX, REFERENCE
