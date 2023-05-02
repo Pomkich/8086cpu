@@ -42,6 +42,9 @@ private:
 	// память
 	wxGrid* mem_dump;
 	wxTextCtrl* start_address;
+	// границы проверяемой памяти
+	wxTextCtrl* block_start;
+	wxTextCtrl* block_end;
 
 	// checkbox'ы 
 	wxCheckBox* AX_check;

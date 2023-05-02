@@ -263,6 +263,25 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	mem_field_sizer->Add(start_address,
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 
+	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
+	block_start = new wxTextCtrl(this, GraphConst::FieldIDs::START_ADDRESS, "00000",
+		wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "Верхняя граница"),
+		0, wxEXPAND | wxALL, GraphConst::base_border);
+	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "Нижняя граница"),
+		0, wxEXPAND | wxALL, GraphConst::base_border);
+	mem_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
+
+	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
+	block_end = new wxTextCtrl(this, GraphConst::FieldIDs::START_ADDRESS, "00000",
+		wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	temp_sizer->Add(block_start,
+		0, wxEXPAND | wxALL, GraphConst::base_border);
+	temp_sizer->Add(block_end,
+		0, wxEXPAND | wxALL, GraphConst::base_border);
+	mem_field_sizer->Add(temp_sizer, 0, wxALIGN_CENTER);
+
+
 	mem_dump = new wxGrid(this, wxID_ANY);
 	mem_dump->CreateGrid(GraphConst::memory_rows, GraphConst::memory_cols);
 	for (int i = 0; i < GraphConst::memory_cols; i++) {
