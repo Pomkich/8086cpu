@@ -3,10 +3,6 @@
 wxBEGIN_EVENT_TABLE(CreateLabFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, CreateLabFrame::OnLoadButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, CreateLabFrame::OnStartAddressChange)
-	EVT_MENU(GraphConst::ButtonsIDs::SANDBOX, CreateLabFrame::OnSandboxButton)
-	EVT_MENU(GraphConst::ButtonsIDs::REFERENCE, CreateLabFrame::OnReferenceButton)
-	EVT_MENU(GraphConst::ButtonsIDs::CREATE_LAB, CreateLabFrame::OnCreateLabButton)
-	EVT_MENU(GraphConst::ButtonsIDs::TEST_LAB, CreateLabFrame::OnTestLabButton)
 	EVT_CLOSE(CreateLabFrame::OnClose)
 	EVT_TEXT(GraphConst::FieldIDs::AH, CreateLabFrame::OnByteFieldChange)
 	EVT_TEXT(GraphConst::FieldIDs::AL, CreateLabFrame::OnByteFieldChange)
@@ -52,23 +48,6 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	reg_field_sizer = new wxBoxSizer(wxVERTICAL);
 	code_field_sizer = new wxBoxSizer(wxVERTICAL);
 	mem_field_sizer = new wxBoxSizer(wxVERTICAL);
-
-	// MENU START
-	menu = new wxMenuBar();
-	emulator = new wxMenu();
-	labs = new wxMenu();
-	sandbox = new wxMenuItem(emulator, GraphConst::ButtonsIDs::SANDBOX, "Песочница");
-	reference = new wxMenuItem(emulator, GraphConst::ButtonsIDs::REFERENCE, "Справка");
-	createLab = new wxMenuItem(labs, GraphConst::ButtonsIDs::CREATE_LAB, "Создать лабораторную");
-	testLab = new wxMenuItem(labs, GraphConst::ButtonsIDs::TEST_LAB, "Проверить лабораторную");
-	emulator->Append(sandbox);
-	emulator->Append(reference);
-	labs->Append(createLab);
-	labs->Append(testLab);
-	menu->Append(emulator, "Эмулятор");
-	menu->Append(labs, "Лабораторные");
-	SetMenuBar(menu);
-	// MENU END
 
 	// BUTTON SIZER START
 	generate_button = new wxButton(this, GraphConst::ButtonsIDs::CLOCK, "Сгенерировать");

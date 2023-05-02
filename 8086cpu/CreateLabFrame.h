@@ -19,14 +19,6 @@ private:
 	wxBoxSizer* reg_field_sizer;
 	wxBoxSizer* code_field_sizer;
 	wxBoxSizer* mem_field_sizer;
-	// меню
-	wxMenuBar* menu;
-	wxMenu* labs;
-	wxMenu* emulator;
-	wxMenuItem* sandbox;
-	wxMenuItem* reference;
-	wxMenuItem* createLab;
-	wxMenuItem* testLab;
 	// кнопки
 	wxButton* generate_button;
 	wxButton* load_button;
