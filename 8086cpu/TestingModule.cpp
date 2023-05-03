@@ -13,8 +13,13 @@ void GenerateLab(
 	//		прочитать и записать выходные данные
 	// создать ещё один текст
 
+	word cs_copy = cpu_pt->getRegVal(RegId::CS);
+	word ip_copy = cpu_pt->getRegVal(RegId::IP);
 
 	for (int test = 0; test < 10; test++) {
+		// восстанавливаем регистры сегментов (пока только кода)
+		cpu_pt->setRegVal(RegId::CS, cs_copy);
+		cpu_pt->setRegVal(RegId::IP, ip_copy);
 		// генерируем случайные данные в регистры
 		std::cout << "input:" << std::endl;
 		dword value = 0;
@@ -31,6 +36,7 @@ void GenerateLab(
 		}
 
 		// запускаем программу
+		*running = true;
 		while (*running) {
 			cpu_pt->clock();
 		}
@@ -47,5 +53,9 @@ void GenerateLab(
 			std::cout << mem_pt->readB(address);	// запись в файл
 		}
 	}
+
+}
+
+void VerifyLab(std::string lab_file_name) {
 
 }

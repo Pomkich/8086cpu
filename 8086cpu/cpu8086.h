@@ -12,6 +12,8 @@ class ConsolePresenter;
 
 // замена текста препроцессором для более удобного
 // обращения к верхней и нижней частей регистров
+#define _ITERATOR_DEBUG_LEVEL 0
+#define _CONTAINER_DEBUG_LEVEL 0
 #define L low_high[0]
 #define H low_high[1]
 

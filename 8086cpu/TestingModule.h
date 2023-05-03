@@ -20,4 +20,4 @@ void GenerateLab(
 	std::list<RegId> regs, int mem_start, int mem_end, std::string deskription);
 
 
-void VerifyLab(std::string lab_file_name) {};
+void VerifyLab(std::string lab_file_name);
