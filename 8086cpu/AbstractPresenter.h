@@ -12,6 +12,7 @@ public:
 	virtual void notifyRegChange() = 0;	// register changed
 	virtual void notifyMemChange() = 0;	// memory changed
 	virtual void notifyStkChange() = 0;	// stack changed
+	virtual void notifyHalt() = 0;		// processor halted
 
 	virtual void Render() = 0;
 };
@@ -23,6 +24,7 @@ public:
 	void notifyRegChange() override {};
 	void notifyMemChange() override {};
 	void notifyStkChange() override {};
+	void notifyHalt() override {};
 
 	void Render() override {};
 };

@@ -10,6 +10,7 @@ public:
 	virtual void notifyRegChange() override;
 	virtual void notifyMemChange() override;
 	virtual void notifyStkChange() override;
+	virtual void notifyHalt() override {};
 
 	ConsolePresenter(std::shared_ptr<cpu8086> p_cpu, std::shared_ptr<Memory> p_mem);
 	virtual void Render() override;

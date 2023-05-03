@@ -63,6 +63,7 @@ public:
 	void notifyRegChange() override;
 	void notifyMemChange() override;
 	void notifyStkChange() override {};
+	void notifyHalt() override {};
 
 	void Render();
 

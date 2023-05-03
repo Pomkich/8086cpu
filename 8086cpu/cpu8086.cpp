@@ -485,6 +485,8 @@ void cpu8086::initOpTable() {
 	// прямое помещение значения в память
 	opcode_table[0xC6] = std::bind(&cpu8086::MOV_MEM_IMM_B, this);
 	opcode_table[0xC7] = std::bind(&cpu8086::MOV_MEM_IMM_W, this);
+	// halt
+	opcode_table[0xF4] = std::bind(&cpu8086::HLT, this);
 }
 
 /******OPCODES_BEG******/
@@ -2664,5 +2666,9 @@ void cpu8086::MOV_SR_IN() {
 		address = ((dword)DS << 4) + EA;
 		first_reg = memory->readW(address);
 	}
+}
+
+void cpu8086::HLT() {
+	presenter->notifyHalt();
 }
 /******OPCODES_END******/
