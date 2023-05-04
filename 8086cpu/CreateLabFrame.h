@@ -5,6 +5,7 @@
 #include "AbstractPresenter.h"
 #include "cpu8086.h"
 #include "Memory.h"
+#include "TestingModule.h"
 #include <string>
 #include <fstream>
 #include <Windows.h>
@@ -74,14 +75,13 @@ public:
 	void Render();
 
 private:
+	// список регистров, которые будут проверяться в лабораторной
+	std::list<RegId> GetRegistersForCheck();
 	void OnClose(wxCloseEvent& evt);
 	// button handlers
 	void OnStartAddressChange(wxCommandEvent& evt);
+	void OnGenerateButton(wxCommandEvent& evt);
 	void OnLoadButton(wxCommandEvent& evt);
-	void OnSandboxButton(wxCommandEvent& evt);
-	void OnReferenceButton(wxCommandEvent& evt);
-	void OnCreateLabButton(wxCommandEvent& evt);
-	void OnTestLabButton(wxCommandEvent& evt);
 	void OnByteFieldChange(wxCommandEvent& evt);
 	void OnWordFieldChange(wxCommandEvent& evt);
 	void OnFlagFieldChange(wxCommandEvent& evt);
