@@ -1,9 +1,9 @@
-//#include <wx/wx.h>
-//#include "EmulatorApp.h"
+#include <wx/wx.h>
+#include "EmulatorApp.h"
 
-//wxIMPLEMENT_APP(EmulatorApp);
+wxIMPLEMENT_APP(EmulatorApp);
 
-#include "Tester.h"
+/*#include "Tester.h"
 #include "cpu8086.h"
 #include "Memory.h"
 #include "AbstractPresenter.h"
@@ -48,4 +48,4 @@ int main() {
 	GenerateLab(cpu_pt, mem_pt, running, regs, 0, 3, "lab1", "testing");
 
 	return 0;
-}
+}*/
