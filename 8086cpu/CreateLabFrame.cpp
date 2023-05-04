@@ -321,6 +321,7 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 
 	SetSizer(main_sizer);
 	SetBackgroundColour(wxColour(100, 200, 100));
+	running = std::make_shared<bool>();
 	CreateStatusBar();
 }
 
@@ -396,6 +397,10 @@ void CreateLabFrame::notifyMemChange() {
 	}
 }
 
+void CreateLabFrame::notifyHalt() {
+	*running = false;
+}
+
 std::list<RegId> CreateLabFrame::GetRegistersForCheck() {
 	std::list<RegId> regs = {};
 	if (AX_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::AX); }
@@ -449,7 +454,7 @@ void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 	// записываем то, что находится в поле кода в файл
 	std::string text = code_editor->GetValue().ToStdString();
 	std::ofstream temp("temp.asm");
-	temp << text;
+	temp << text << "\nHLT";	// код остановки добавляется в конец каждой программы
 	temp.close();
 
 	// код запуска компилятора с записанным файлом
@@ -487,7 +492,9 @@ void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
 	notifyMemChange();
 
-	GetRegistersForCheck();
+	*running = true;
+	auto regs = GetRegistersForCheck();
+	GenerateLab(cpu_pt, mem_pt, running, regs, 0, 0, "test", "test");
 }
 
 void CreateLabFrame::OnByteFieldChange(wxCommandEvent& evt) {

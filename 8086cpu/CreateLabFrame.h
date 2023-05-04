@@ -63,6 +63,8 @@ private:
 	wxCheckBox* ES_check;
 	wxCheckBox* O_check, * S_check, * Z_check, * P_check, * C_check, * A_check;
 
+	// переменная нужна для программы при генерации теста
+	std::shared_ptr<bool> running;
 public:
 	CreateLabFrame();
 	void initEmulator();
@@ -70,7 +72,7 @@ public:
 	void notifyRegChange() override;
 	void notifyMemChange() override;
 	void notifyStkChange() override {};
-	void notifyHalt() override {};
+	void notifyHalt() override;
 
 	void Render();
 

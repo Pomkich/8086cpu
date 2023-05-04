@@ -395,7 +395,7 @@ void MainFrame::OnRunButton(wxCommandEvent& evt) {
 	// записываем то, что находится в поле кода в файл
 	std::string text = code_editor->GetValue().ToStdString();
 	std::ofstream temp("temp.asm");
-	temp << text;
+	temp << text << "\nHLT";	// код остановки добавляется в конец каждой программы
 	temp.close();
 
 	// код запуска компилятора с записанным файлом
