@@ -482,7 +482,7 @@ void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 	int end = 0;
 	block_start->GetValue().ToInt(&start);
 	block_end->GetValue().ToInt(&end);
-	GenerateLab(cpu_pt, mem_pt, running, regs, start, end, "test", "test");
+	GenerateLab(cpu_pt, mem_pt, running, regs, start, end, lab_name.ToStdString(), description.ToStdString());
 }
 
 void CreateLabFrame::OnAddDescButton(wxCommandEvent& evt) {

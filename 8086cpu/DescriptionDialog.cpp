@@ -13,12 +13,12 @@ DescriptionDialog::DescriptionDialog(
 	main_sizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* temp_sizer = new wxBoxSizer(wxHORIZONTAL);
 	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "Название"));
-	temp_sizer->Add(lab_name);
+	temp_sizer->Add(lab_name, 1, wxEXPAND);
 	main_sizer->Add(temp_sizer);
 
 	temp_sizer = new wxBoxSizer(wxHORIZONTAL);
 	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "Описание"));
-	temp_sizer->Add(description);
+	temp_sizer->Add(description, 1, wxEXPAND);
 	main_sizer->Add(temp_sizer);
 
 	wxSizer* buttonSizer = CreateButtonSizer(wxOK | wxCANCEL);
