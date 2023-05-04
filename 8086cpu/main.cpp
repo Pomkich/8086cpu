@@ -45,7 +45,7 @@ int main() {
 
 	std::list<RegId> regs = { RegId::AX, RegId::BX };
 
-	GenerateLab(cpu_pt, mem_pt, running, regs, 0, 0, "JOPA)))");
+	GenerateLab(cpu_pt, mem_pt, running, regs, 0, 3, "lab1", "testing");
 
 	return 0;
 }

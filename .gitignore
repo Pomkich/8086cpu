@@ -363,6 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # my files
-temp.bin
-temp.asm
+*.bin
+*.asm
+*.json
 FASM.EXE
