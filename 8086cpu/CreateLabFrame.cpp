@@ -494,6 +494,7 @@ void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 
 	*running = true;
 	auto regs = GetRegistersForCheck();
+	int a = 0;
 	GenerateLab(cpu_pt, mem_pt, running, regs, 0, 0, "test", "test");
 }
 
