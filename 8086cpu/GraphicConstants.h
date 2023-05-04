@@ -25,7 +25,7 @@ namespace GraphConst {
 	};
 
 	enum ButtonsIDs {
-		CLOCK, RUN, STOP, LOAD, TEST_LAB, CREATE_LAB, SANDBOX, REFERENCE
+		CLOCK, RUN, STOP, LOAD, TEST_LAB, CREATE_LAB, SANDBOX, REFERENCE, ADD_DESC
 	};
 
 	enum FieldIDs {

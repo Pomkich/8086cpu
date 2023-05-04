@@ -138,6 +138,7 @@
     <ClCompile Include="ConsolePresenter.cpp" />
     <ClCompile Include="cpu8086.cpp" />
     <ClCompile Include="CreateLabFrame.cpp" />
+    <ClCompile Include="DescriptionDialog.cpp" />
     <ClCompile Include="EmulatorApp.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainFrame.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="cpu8086.h" />
     <ClInclude Include="CreateLabFrame.h" />
+    <ClInclude Include="DescriptionDialog.h" />
     <ClInclude Include="EmulatorApp.h" />
     <ClInclude Include="GraphicConstants.h" />
     <ClInclude Include="MainFrame.h" />

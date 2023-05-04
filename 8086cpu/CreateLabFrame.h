@@ -6,6 +6,7 @@
 #include "cpu8086.h"
 #include "Memory.h"
 #include "TestingModule.h"
+#include "DescriptionDialog.h"
 #include <string>
 #include <fstream>
 #include <Windows.h>
@@ -22,6 +23,7 @@ private:
 	wxBoxSizer* mem_field_sizer;
 	// кнопки
 	wxButton* generate_button;
+	wxButton* add_description;
 	wxButton* load_button;
 	// регистры
 	wxTextCtrl* AH_field, * AL_field;
@@ -83,6 +85,7 @@ private:
 	// button handlers
 	void OnStartAddressChange(wxCommandEvent& evt);
 	void OnGenerateButton(wxCommandEvent& evt);
+	void OnAddDescButton(wxCommandEvent& evt);
 	void OnLoadButton(wxCommandEvent& evt);
 	void OnByteFieldChange(wxCommandEvent& evt);
 	void OnWordFieldChange(wxCommandEvent& evt);

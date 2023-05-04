@@ -2,6 +2,7 @@
 
 wxBEGIN_EVENT_TABLE(CreateLabFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, CreateLabFrame::OnLoadButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::ADD_DESC, CreateLabFrame::OnAddDescButton)
 	EVT_BUTTON(GraphConst::ButtonsIDs::CREATE_LAB, CreateLabFrame::OnGenerateButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, CreateLabFrame::OnStartAddressChange)
 	EVT_CLOSE(CreateLabFrame::OnClose)
@@ -52,8 +53,10 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 
 	// BUTTON SIZER START
 	generate_button = new wxButton(this, GraphConst::ButtonsIDs::CREATE_LAB, "Сгенерировать");
+	add_description = new wxButton(this, GraphConst::ButtonsIDs::ADD_DESC, "Добавить описание");
 	load_button = new wxButton(this, GraphConst::ButtonsIDs::LOAD, "Загрузить");
 	buttons_sizer->Add(generate_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(add_description, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	buttons_sizer->Add(load_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	// BUTTON SIZER END
 
@@ -429,27 +432,6 @@ void CreateLabFrame::OnStartAddressChange(wxCommandEvent& evt) {
 	wxLogStatus(start_address->GetValue());
 }
 
-// загрузить исходный код программы
-void CreateLabFrame::OnLoadButton(wxCommandEvent& evt) {
-	wxFileDialog
-		openFileDialog(this, _("Загрузить исходный код"), "", "",
-			"ASM files (*.asm)|*.asm", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-
-	if (openFileDialog.ShowModal() == wxID_CANCEL)
-		return;     // the user changed idea...
-
-	// открываем файл в режиме чтения
-	std::ifstream stream(openFileDialog.GetPath().ToStdString());
-	std::string line;
-	code_editor->Clear();
-	// читаем файл и записываем исходный код
-	while (std::getline(stream, line)) {
-		code_editor->AppendText(line);
-		code_editor->AppendText('\n');
-	}
-	stream.close();
-}
-
 void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 	// записываем то, что находится в поле кода в файл
 	std::string text = code_editor->GetValue().ToStdString();
@@ -499,6 +481,33 @@ void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 	block_start->GetValue().ToInt(&start);
 	block_end->GetValue().ToInt(&end);
 	GenerateLab(cpu_pt, mem_pt, running, regs, start, end, "test", "test");
+}
+
+void CreateLabFrame::OnAddDescButton(wxCommandEvent& evt) {
+	DescriptionDialog* dialog = new DescriptionDialog(this, wxID_ANY, "desc", wxDefaultPosition, wxDefaultSize, 0, "asdf");
+	dialog->ShowModal();
+	dialog->Destroy();
+}
+
+// загрузить исходный код программы
+void CreateLabFrame::OnLoadButton(wxCommandEvent& evt) {
+	wxFileDialog
+		openFileDialog(this, _("Загрузить исходный код"), "", "",
+			"ASM files (*.asm)|*.asm", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return;     // the user changed idea...
+
+	// открываем файл в режиме чтения
+	std::ifstream stream(openFileDialog.GetPath().ToStdString());
+	std::string line;
+	code_editor->Clear();
+	// читаем файл и записываем исходный код
+	while (std::getline(stream, line)) {
+		code_editor->AppendText(line);
+		code_editor->AppendText('\n');
+	}
+	stream.close();
 }
 
 void CreateLabFrame::OnByteFieldChange(wxCommandEvent& evt) {
