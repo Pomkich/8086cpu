@@ -70,10 +70,10 @@ void cpu8086::loadTestProgram() {
 
 word cpu8086::getRegVal(RegId reg_id) {
 	switch (reg_id) {
-	case RegId::AL: return A.L; case RegId::AH: return A.H; case RegId::AX: return A.X;
-	case RegId::BL: return B.L; case RegId::BH: return B.H; case RegId::BX: return B.X;
-	case RegId::CL: return C.L; case RegId::CH: return C.H; case RegId::CX: return C.X;
-	case RegId::DL: return D.L; case RegId::DH: return D.H; case RegId::DX: return D.X;
+	case RegId::AL: return A.low_high[0]; case RegId::AH: return A.low_high[1]; case RegId::AX: return A.X;
+	case RegId::BL: return B.low_high[0]; case RegId::BH: return B.low_high[1]; case RegId::BX: return B.X;
+	case RegId::CL: return C.low_high[0]; case RegId::CH: return C.low_high[1]; case RegId::CX: return C.X;
+	case RegId::DL: return D.low_high[0]; case RegId::DH: return D.low_high[1]; case RegId::DX: return D.X;
 	case RegId::SP: return SP; case RegId::BP: return BP; 
 	case RegId::SI: return SI; case RegId::DI: return DI;
 	case RegId::CS: return CS; case RegId::DS: return DS;
@@ -84,17 +84,17 @@ word cpu8086::getRegVal(RegId reg_id) {
 
 void cpu8086::setRegVal(RegId reg_id, word value) {
 	switch (reg_id) {
-	case RegId::AL: A.L = value; break; 
-	case RegId::AH: A.H = value; break;
+	case RegId::AL: A.low_high[0] = value; break; 
+	case RegId::AH: A.low_high[1] = value; break;
 	case RegId::AX: A.X = value; break;
-	case RegId::BL: B.L = value; break; 
-	case RegId::BH: B.H = value; break;
+	case RegId::BL: B.low_high[0] = value; break; 
+	case RegId::BH: B.low_high[1] = value; break;
 	case RegId::BX: B.X = value; break;
-	case RegId::CL: C.L = value; break; 
-	case RegId::CH: C.H = value; break;
+	case RegId::CL: C.low_high[0] = value; break; 
+	case RegId::CH: C.low_high[1] = value; break;
 	case RegId::CX: C.X = value; break;
-	case RegId::DL: D.L = value; break; 
-	case RegId::DH: D.H = value; break;
+	case RegId::DL: D.low_high[0] = value; break; 
+	case RegId::DH: D.low_high[1] = value; break;
 	case RegId::DX: D.X = value; break;
 	case RegId::SP: SP = value; break; 
 	case RegId::BP: BP = value; break;
@@ -266,15 +266,15 @@ void cpu8086::fetchModRegRm(byte& mod, byte& reg, byte& rm) {
 // возвращают ссылки на регистр
 byte& cpu8086::getRegB(byte reg) {
 	switch (reg) {
-	case 0: return A.L; break;
-	case 1: return C.L; break;
-	case 2: return D.L; break;
-	case 3: return B.L; break;
-	case 4: return A.H; break;
-	case 5: return C.H; break;
-	case 6: return D.H; break;
-	case 7: return B.H; break;
-	default: return A.L; break;
+	case 0: return A.low_high[0]; break;
+	case 1: return C.low_high[0]; break;
+	case 2: return D.low_high[0]; break;
+	case 3: return B.low_high[0]; break;
+	case 4: return A.low_high[1]; break;
+	case 5: return C.low_high[1]; break;
+	case 6: return D.low_high[1]; break;
+	case 7: return B.low_high[1]; break;
+	default: return A.low_high[0]; break;
 	}
 }
 
@@ -465,14 +465,14 @@ void cpu8086::initOpTable() {
 	opcode_table[0xA2] = std::bind(&cpu8086::MOV_A_OUT_B, this);
 	opcode_table[0xA3] = std::bind(&cpu8086::MOV_A_OUT_W, this);
 	// прямое помещение значения в байтовый регистр
-	opcode_table[0xB0] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.L));
-	opcode_table[0xB1] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.L));
-	opcode_table[0xB2] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(D.L));
-	opcode_table[0xB3] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(B.L));
-	opcode_table[0xB4] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.H));
-	opcode_table[0xB5] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.H));
-	opcode_table[0xB6] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(D.H));
-	opcode_table[0xB7] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(B.H));
+	opcode_table[0xB0] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.low_high[0]));
+	opcode_table[0xB1] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.low_high[0]));
+	opcode_table[0xB2] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(D.low_high[0]));
+	opcode_table[0xB3] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(B.low_high[0]));
+	opcode_table[0xB4] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(A.low_high[1]));
+	opcode_table[0xB5] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(C.low_high[1]));
+	opcode_table[0xB6] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(D.low_high[1]));
+	opcode_table[0xB7] = std::bind(&cpu8086::MOV_R_IMM_B, this, std::ref(B.low_high[1]));
 	// прямое помещение значения в двухбайтовый регистр
 	opcode_table[0xB8] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(A.X));
 	opcode_table[0xB9] = std::bind(&cpu8086::MOV_R_IMM_W, this, std::ref(C.X));
@@ -620,16 +620,16 @@ void cpu8086::ADD_R_IN_W() {
 void cpu8086::ADD_A_B() {
 	byte data = fetchCodeByte();
 
-	byte prev_val = A.L;
+	byte prev_val = A.low_high[0];
 	
-	A.L += data;
+	A.low_high[0] += data;
 
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
-	testFlagCAdd(prev_val, A.L);
-	testFlagAAdd(prev_val, A.L);
-	testFlagO(prev_val, A.L, OpType::Byte);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
+	testFlagCAdd(prev_val, A.low_high[0]);
+	testFlagAAdd(prev_val, A.low_high[0]);
+	testFlagO(prev_val, A.low_high[0], OpType::Byte);
 }
 
 void cpu8086::ADD_A_W() {
@@ -777,15 +777,15 @@ void cpu8086::OR_R_IN_W() {
 void cpu8086::OR_A_B() {
 	byte data = fetchCodeByte();
 
-	byte prev_val = A.L;
+	byte prev_val = A.low_high[0];
 	
-	A.L |= data;
+	A.low_high[0] |= data;
 
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
 	remFlag(Flag::C);
-	(A.L > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(A.low_high[0] > prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -934,16 +934,16 @@ void cpu8086::ADC_R_IN_W() {
 void cpu8086::ADC_A_B() {
 	byte data = fetchCodeByte();
 
-	byte prev_val = A.L;
+	byte prev_val = A.low_high[0];
 	
-	A.L += data + getFlag(Flag::C);
+	A.low_high[0] += data + getFlag(Flag::C);
 
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
-	testFlagCAdd(prev_val, A.L);
-	testFlagAAdd(prev_val, A.L);
-	testFlagO(prev_val, A.L, OpType::Byte);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
+	testFlagCAdd(prev_val, A.low_high[0]);
+	testFlagAAdd(prev_val, A.low_high[0]);
+	testFlagO(prev_val, A.low_high[0], OpType::Byte);
 }
 
 void cpu8086::ADC_A_W() {
@@ -1091,16 +1091,16 @@ void cpu8086::SBB_R_IN_W() {
 void cpu8086::SBB_A_B() {
 	byte data = fetchCodeByte();
 
-	byte prev_val = A.L;
+	byte prev_val = A.low_high[0];
 	
-	A.L = A.L - data - getFlag(Flag::C);
+	A.low_high[0] = A.low_high[0] - data - getFlag(Flag::C);
 
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
-	testFlagCSub(prev_val, A.L);
-	testFlagASub(prev_val, A.L);
-	testFlagO(prev_val, A.L, OpType::Byte);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
+	testFlagCSub(prev_val, A.low_high[0]);
+	testFlagASub(prev_val, A.low_high[0]);
+	testFlagO(prev_val, A.low_high[0], OpType::Byte);
 }
 
 void cpu8086::SBB_A_W() {
@@ -1248,15 +1248,15 @@ void cpu8086::AND_R_IN_W() {
 void cpu8086::AND_A_B() {
 	byte data = fetchCodeByte();
 
-	byte prev_val = A.L;
+	byte prev_val = A.low_high[0];
 	
-	A.L &= data;
+	A.low_high[0] &= data;
 
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
 	remFlag(Flag::C);
-	(A.L == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(A.low_high[0] == prev_val) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -1276,19 +1276,19 @@ void cpu8086::AND_A_W() {
 }
 
 void cpu8086::DAA() {
-	byte prev_val = A.L;
-	if ((A.L & 0xF) > 9 || getFlag(Flag::A)) {
-		A.L += 6;
+	byte prev_val = A.low_high[0];
+	if ((A.low_high[0] & 0xF) > 9 || getFlag(Flag::A)) {
+		A.low_high[0] += 6;
 		setFlag(Flag::A);
 	}
-	if (A.L > 0x9F || getFlag(Flag::C)) {
-		A.L += 0x60;
+	if (A.low_high[0] > 0x9F || getFlag(Flag::C)) {
+		A.low_high[0] += 0x60;
 		setFlag(Flag::C);
 	}
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
-	testFlagO(prev_val, A.L, OpType::Byte);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
+	testFlagO(prev_val, A.low_high[0], OpType::Byte);
 }
 
 void cpu8086::SUB_R_OUT_B() {
@@ -1421,16 +1421,16 @@ void cpu8086::SUB_R_IN_W() {
 void cpu8086::SUB_A_B() {
 	byte data = fetchCodeByte();
 
-	byte prev_val = A.L;
+	byte prev_val = A.low_high[0];
 	
-	A.L = A.L - data;
+	A.low_high[0] = A.low_high[0] - data;
 
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
-	testFlagCSub(prev_val, A.L);
-	testFlagASub(prev_val, A.L);
-	testFlagO(prev_val, A.L, OpType::Byte);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
+	testFlagCSub(prev_val, A.low_high[0]);
+	testFlagASub(prev_val, A.low_high[0]);
+	testFlagO(prev_val, A.low_high[0], OpType::Byte);
 }
 
 void cpu8086::SUB_A_W() {
@@ -1449,19 +1449,19 @@ void cpu8086::SUB_A_W() {
 }
 
 void cpu8086::DAS() {
-	byte prev_val = A.L;
-	if ((A.L & 0xF) > 9 || getFlag(Flag::A)) {
-		A.L -= 6;
+	byte prev_val = A.low_high[0];
+	if ((A.low_high[0] & 0xF) > 9 || getFlag(Flag::A)) {
+		A.low_high[0] -= 6;
 		setFlag(Flag::A);
 	}
-	if (A.L > 0x9F || getFlag(Flag::C)) {
-		A.L -= 0x60;
+	if (A.low_high[0] > 0x9F || getFlag(Flag::C)) {
+		A.low_high[0] -= 0x60;
 		setFlag(Flag::C);
 	}
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
-	testFlagO(prev_val, A.L, OpType::Byte);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
+	testFlagO(prev_val, A.low_high[0], OpType::Byte);
 }
 
 void cpu8086::XOR_R_OUT_B() {
@@ -1594,15 +1594,15 @@ void cpu8086::XOR_R_IN_W() {
 void cpu8086::XOR_A_B() {
 	byte data = fetchCodeByte();
 
-	byte prev_val = A.L;
+	byte prev_val = A.low_high[0];
 	
-	A.L ^= data;
+	A.low_high[0] ^= data;
 
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
 	remFlag(Flag::C);
-	(A.L > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
+	(A.low_high[0] > 0) ? setFlag(Flag::A) : remFlag(Flag::A);
 	remFlag(Flag::O);
 }
 
@@ -1622,18 +1622,18 @@ void cpu8086::XOR_A_W() {
 }
 
 void cpu8086::AAA() {
-	byte prev_val = A.L;
-	if ((A.L & 0x0F) > 9 || getFlag(Flag::A)) {
-		A.L += 6;
-		A.H += 1;
+	byte prev_val = A.low_high[0];
+	if ((A.low_high[0] & 0x0F) > 9 || getFlag(Flag::A)) {
+		A.low_high[0] += 6;
+		A.low_high[1] += 1;
 		setFlag(Flag::A);
 		setFlag(Flag::C);
 	}
-	A.L = A.L & 0x0F;
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
-	testFlagO(prev_val, A.L, OpType::Byte);
+	A.low_high[0] = A.low_high[0] & 0x0F;
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
+	testFlagO(prev_val, A.low_high[0], OpType::Byte);
 }
 
 void cpu8086::CMP_R_OUT_B() {
@@ -1769,9 +1769,9 @@ void cpu8086::CMP_A_B() {
 	byte data = fetchCodeByte();
 	byte temp = 0;	// временная переменная с которой выполняется сравнение
 
-	byte prev_val = A.L;
+	byte prev_val = A.low_high[0];
 	
-	temp = A.L - data;
+	temp = A.low_high[0] - data;
 
 	testFlagZ(temp);
 	testFlagS(temp, OpType::Byte);
@@ -1798,18 +1798,18 @@ void cpu8086::CMP_A_W() {
 }
 
 void cpu8086::AAS() {
-	byte prev_val = A.L;
-	if ((A.L & 0x0F) > 9 || getFlag(Flag::A)) {
-		A.L -= 6;
-		A.H -= 1;
+	byte prev_val = A.low_high[0];
+	if ((A.low_high[0] & 0x0F) > 9 || getFlag(Flag::A)) {
+		A.low_high[0] -= 6;
+		A.low_high[1] -= 1;
 		setFlag(Flag::A);
 		setFlag(Flag::C);
 	}
-	A.L = A.L & 0x0F;
-	testFlagZ(A.L);
-	testFlagS(A.L, OpType::Byte);
-	testFlagP(A.L);
-	testFlagO(prev_val, A.L, OpType::Byte);
+	A.low_high[0] = A.low_high[0] & 0x0F;
+	testFlagZ(A.low_high[0]);
+	testFlagS(A.low_high[0], OpType::Byte);
+	testFlagP(A.low_high[0]);
+	testFlagO(prev_val, A.low_high[0], OpType::Byte);
 }
 
 void cpu8086::INC_R(word& reg) {
@@ -2499,7 +2499,7 @@ void cpu8086::MOV_R_IMM_W(word& reg) {
 
 void cpu8086::MOV_A_IN_B() {
 	address = fetchCodeWord();
-	A.L = memory->readB(((dword)DS << 4) + address);
+	A.low_high[0] = memory->readB(((dword)DS << 4) + address);
 }
 
 void cpu8086::MOV_A_IN_W() {
@@ -2509,7 +2509,7 @@ void cpu8086::MOV_A_IN_W() {
 
 void cpu8086::MOV_A_OUT_B() {
 	address = fetchCodeWord();
-	memory->writeB(((dword)DS << 4) + address, A.L);
+	memory->writeB(((dword)DS << 4) + address, A.low_high[0]);
 }
 
 void cpu8086::MOV_A_OUT_W() {

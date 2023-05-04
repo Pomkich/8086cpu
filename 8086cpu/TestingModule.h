@@ -5,6 +5,7 @@
 #include "Memory.h"
 #include <list>
 #include <string>
+#include <boost/json.hpp>
 
 // функция генерации лабораторных, 
 // аргументы: 

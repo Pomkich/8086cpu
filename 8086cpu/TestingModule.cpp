@@ -13,6 +13,9 @@ void GenerateLab(
 	//		прочитать и записать выходные данные
 	// создать ещё один текст
 
+	boost::json::object out_file;
+	out_file["ax"] = 32;
+
 	word cs_copy = cpu_pt->getRegVal(RegId::CS);
 	word ip_copy = cpu_pt->getRegVal(RegId::IP);
 

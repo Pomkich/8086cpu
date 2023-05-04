@@ -227,7 +227,7 @@ void Tester::ADD_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x00);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -267,7 +267,7 @@ void Tester::ADD_R_IN_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x02);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -276,7 +276,7 @@ void Tester::ADD_R_IN_B_Test() {
 	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x67);
+	assert(cpu_pt->B.low_high[0] == 0x67);
 
 	// adding value to register from register
 	cpu_pt->reset();
@@ -284,14 +284,14 @@ void Tester::ADD_R_IN_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->B.L = 0x32;
-	cpu_pt->C.L = 0x58;
+	cpu_pt->B.low_high[0] = 0x32;
+	cpu_pt->C.low_high[0] = 0x58;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x02);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x8A);
+	assert(cpu_pt->B.low_high[0] == 0x8A);
 }
 
 void Tester::ADD_R_IN_W_Test() {
@@ -336,14 +336,14 @@ void Tester::ADD_A_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0x32;
+	cpu_pt->A.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x04);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x35);
 	// run opcode
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x67);
+	assert(cpu_pt->A.low_high[0] == 0x67);
 }
 
 void Tester::ADD_A_W_Test() {
@@ -371,7 +371,7 @@ void Tester::OR_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x08);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -411,7 +411,7 @@ void Tester::OR_R_IN_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x0A);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -420,7 +420,7 @@ void Tester::OR_R_IN_B_Test() {
 	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x37);
+	assert(cpu_pt->B.low_high[0] == 0x37);
 
 	// adding value to register from register
 	cpu_pt->reset();
@@ -428,14 +428,14 @@ void Tester::OR_R_IN_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->B.L = 0x32;
-	cpu_pt->C.L = 0x58;
+	cpu_pt->B.low_high[0] = 0x32;
+	cpu_pt->C.low_high[0] = 0x58;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x0A);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x7A);
+	assert(cpu_pt->B.low_high[0] == 0x7A);
 }
 
 void Tester::OR_R_IN_W_Test() {
@@ -481,14 +481,14 @@ void Tester::OR_A_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0x32;
+	cpu_pt->A.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x0C);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x35);
 	// run opcode
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x37);
+	assert(cpu_pt->A.low_high[0] == 0x37);
 }
 
 void Tester::OR_A_W_Test() {
@@ -516,7 +516,7 @@ void Tester::ADC_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	cpu_pt->setFlag(Flag::C);
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x10);	// opcode: ADC
@@ -558,7 +558,7 @@ void Tester::ADC_R_IN_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x12);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -567,7 +567,7 @@ void Tester::ADC_R_IN_B_Test() {
 	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x67);
+	assert(cpu_pt->B.low_high[0] == 0x67);
 
 	// adding value to register from register
 	cpu_pt->reset();
@@ -575,15 +575,15 @@ void Tester::ADC_R_IN_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->B.L = 0x32;
-	cpu_pt->C.L = 0x58;
+	cpu_pt->B.low_high[0] = 0x32;
+	cpu_pt->C.low_high[0] = 0x58;
 	cpu_pt->setFlag(Flag::C);
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x12);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x8B);
+	assert(cpu_pt->B.low_high[0] == 0x8B);
 }
 
 void Tester::ADC_R_IN_W_Test() {
@@ -628,7 +628,7 @@ void Tester::ADC_A_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0x32;
+	cpu_pt->A.low_high[0] = 0x32;
 	cpu_pt->setFlag(Flag::C);
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x14);	// opcode: ADD
@@ -636,7 +636,7 @@ void Tester::ADC_A_B_Test() {
 	// run opcode
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x68);
+	assert(cpu_pt->A.low_high[0] == 0x68);
 }
 
 void Tester::ADC_A_W_Test() {
@@ -665,7 +665,7 @@ void Tester::SBB_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	cpu_pt->setFlag(Flag::C);
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x18);	// opcode: SBB
@@ -683,7 +683,7 @@ void Tester::SBB_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	cpu_pt->setFlag(Flag::C);
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x18);	// opcode: SBB
@@ -725,7 +725,7 @@ void Tester::SBB_R_IN_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x42;
+	cpu_pt->B.low_high[0] = 0x42;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x1A);	// opcode: SBB
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -734,7 +734,7 @@ void Tester::SBB_R_IN_B_Test() {
 	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x0D);
+	assert(cpu_pt->B.low_high[0] == 0x0D);
 
 	// adding value to register from register
 	cpu_pt->reset();
@@ -742,15 +742,15 @@ void Tester::SBB_R_IN_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->B.L = 0x98;
-	cpu_pt->C.L = 0x58;
+	cpu_pt->B.low_high[0] = 0x98;
+	cpu_pt->C.low_high[0] = 0x58;
 	cpu_pt->setFlag(Flag::C);
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x1A);	// opcode: SBB
 	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x3F);
+	assert(cpu_pt->B.low_high[0] == 0x3F);
 }
 
 void Tester::SBB_R_IN_W_Test() {
@@ -796,7 +796,7 @@ void Tester::SBB_A_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0x32;
+	cpu_pt->A.low_high[0] = 0x32;
 	cpu_pt->setFlag(Flag::C);
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x1C);	// opcode: SBB
@@ -804,7 +804,7 @@ void Tester::SBB_A_B_Test() {
 	// run opcode
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x1F);
+	assert(cpu_pt->A.low_high[0] == 0x1F);
 }
 
 void Tester::SBB_A_W_Test() {
@@ -833,7 +833,7 @@ void Tester::AND_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x20);	// opcode: AND
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -873,7 +873,7 @@ void Tester::AND_R_IN_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x22);	// opcode: AND
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -882,7 +882,7 @@ void Tester::AND_R_IN_B_Test() {
 	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x30);
+	assert(cpu_pt->B.low_high[0] == 0x30);
 
 	// adding value to register from register
 	cpu_pt->reset();
@@ -890,14 +890,14 @@ void Tester::AND_R_IN_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->B.L = 0x32;
-	cpu_pt->C.L = 0x58;
+	cpu_pt->B.low_high[0] = 0x32;
+	cpu_pt->C.low_high[0] = 0x58;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x22);	// opcode: AND
 	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x10);
+	assert(cpu_pt->B.low_high[0] == 0x10);
 }
 
 void Tester::AND_R_IN_W_Test() {
@@ -942,14 +942,14 @@ void Tester::AND_A_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0x32;
+	cpu_pt->A.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x24);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x35);
 	// run opcode
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x30);
+	assert(cpu_pt->A.low_high[0] == 0x30);
 }
 
 void Tester::AND_A_W_Test() {
@@ -976,7 +976,7 @@ void Tester::DAA_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0;
+	cpu_pt->A.low_high[0] = 0;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x04);		// opcode: ADD
 	mem_pt->writeB(0x10001, 0xE0);		// opcode: 
@@ -985,7 +985,7 @@ void Tester::DAA_Test() {
 	cpu_pt->clock();
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x40);
+	assert(cpu_pt->A.low_high[0] == 0x40);
 }
 
 void Tester::SUB_R_OUT_B_Test() {
@@ -996,7 +996,7 @@ void Tester::SUB_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x28);	// opcode: SBB
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1013,7 +1013,7 @@ void Tester::SUB_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x28);	// opcode: SBB
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1053,7 +1053,7 @@ void Tester::SUB_R_IN_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x42;
+	cpu_pt->B.low_high[0] = 0x42;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x2A);	// opcode: SBB
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1062,7 +1062,7 @@ void Tester::SUB_R_IN_B_Test() {
 	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x0D);
+	assert(cpu_pt->B.low_high[0] == 0x0D);
 
 	// adding value to register from register
 	cpu_pt->reset();
@@ -1070,14 +1070,14 @@ void Tester::SUB_R_IN_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->B.L = 0x98;
-	cpu_pt->C.L = 0x58;
+	cpu_pt->B.low_high[0] = 0x98;
+	cpu_pt->C.low_high[0] = 0x58;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x2A);	// opcode: SBB
 	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x40);
+	assert(cpu_pt->B.low_high[0] == 0x40);
 }
 
 void Tester::SUB_R_IN_W_Test() {
@@ -1122,14 +1122,14 @@ void Tester::SUB_A_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0x32;
+	cpu_pt->A.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x2C);	// opcode: SBB
 	mem_pt->writeB(0x10001, 0x12);
 	// run opcode
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x20);
+	assert(cpu_pt->A.low_high[0] == 0x20);
 }
 
 void Tester::SUB_A_W_Test() {
@@ -1156,7 +1156,7 @@ void Tester::DAS_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0;
+	cpu_pt->A.low_high[0] = 0;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x2C);		// opcode: SUB
 	mem_pt->writeB(0x10001, 0xE0);
@@ -1165,7 +1165,7 @@ void Tester::DAS_Test() {
 	cpu_pt->clock();
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0xC0);
+	assert(cpu_pt->A.low_high[0] == 0xC0);
 }
 
 void Tester::XOR_R_OUT_B_Test() {
@@ -1176,7 +1176,7 @@ void Tester::XOR_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x30);	// opcode: XOR
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1194,7 +1194,7 @@ void Tester::XOR_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x30);	// opcode: XOR
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1235,7 +1235,7 @@ void Tester::XOR_R_IN_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x32);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1244,7 +1244,7 @@ void Tester::XOR_R_IN_B_Test() {
 	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x07);
+	assert(cpu_pt->B.low_high[0] == 0x07);
 
 	// adding value to register from register
 	cpu_pt->reset();
@@ -1252,14 +1252,14 @@ void Tester::XOR_R_IN_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->B.L = 0x32;
-	cpu_pt->C.L = 0x58;
+	cpu_pt->B.low_high[0] = 0x32;
+	cpu_pt->C.low_high[0] = 0x58;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x32);	// opcode: XOR
 	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x6A);
+	assert(cpu_pt->B.low_high[0] == 0x6A);
 }
 
 void Tester::XOR_R_IN_W_Test() {
@@ -1304,14 +1304,14 @@ void Tester::XOR_A_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0x32;
+	cpu_pt->A.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x34);	// opcode: ADD
 	mem_pt->writeB(0x10001, 0x35);
 	// run opcode
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x07);
+	assert(cpu_pt->A.low_high[0] == 0x07);
 }
 
 void Tester::XOR_A_W_Test() {
@@ -1338,8 +1338,8 @@ void Tester::AAA_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0;
-	cpu_pt->A.H = 0;
+	cpu_pt->A.low_high[0] = 0;
+	cpu_pt->A.low_high[1] = 0;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x04);		// opcode: ADD
 	mem_pt->writeB(0x10001, 0xFA);		// opcode: 
@@ -1348,8 +1348,8 @@ void Tester::AAA_Test() {
 	cpu_pt->clock();
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x00);
-	assert(cpu_pt->A.H == 0x01);
+	assert(cpu_pt->A.low_high[0] == 0x00);
+	assert(cpu_pt->A.low_high[1] == 0x01);
 }
 
 void Tester::CMP_R_OUT_B_Test() {
@@ -1360,7 +1360,7 @@ void Tester::CMP_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x38);	// opcode: CMP
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1378,7 +1378,7 @@ void Tester::CMP_R_OUT_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x32;
+	cpu_pt->B.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x38);	// opcode: SBB
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1418,7 +1418,7 @@ void Tester::CMP_R_IN_B_Test() {
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
 	cpu_pt->DS = 0x0100;
-	cpu_pt->B.L = 0x42;
+	cpu_pt->B.low_high[0] = 0x42;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x3A);	// opcode: CMP
 	mem_pt->writeB(0x10001, 0x1E);	// MOD: 00, REG: 011, R/M: 110
@@ -1427,7 +1427,7 @@ void Tester::CMP_R_IN_B_Test() {
 	mem_pt->writeB(0x01064, 0x35);	// value in memory: 35
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x42);
+	assert(cpu_pt->B.low_high[0] == 0x42);
 
 	// adding value to register from register
 	cpu_pt->reset();
@@ -1435,14 +1435,14 @@ void Tester::CMP_R_IN_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->B.L = 0x98;
-	cpu_pt->C.L = 0x58;
+	cpu_pt->B.low_high[0] = 0x98;
+	cpu_pt->C.low_high[0] = 0x58;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x3A);	// opcode: CMP
 	mem_pt->writeB(0x10001, 0xD9);	// MOD: 11, REG: 011, R/M: 001
 	// run opcode
 	cpu_pt->clock();
-	assert(cpu_pt->B.L == 0x98);
+	assert(cpu_pt->B.low_high[0] == 0x98);
 }
 
 void Tester::CMP_R_IN_W_Test() {
@@ -1487,14 +1487,14 @@ void Tester::CMP_A_B_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0x32;
+	cpu_pt->A.low_high[0] = 0x32;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x3C);	// opcode: CMP
 	mem_pt->writeB(0x10001, 0x12);
 	// run opcode
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x32);
+	assert(cpu_pt->A.low_high[0] == 0x32);
 }
 
 void Tester::CMP_A_W_Test() {
@@ -1522,8 +1522,8 @@ void Tester::AAS_Test() {
 	// initialize registers
 	cpu_pt->CS = 0x1000;
 	cpu_pt->IP = 0x0000;
-	cpu_pt->A.L = 0;
-	cpu_pt->A.H = 0;
+	cpu_pt->A.low_high[0] = 0;
+	cpu_pt->A.low_high[1] = 0;
 	// initialize memory
 	mem_pt->writeB(0x10000, 0x2C);		// opcode: SUB
 	mem_pt->writeB(0x10001, 0x78);
@@ -1532,8 +1532,8 @@ void Tester::AAS_Test() {
 	cpu_pt->clock();
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x02);
-	assert(cpu_pt->A.H == 0xFF);
+	assert(cpu_pt->A.low_high[0] == 0x02);
+	assert(cpu_pt->A.low_high[1] == 0xFF);
 }
 
 
@@ -1654,7 +1654,7 @@ void Tester::MOV_R_OUT_B_Test() {
 	mem_pt->writeB(0x40002, 0x1E);
 	mem_pt->writeB(0x40003, 0x32);
 	mem_pt->writeB(0x40004, 0x00);
-	cpu_pt->B.L = 0x11;
+	cpu_pt->B.low_high[0] = 0x11;
 	cpu_pt->clock();
 
 	assert(mem_pt->readB(0x10032) == 0x11);
@@ -1698,14 +1698,14 @@ void Tester::MOV_R_IN_B_Test()  {
 	mem_pt->writeB(0x10032, 0x64);
 	cpu_pt->clock();
 
-	assert(cpu_pt->B.L == 0x64);
+	assert(cpu_pt->B.low_high[0] == 0x64);
 
 	// register mode test
 	cpu_pt->reset();
 	mem_pt->reset();
 
-	cpu_pt->B.L = 0x33;
-	cpu_pt->A.L = 0x11;
+	cpu_pt->B.low_high[0] = 0x33;
+	cpu_pt->A.low_high[0] = 0x11;
 
 	// initialize code segment
 	cpu_pt->CS = 0x4000;
@@ -1715,7 +1715,7 @@ void Tester::MOV_R_IN_B_Test()  {
 	mem_pt->writeB(0x40002, 0xD8);
 	cpu_pt->clock();
 
-	assert(cpu_pt->B.L == 0x11);
+	assert(cpu_pt->B.low_high[0] == 0x11);
 }
 
 void Tester::MOV_R_IN_W_Test() {
@@ -1841,7 +1841,7 @@ void Tester::MOV_A_IN_B_Test() {
 	mem_pt->writeB(0x10AAA, 0x32);
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x32);
+	assert(cpu_pt->A.low_high[0] == 0x32);
 }
 
 void Tester::MOV_A_IN_W_Test() {
@@ -1874,7 +1874,7 @@ void Tester::MOV_A_OUT_B_Test() {
 	mem_pt->writeW(0x40002, 0x0AAA);
 	mem_pt->writeB(0x10AAA, 0x32);
 
-	cpu_pt->A.L = 0x64;
+	cpu_pt->A.low_high[0] = 0x64;
 	cpu_pt->clock();
 
 	assert(mem_pt->readB(0x10AAA) == 0x64);
@@ -1910,7 +1910,7 @@ void Tester::MOV_R_IMM_B_Test() {
 	mem_pt->writeB(0x40002, 0x12);
 	cpu_pt->clock();
 
-	assert(cpu_pt->A.L == 0x12);
+	assert(cpu_pt->A.low_high[0] == 0x12);
 }
 
 void Tester::MOV_R_IMM_W_Test() {
