@@ -27,3 +27,19 @@ DescriptionDialog::DescriptionDialog(
 	SetSizer(main_sizer);
 	Fit();
 }
+
+wxString DescriptionDialog::GetDescription() {
+	return description->GetValue();
+}
+
+wxString DescriptionDialog::GetLabName() {
+	return lab_name->GetValue();
+}
+
+void DescriptionDialog::SetDescription(wxString desc) {
+	description->SetValue(desc);
+}
+
+void DescriptionDialog::SetLabName(wxString lb_nm) {
+	lab_name->SetValue(lb_nm);
+}

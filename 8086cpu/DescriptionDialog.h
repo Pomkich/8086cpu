@@ -14,4 +14,9 @@ public:
 		const wxSize& size,
 		long style,
 		const wxString& name);
+
+	wxString GetDescription();
+	wxString GetLabName();
+	void SetDescription(wxString desc);
+	void SetLabName(wxString lb_nm);
 };

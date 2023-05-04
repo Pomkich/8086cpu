@@ -325,6 +325,8 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	SetSizer(main_sizer);
 	SetBackgroundColour(wxColour(100, 200, 100));
 	running = std::make_shared<bool>();
+	description = "Нет описания";
+	lab_name = "Лабораторная работа";
 	CreateStatusBar();
 }
 
@@ -485,7 +487,12 @@ void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 
 void CreateLabFrame::OnAddDescButton(wxCommandEvent& evt) {
 	DescriptionDialog* dialog = new DescriptionDialog(this, wxID_ANY, "desc", wxDefaultPosition, wxDefaultSize, 0, "asdf");
-	dialog->ShowModal();
+	dialog->SetDescription(description);
+	dialog->SetLabName(lab_name);
+	if (dialog->ShowModal() == wxID_OK) {
+		description = dialog->GetDescription();
+		lab_name = dialog->GetLabName();
+	}
 	dialog->Destroy();
 }
 

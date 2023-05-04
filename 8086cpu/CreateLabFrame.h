@@ -67,6 +67,8 @@ private:
 
 	// переменная нужна для программы при генерации теста
 	std::shared_ptr<bool> running;
+	wxString description;
+	wxString lab_name;
 public:
 	CreateLabFrame();
 	void initEmulator();
