@@ -397,8 +397,21 @@ void CreateLabFrame::notifyMemChange() {
 }
 
 std::list<RegId> CreateLabFrame::GetRegistersForCheck() {
-	//AX_check->getstate
-	return std::list<RegId>();
+	std::list<RegId> regs = {};
+	if (AX_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::AX); }
+	if (BX_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::BX); }
+	if (CX_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::CX); }
+	if (DX_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::DX); }
+	if (SP_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::SP); }
+	if (BP_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::BP); }
+	if (SI_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::SI); }
+	if (DI_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::DI); }
+	if (CS_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::CS); }
+	if (DS_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::DS); }
+	if (SS_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::SS); }
+	if (ES_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::ES); }
+	if (IP_check->GetValue() == wxCHK_CHECKED) { regs.push_back(RegId::IP); }
+	return regs;
 }
 
 void CreateLabFrame::OnClose(wxCloseEvent& evt) {
@@ -473,6 +486,8 @@ void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 	// записываем скомпилированную программу в память
 	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
 	notifyMemChange();
+
+	GetRegistersForCheck();
 }
 
 void CreateLabFrame::OnByteFieldChange(wxCommandEvent& evt) {
