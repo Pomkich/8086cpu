@@ -4,7 +4,8 @@ void GenerateLab(
 	std::shared_ptr<cpu8086> cpu_pt,
 	std::shared_ptr<Memory> mem_pt,
 	std::shared_ptr<bool> running, 
-	std::list<RegId> regs, int mem_start, int mem_end, std::string lab_name, std::string description) {
+	std::list<RegId> regs, int mem_start, int mem_end, 
+	std::string lab_name, std::string description) {
 	// записать описание в файл
 	// создать тест:
 	//		сгенерировать входные данные для регистров и памяти
@@ -66,6 +67,20 @@ void GenerateLab(
 	file.close();
 }
 
-void VerifyLab(std::string lab_file_name) {
+bool VerifyLab(
+	std::shared_ptr<cpu8086> cpu_pt, 
+	std::shared_ptr<Memory> mem_pt,
+	std::shared_ptr<bool> running,
+	std::string lab_file_name) {
+	// загрузить данные
+	// запустить тест
+	//		запустить программу
+	//		проверить соответствие данных
+	//		если не соответствуют -> return false
+	// запустить следующий тест
+	// return true
 
+	boost::property_tree::ptree root;
+	boost::property_tree::read_json("lab1.json", root);
+	return true;
 }
