@@ -13,6 +13,9 @@ namespace GraphConst {
 	const int memory_rows = 16;
 	const int row_label_size = 40;
 	const int col_label_size = 16;
+	const int lab_width = 300;
+	const int lab_height = 50;
+	const int description_height = 400;
 
 
 	const int screen_width = 800;

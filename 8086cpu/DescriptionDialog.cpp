@@ -8,8 +8,12 @@ DescriptionDialog::DescriptionDialog(
 	long style,
 	const wxString& name) : wxDialog(parent, id, title, pos, size, style, name) {
 
-	description = new wxTextCtrl(this, wxID_ANY, "Empty description");
-	lab_name = new wxTextCtrl(this, wxID_ANY, "Empty name");
+	description = new wxTextCtrl(this, wxID_ANY, "Empty description", 
+		wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
+	description->SetMinSize(wxSize(GraphConst::lab_width, GraphConst::description_height));
+	lab_name = new wxTextCtrl(this, wxID_ANY, "Empty name",
+		wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
+	lab_name->SetMinSize(wxSize(GraphConst::lab_width, GraphConst::lab_height));
 	main_sizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* temp_sizer = new wxBoxSizer(wxHORIZONTAL);
 	temp_sizer->Add(new wxStaticText(this, wxID_ANY, "Название"));

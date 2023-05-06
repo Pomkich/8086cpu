@@ -54,6 +54,9 @@
     <ClCompile Include="TestingModule.cpp">
       <Filter>Исходные файлы\emulator</Filter>
     </ClCompile>
+    <ClCompile Include="DescriptionDialog.cpp">
+      <Filter>Исходные файлы\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cpu8086.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="TestingModule.h">
       <Filter>Файлы заголовков\emulator</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptionDialog.h">
+      <Filter>Файлы заголовков\gui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
