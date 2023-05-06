@@ -80,7 +80,48 @@ bool VerifyLab(
 	// запустить следующий тест
 	// return true
 
+	// загрузка данных в root
 	boost::property_tree::ptree root;
 	boost::property_tree::read_json("lab1.json", root);
+	// начальные значения сегментов
+	word cs_copy = cpu_pt->getRegVal(RegId::CS);
+	word ip_copy = cpu_pt->getRegVal(RegId::IP);
+
+	for (int test = 0; test < 10; test++) {
+		cpu_pt->setRegVal(RegId::IP, ip_copy);
+		cpu_pt->setRegVal(RegId::CS, cs_copy);
+
+		// заполнение входными данными регистры и память
+		std::string test_N = "test_" + std::to_string(test);
+		for (const auto& node : root.get_child(test_N)) {
+			if (node.first.size() <= 2) {	// работа с регистрами
+				int value = node.second.get<int>("in");
+				int id = std::stoi(node.first);
+				cpu_pt->setRegVal((RegId)id, value);
+			}
+			else if (node.first == "MemDumpIN") { // работа с памятью
+
+			}
+		}
+		// запуск программы
+		*running = true;
+		while (*running) {
+			cpu_pt->clock();
+		}
+
+		for (const auto& node : root.get_child(test_N)) {
+			if (node.first.size() <= 2) {	// работаем с регистрами
+				int value = node.second.get<int>("out");
+				int id = std::stoi(node.first);
+				if (cpu_pt->getRegVal((RegId)id) != value) {
+					return false; // значение не совпало -> лабораторная не выполнена
+				}
+			}
+			else if (node.first == "MemDumpOUT") { // работаем с памятью
+
+			}
+		}
+	}
+
 	return true;
 }
