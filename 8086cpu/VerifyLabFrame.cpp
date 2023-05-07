@@ -1,8 +1,10 @@
 #include "VerifyLabFrame.h"
 
 wxBEGIN_EVENT_TABLE(VerifyLabFrame, wxFrame)
-	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, VerifyLabFrame::OnLoadButton)
-	EVT_BUTTON(GraphConst::ButtonsIDs::CREATE_LAB, VerifyLabFrame::OnGenerateButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::VERIFY, VerifyLabFrame::OnVerifyButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::SHOW_DESC, VerifyLabFrame::OnShowDescButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD_CODE, VerifyLabFrame::OnLoadCodeButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD_LAB, VerifyLabFrame::OnLoadLabButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, VerifyLabFrame::OnStartAddressChange)
 	EVT_CLOSE(VerifyLabFrame::OnClose)
 	EVT_TEXT(GraphConst::FieldIDs::AH, VerifyLabFrame::OnByteFieldChange)
@@ -51,10 +53,14 @@ VerifyLabFrame::VerifyLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	mem_field_sizer = new wxBoxSizer(wxVERTICAL);
 
 	// BUTTON SIZER START
-	generate_button = new wxButton(this, GraphConst::ButtonsIDs::CREATE_LAB, "Сгенерировать");
-	load_button = new wxButton(this, GraphConst::ButtonsIDs::LOAD, "Загрузить");
-	buttons_sizer->Add(generate_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
-	buttons_sizer->Add(load_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	verify_button = new wxButton(this, GraphConst::ButtonsIDs::VERIFY, "Проверить");
+	show_desc_button = new wxButton(this, GraphConst::ButtonsIDs::SHOW_DESC, "Прочитать описание");
+	load_code_button = new wxButton(this, GraphConst::ButtonsIDs::LOAD_CODE, "Загрузить код");
+	load_lab_button  = new wxButton(this, GraphConst::ButtonsIDs::LOAD_LAB, "Загрузить лабораторную");
+	buttons_sizer->Add(verify_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(show_desc_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(load_code_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(load_lab_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	// BUTTON SIZER END
 
 	// REGISTER SIZER START
@@ -340,12 +346,18 @@ void VerifyLabFrame::OnStartAddressChange(wxCommandEvent& evt) {
 	wxLogStatus(start_address->GetValue());
 }
 
-void VerifyLabFrame::OnGenerateButton(wxCommandEvent& evt) {
-	
+// проверить лабораторную
+void VerifyLabFrame::OnVerifyButton(wxCommandEvent& evt) {
+	wxLogStatus("verify");
+}
+
+// показать описание
+void VerifyLabFrame::OnShowDescButton(wxCommandEvent& evt) {
+	wxLogStatus("show lab");
 }
 
 // загрузить исходный код программы
-void VerifyLabFrame::OnLoadButton(wxCommandEvent& evt) {
+void VerifyLabFrame::OnLoadCodeButton(wxCommandEvent& evt) {
 	wxFileDialog
 		openFileDialog(this, _("Загрузить исходный код"), "", "",
 			"ASM files (*.asm)|*.asm", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -363,6 +375,11 @@ void VerifyLabFrame::OnLoadButton(wxCommandEvent& evt) {
 		code_editor->AppendText('\n');
 	}
 	stream.close();
+}
+
+// загрузить лабораторную
+void VerifyLabFrame::OnLoadLabButton(wxCommandEvent& evt) {
+	wxLogStatus("load lab");
 }
 
 void VerifyLabFrame::OnByteFieldChange(wxCommandEvent& evt) {

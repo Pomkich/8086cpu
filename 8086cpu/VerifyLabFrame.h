@@ -21,8 +21,10 @@ private:
 	wxBoxSizer* code_field_sizer;
 	wxBoxSizer* mem_field_sizer;
 	// кнопки
-	wxButton* generate_button;
-	wxButton* load_button;
+	wxButton* verify_button;
+	wxButton* show_desc_button;
+	wxButton* load_lab_button;
+	wxButton* load_code_button;
 	// регистры
 	wxTextCtrl* AH_field, * AL_field;
 	wxTextCtrl* BH_field, * BL_field;
@@ -64,8 +66,10 @@ private:
 	void OnClose(wxCloseEvent& evt);
 	// button handlers
 	void OnStartAddressChange(wxCommandEvent& evt);
-	void OnGenerateButton(wxCommandEvent& evt);
-	void OnLoadButton(wxCommandEvent& evt);
+	void OnVerifyButton(wxCommandEvent& evt);
+	void OnShowDescButton(wxCommandEvent& evt);
+	void OnLoadCodeButton(wxCommandEvent& evt);
+	void OnLoadLabButton(wxCommandEvent& evt);
 	void OnByteFieldChange(wxCommandEvent& evt);
 	void OnWordFieldChange(wxCommandEvent& evt);
 	void OnFlagFieldChange(wxCommandEvent& evt);
