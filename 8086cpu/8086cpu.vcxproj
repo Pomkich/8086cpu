@@ -111,7 +111,7 @@
       <AdditionalIncludeDirectories>D:\Development\Libraries\wxWidgets-3.2.2.1\include;D:\Development\Libraries\wxWidgets-3.2.2.1\include\msvc;D:\Development\Libraries\boost_1_82_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>D:\Development\Libraries\wxWidgets-3.2.2.1\lib\vc_x64_lib;D:\Development\Libraries\boost_1_82_0\stage\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
