@@ -32,3 +32,5 @@ bool VerifyLab(
 	std::shared_ptr<bool> running,
 	std::string lab_file_name
 );
+
+std::string GetDescription(std::string file_name);

@@ -54,6 +54,8 @@ int main() {
 		std::cout << "lab not done" << std::endl;
 	}
 
+	std::cout << GetDescription("lab1.json");
+
 
 	return 0;
 }

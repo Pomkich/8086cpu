@@ -95,7 +95,7 @@ bool VerifyLab(
 
 	// загрузка данных в root
 	boost::property_tree::ptree root;
-	boost::property_tree::read_json("lab1.json", root);
+	boost::property_tree::read_json(lab_file_name, root);
 	// адрес начала блока памяти
 	int start_address = root.get<int>("StartAddress");
 	// начальные значения сегментов
@@ -159,4 +159,11 @@ bool VerifyLab(
 	}
 
 	return true;
+}
+
+std::string GetDescription(std::string file_name) {
+	// загрузка данных в root
+	boost::property_tree::ptree root;
+	boost::property_tree::read_json(file_name, root);
+	return root.get<std::string>("Description");
 }
