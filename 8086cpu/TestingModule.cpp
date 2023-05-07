@@ -16,6 +16,8 @@ void GenerateLab(
 
 	boost::json::object out_data;
 	out_data["Description"] = description;
+	// запись адреса начала блока памяти
+	out_data["StartAddress"] = mem_start;
 
 	word cs_copy = cpu_pt->getRegVal(RegId::CS);
 	word ip_copy = cpu_pt->getRegVal(RegId::IP);
@@ -24,19 +26,18 @@ void GenerateLab(
 		std::string test_N = "test_" + std::to_string(test);
 		out_data[test_N].emplace_object();
 
-		// восстанавливаем регистры сегментов (пока только кода)
+		// восстанавливаение регистров сегментов (пока только кода)
 		cpu_pt->setRegVal(RegId::CS, cs_copy);
 		cpu_pt->setRegVal(RegId::IP, ip_copy);
-		// генерируем случайные данные в регистры
+		// генерация случайных данных в регистры
 		dword value = 0;
 		for (auto id : regs) {
 			value = rand() % 65000;	// ~2^16
 			cpu_pt->setRegVal(id, value);
 			out_data[test_N].get_object()[std::to_string((int)id)] = { {"in", value}, {"out", 0} };
 		}
-		// генерируем случайные данные в память
-		out_data[test_N].get_object()["MemDumpIN"].emplace_array();	// инициализируем массив
-		//out_file["MemDumpIN"].emplace_array();	
+		// генерация случайных данных в память
+		out_data[test_N].get_object()["MemDumpIN"].emplace_array();	// инициализируем массив	
 		for (int address = mem_start; address < mem_end; address++) {
 			value = rand() % 255;
 			mem_pt->writeB(address, value);
@@ -49,19 +50,19 @@ void GenerateLab(
 			cpu_pt->clock();
 		}
 
-		// читаем выходные значения регистров
+		// чтение выходных значений регистров
 		for (auto id : regs) {
 			value = cpu_pt->getRegVal(id);
 			out_data[test_N].get_object()[std::to_string((int)id)].get_object()["out"] = value;
 		}
-		// читаем выходные значения памяти
+		// чтение выходных значений памяти
 		out_data[test_N].get_object()["MemDumpOUT"].emplace_array();
 		for (int address = mem_start; address < mem_end; address++) {
 			value = mem_pt->readB(address);
 			out_data[test_N].get_object()["MemDumpOUT"].get_array().emplace_back(value);
 		}
 	}
-	// записываем в файл структуру
+	// запись в файл структуры данных
 	std::ofstream file(lab_name + ".json");
 	file << boost::json::serialize(out_data);
 	file.close();
@@ -83,6 +84,8 @@ bool VerifyLab(
 	// загрузка данных в root
 	boost::property_tree::ptree root;
 	boost::property_tree::read_json("lab1.json", root);
+	// адрес начала блока памяти
+	int start_address = root.get<int>("StartAddress");
 	// начальные значения сегментов
 	word cs_copy = cpu_pt->getRegVal(RegId::CS);
 	word ip_copy = cpu_pt->getRegVal(RegId::IP);
@@ -91,35 +94,46 @@ bool VerifyLab(
 		cpu_pt->setRegVal(RegId::IP, ip_copy);
 		cpu_pt->setRegVal(RegId::CS, cs_copy);
 
-		// заполнение входными данными регистры и память
+		// заполнение входными данными регистров
 		std::string test_N = "test_" + std::to_string(test);
 		for (const auto& node : root.get_child(test_N)) {
-			if (node.first.size() <= 2) {	// работа с регистрами
+			if (node.first.size() <= 2) {
 				int value = node.second.get<int>("in");
 				int id = std::stoi(node.first);
 				cpu_pt->setRegVal((RegId)id, value);
 			}
-			else if (node.first == "MemDumpIN") { // работа с памятью
-
-			}
 		}
+		// заполнение входными данными памяти
+		int offset = 0;
+		for (const auto& node : root.get_child(test_N + ".MemDumpIN")) {
+			mem_pt->writeB(start_address + offset, node.second.get_value<int>());
+			offset++;
+		}
+
 		// запуск программы
 		*running = true;
 		while (*running) {
 			cpu_pt->clock();
 		}
 
+		// проверка регистров на соответствие
 		for (const auto& node : root.get_child(test_N)) {
-			if (node.first.size() <= 2) {	// работаем с регистрами
+			if (node.first.size() <= 2) {
 				int value = node.second.get<int>("out");
 				int id = std::stoi(node.first);
 				if (cpu_pt->getRegVal((RegId)id) != value) {
 					return false; // значение не совпало -> лабораторная не выполнена
 				}
 			}
-			else if (node.first == "MemDumpOUT") { // работаем с памятью
-
+		}
+		// проверка памяти на соответствие
+		offset = 0;
+		for (const auto& node : root.get_child(test_N + ".MemDumpOUT")) {
+			int value = mem_pt->readB(start_address + offset);
+			if (value != node.second.get_value<int>()) {
+				return false;
 			}
+			offset++;
 		}
 	}
 
