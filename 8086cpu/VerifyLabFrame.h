@@ -5,17 +5,14 @@
 #include "AbstractPresenter.h"
 #include "cpu8086.h"
 #include "Memory.h"
-#include "CreateLabFrame.h"
-#include "VerifyLabFrame.h"
+#include "TestingModule.h"
 #include <string>
 #include <fstream>
 #include <Windows.h>
 #include <iostream>
 
-class MainFrame : public wxFrame, public AbstractPresenter {
+class VerifyLabFrame : public wxFrame, public AbstractPresenter {
 private:
-	CreateLabFrame* lab_frame;
-	VerifyLabFrame* verify_frame;
 	// sizers
 	wxBoxSizer* main_sizer;
 	wxBoxSizer* buttons_sizer;
@@ -23,18 +20,8 @@ private:
 	wxBoxSizer* reg_field_sizer;
 	wxBoxSizer* code_field_sizer;
 	wxBoxSizer* mem_field_sizer;
-	// меню
-	wxMenuBar* menu;
-	wxMenu* labs;
-	wxMenu* emulator;
-	wxMenuItem* sandbox;
-	wxMenuItem* reference;
-	wxMenuItem* createLab;
-	wxMenuItem* testLab;
 	// кнопки
-	wxButton* clock_button;
-	wxButton* run_button;
-	wxButton* stop_button;
+	wxButton* generate_button;
 	wxButton* load_button;
 	// регистры
 	wxTextCtrl* AH_field, * AL_field;
@@ -57,30 +44,28 @@ private:
 	wxGrid* mem_dump;
 	wxTextCtrl* start_address;
 
+	// переменная нужна для проверки лабораторной
+	std::shared_ptr<bool> running;
+	wxString description;
+	wxString lab_name;
 public:
-	MainFrame();
+	VerifyLabFrame();
 	void initEmulator();
-	void initLabFrame(CreateLabFrame* second_frame);
-	void initVerifyFrame(VerifyLabFrame* third_frame);
 
 	void notifyRegChange() override;
 	void notifyMemChange() override;
 	void notifyStkChange() override {};
-	void notifyHalt() override {};
+	void notifyHalt() override;
 
 	void Render();
 
 private:
+	// список регистров, которые будут проверяться в лабораторной
 	void OnClose(wxCloseEvent& evt);
 	// button handlers
 	void OnStartAddressChange(wxCommandEvent& evt);
-	void OnClockButton(wxCommandEvent& evt);
+	void OnGenerateButton(wxCommandEvent& evt);
 	void OnLoadButton(wxCommandEvent& evt);
-	void OnRunButton(wxCommandEvent& evt);
-	void OnSandboxButton(wxCommandEvent& evt);
-	void OnReferenceButton(wxCommandEvent& evt);
-	void OnCreateLabButton(wxCommandEvent& evt);
-	void OnTestLabButton(wxCommandEvent& evt);
 	void OnByteFieldChange(wxCommandEvent& evt);
 	void OnWordFieldChange(wxCommandEvent& evt);
 	void OnFlagFieldChange(wxCommandEvent& evt);

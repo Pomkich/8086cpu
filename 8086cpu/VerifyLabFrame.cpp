@@ -1,23 +1,18 @@
-#include "MainFrame.h"
+#include "VerifyLabFrame.h"
 
-wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
-	EVT_BUTTON(GraphConst::ButtonsIDs::CLOCK, MainFrame::OnClockButton)
-	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, MainFrame::OnLoadButton)
-	EVT_BUTTON(GraphConst::ButtonsIDs::RUN, MainFrame::OnRunButton)
-	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, MainFrame::OnStartAddressChange)
-	EVT_MENU(GraphConst::ButtonsIDs::SANDBOX, MainFrame::OnSandboxButton)
-	EVT_MENU(GraphConst::ButtonsIDs::REFERENCE, MainFrame::OnReferenceButton)
-	EVT_MENU(GraphConst::ButtonsIDs::CREATE_LAB, MainFrame::OnCreateLabButton)
-	EVT_MENU(GraphConst::ButtonsIDs::TEST_LAB, MainFrame::OnTestLabButton)
-	EVT_CLOSE(MainFrame::OnClose)
-	EVT_TEXT(GraphConst::FieldIDs::AH, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::AL, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::BH, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::BL, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::CH, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::CL, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::DH, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::DL, MainFrame::OnByteFieldChange)
+wxBEGIN_EVENT_TABLE(VerifyLabFrame, wxFrame)
+	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, VerifyLabFrame::OnLoadButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::CREATE_LAB, VerifyLabFrame::OnGenerateButton)
+	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, VerifyLabFrame::OnStartAddressChange)
+	EVT_CLOSE(VerifyLabFrame::OnClose)
+	EVT_TEXT(GraphConst::FieldIDs::AH, VerifyLabFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::AL, VerifyLabFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::BH, VerifyLabFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::BL, VerifyLabFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::CH, VerifyLabFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::CL, VerifyLabFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::DH, VerifyLabFrame::OnByteFieldChange)
+	EVT_TEXT(GraphConst::FieldIDs::DL, VerifyLabFrame::OnByteFieldChange)
 wxEND_EVENT_TABLE()
 
 // вспомогательные функции
@@ -45,7 +40,7 @@ static int hex_to_int(std::string hexVal) {
 	return dec_val;
 }
 
-MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
+VerifyLabFrame::VerifyLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	SetSize(GraphConst::screen_width, GraphConst::screen_height);
 
 	main_sizer = new wxBoxSizer(wxVERTICAL);
@@ -55,31 +50,10 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	code_field_sizer = new wxBoxSizer(wxVERTICAL);
 	mem_field_sizer = new wxBoxSizer(wxVERTICAL);
 
-	// MENU START
-	menu = new wxMenuBar();
-	emulator = new wxMenu();
-	labs = new wxMenu();
-	sandbox = new wxMenuItem(emulator, GraphConst::ButtonsIDs::SANDBOX, "Песочница");
-	reference = new wxMenuItem(emulator, GraphConst::ButtonsIDs::REFERENCE, "Справка");
-	createLab = new wxMenuItem(labs, GraphConst::ButtonsIDs::CREATE_LAB, "Создать лабораторную");
-	testLab = new wxMenuItem(labs, GraphConst::ButtonsIDs::TEST_LAB, "Проверить лабораторную");
-	emulator->Append(sandbox);
-	emulator->Append(reference);
-	labs->Append(createLab);
-	labs->Append(testLab);
-	menu->Append(emulator, "Эмулятор");
-	menu->Append(labs, "Лабораторные");
-	SetMenuBar(menu);
-	// MENU END
-
 	// BUTTON SIZER START
-	clock_button = new wxButton(this, GraphConst::ButtonsIDs::CLOCK, "Шаг");
-	run_button = new wxButton(this, GraphConst::ButtonsIDs::RUN, "Старт");
-	stop_button = new wxButton(this, GraphConst::ButtonsIDs::STOP, "Стоп");
+	generate_button = new wxButton(this, GraphConst::ButtonsIDs::CREATE_LAB, "Сгенерировать");
 	load_button = new wxButton(this, GraphConst::ButtonsIDs::LOAD, "Загрузить");
-	buttons_sizer->Add(clock_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
-	buttons_sizer->Add(run_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
-	buttons_sizer->Add(stop_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(generate_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	buttons_sizer->Add(load_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	// BUTTON SIZER END
 
@@ -233,7 +207,7 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	code_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "Код программы"),
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
-	code_editor = new wxTextCtrl(this, GraphConst::CODE_FIELD, wxEmptyString, 
+	code_editor = new wxTextCtrl(this, GraphConst::CODE_FIELD, wxEmptyString,
 		wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
 	code_field_sizer->Add(code_editor, 1, wxEXPAND);
 	// CODE SIZER END
@@ -242,9 +216,9 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	mem_field_sizer->Add(
 		new wxStaticText(this, wxID_ANY, "Память"),
 		0, wxALIGN_CENTER);
-	start_address = new wxTextCtrl(this, GraphConst::FieldIDs::START_ADDRESS, "00000", 
+	start_address = new wxTextCtrl(this, GraphConst::FieldIDs::START_ADDRESS, "00000",
 		wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
-	mem_field_sizer->Add(new wxStaticText(this, wxID_ANY, "Начальный адрес"), 
+	mem_field_sizer->Add(new wxStaticText(this, wxID_ANY, "Начальный адрес"),
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	mem_field_sizer->Add(start_address,
 		0, wxALIGN_CENTER | wxALL, GraphConst::base_border);
@@ -274,10 +248,13 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 
 	SetSizer(main_sizer);
 	SetBackgroundColour(wxColour(100, 200, 100));
+	running = std::make_shared<bool>();
+	description = "Нет описания";
+	lab_name = "Лабораторная работа";
 	CreateStatusBar();
 }
 
-void MainFrame::initEmulator() {
+void VerifyLabFrame::initEmulator() {
 	cpu_pt = std::make_shared<cpu8086>();
 	mem_pt = std::make_shared<Memory>();
 	cpu_pt->initOpTable();
@@ -291,20 +268,12 @@ void MainFrame::initEmulator() {
 	Render();
 }
 
-void MainFrame::initLabFrame(CreateLabFrame* second_frame) {
-	lab_frame = second_frame;
-}
-
-void MainFrame::initVerifyFrame(VerifyLabFrame* third_frame) {
-	verify_frame = third_frame;
-}
-
-void MainFrame::Render() {
+void VerifyLabFrame::Render() {
 	notifyRegChange();
 	notifyMemChange();
 }
 
-void MainFrame::notifyRegChange() {
+void VerifyLabFrame::notifyRegChange() {
 	AH_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::AH)));
 	AL_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::AL)));
 	BH_field->SetValue(int_to_hex(cpu_pt->getRegVal(RegId::BH)));
@@ -331,7 +300,7 @@ void MainFrame::notifyRegChange() {
 	A_field->SetValue(std::to_string(cpu_pt->getFlag(Flag::A)));
 }
 
-void MainFrame::notifyMemChange() {
+void VerifyLabFrame::notifyMemChange() {
 	int address = 0;
 	address = hex_to_int(start_address->GetValue().ToStdString());
 
@@ -357,25 +326,26 @@ void MainFrame::notifyMemChange() {
 	}
 }
 
-void MainFrame::OnClose(wxCloseEvent& evt) {
-	lab_frame->Destroy();
-	verify_frame->Destroy();
-	Destroy();
+void VerifyLabFrame::notifyHalt() {
+	*running = false;
 }
 
-void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
+void VerifyLabFrame::OnClose(wxCloseEvent& evt) {
+	Show(false);
+}
+
+void VerifyLabFrame::OnStartAddressChange(wxCommandEvent& evt) {
 	start_address->SetValue(evt.GetString().MakeUpper());
 	notifyMemChange();
 	wxLogStatus(start_address->GetValue());
 }
 
-void MainFrame::OnClockButton(wxCommandEvent& evt) {
-	cpu_pt->clock();
-	wxLogStatus("clicked");
+void VerifyLabFrame::OnGenerateButton(wxCommandEvent& evt) {
+	
 }
 
 // загрузить исходный код программы
-void MainFrame::OnLoadButton(wxCommandEvent& evt) {
+void VerifyLabFrame::OnLoadButton(wxCommandEvent& evt) {
 	wxFileDialog
 		openFileDialog(this, _("Загрузить исходный код"), "", "",
 			"ASM files (*.asm)|*.asm", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -395,75 +365,14 @@ void MainFrame::OnLoadButton(wxCommandEvent& evt) {
 	stream.close();
 }
 
-// скомплиировать исходный код
-void MainFrame::OnRunButton(wxCommandEvent& evt) {
-	// записываем то, что находится в поле кода в файл
-	std::string text = code_editor->GetValue().ToStdString();
-	std::ofstream temp("temp.asm");
-	temp << text << "\nHLT";	// код остановки добавляется в конец каждой программы
-	temp.close();
-
-	// код запуска компилятора с записанным файлом
-	STARTUPINFOA si;
-	PROCESS_INFORMATION pi;
-
-	// set the size of the structures
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
-	ZeroMemory(&pi, sizeof(pi));
-
-	// start the program up
-	CreateProcessA
-	(
-		NULL,   // the path
-		const_cast<LPSTR>(".\\FASM.EXE temp.asm"),  // Command line
-		NULL,                   // Process handle not inheritable
-		NULL,                   // Thread handle not inheritable
-		FALSE,                  // Set handle inheritance to FALSE
-		CREATE_NO_WINDOW,     // Opens file in a separate console
-		NULL,           // Use parent's environment block
-		NULL,           // Use parent's starting directory 
-		&si,            // Pointer to STARTUPINFO structure
-		&pi           // Pointer to PROCESS_INFORMATION structure
-	);
-
-	// ждём пока программа скомпилируется
-	WaitForSingleObject(pi.hProcess, INFINITE);
-
-	// Close process and thread handles.
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
-
-	// записываем скомпилированную программу в память
-	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
-	notifyMemChange();
-}
-
-void MainFrame::OnSandboxButton(wxCommandEvent& evt) {
-	wxLogStatus("sandbox");
-}
-
-void MainFrame::OnReferenceButton(wxCommandEvent& evt) {
-	wxLogStatus("ref");
-}
-
-void MainFrame::OnCreateLabButton(wxCommandEvent& evt) {
-	lab_frame->Show(true);
-	wxLogStatus("create lab");
-}
-
-void MainFrame::OnTestLabButton(wxCommandEvent& evt) {
-	verify_frame->Show(true);
-}
-
-void MainFrame::OnByteFieldChange(wxCommandEvent& evt) {
+void VerifyLabFrame::OnByteFieldChange(wxCommandEvent& evt) {
 	wxLogStatus(evt.GetString());
 }
 
-void MainFrame::OnWordFieldChange(wxCommandEvent& evt) {
+void VerifyLabFrame::OnWordFieldChange(wxCommandEvent& evt) {
 	wxLogStatus(evt.GetString());
 }
 
-void MainFrame::OnFlagFieldChange(wxCommandEvent& evt) {
+void VerifyLabFrame::OnFlagFieldChange(wxCommandEvent& evt) {
 	wxLogStatus(evt.GetString());
 }

@@ -145,6 +145,7 @@
     <ClCompile Include="Memory.cpp" />
     <ClCompile Include="Tester.cpp" />
     <ClCompile Include="TestingModule.cpp" />
+    <ClCompile Include="VerifyLabFrame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractPresenter.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Tester.h" />
     <ClInclude Include="TestingModule.h" />
+    <ClInclude Include="VerifyLabFrame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
