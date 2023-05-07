@@ -21,8 +21,20 @@ void GenerateLab(
 
 	word cs_copy = cpu_pt->getRegVal(RegId::CS);
 	word ip_copy = cpu_pt->getRegVal(RegId::IP);
+	word ds_copy = cpu_pt->getRegVal(RegId::DS);
+	word ss_copy = cpu_pt->getRegVal(RegId::SS);
+	word sp_copy = cpu_pt->getRegVal(RegId::SP);
+	word es_copy = cpu_pt->getRegVal(RegId::ES);
 
 	for (int test = 0; test < 10; test++) {
+		// восстанавление начального значения сегментов
+		cpu_pt->setRegVal(RegId::CS, cs_copy);
+		cpu_pt->setRegVal(RegId::IP, ip_copy);
+		cpu_pt->setRegVal(RegId::DS, ds_copy);
+		cpu_pt->setRegVal(RegId::SS, ss_copy);
+		cpu_pt->setRegVal(RegId::SP, sp_copy);
+		cpu_pt->setRegVal(RegId::ES, es_copy);
+
 		std::string test_N = "test_" + std::to_string(test);
 		out_data[test_N].emplace_object();
 
@@ -89,10 +101,19 @@ bool VerifyLab(
 	// начальные значения сегментов
 	word cs_copy = cpu_pt->getRegVal(RegId::CS);
 	word ip_copy = cpu_pt->getRegVal(RegId::IP);
+	word ds_copy = cpu_pt->getRegVal(RegId::DS);
+	word ss_copy = cpu_pt->getRegVal(RegId::SS);
+	word sp_copy = cpu_pt->getRegVal(RegId::SP);
+	word es_copy = cpu_pt->getRegVal(RegId::ES);
 
 	for (int test = 0; test < 10; test++) {
-		cpu_pt->setRegVal(RegId::IP, ip_copy);
+		// восстанавление начального значения сегментов
 		cpu_pt->setRegVal(RegId::CS, cs_copy);
+		cpu_pt->setRegVal(RegId::IP, ip_copy);
+		cpu_pt->setRegVal(RegId::DS, ds_copy);
+		cpu_pt->setRegVal(RegId::SS, ss_copy);
+		cpu_pt->setRegVal(RegId::SP, sp_copy);
+		cpu_pt->setRegVal(RegId::ES, es_copy);
 
 		// заполнение входными данными регистров
 		std::string test_N = "test_" + std::to_string(test);
