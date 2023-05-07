@@ -478,10 +478,8 @@ void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
 
 	*running = true;
 	auto regs = GetRegistersForCheck();
-	int start = 0;
-	int end = 0;
-	block_start->GetValue().ToInt(&start);
-	block_end->GetValue().ToInt(&end);
+	int start = std::strtol(block_start->GetValue(), NULL, 16);
+	int end = std::strtol(block_end->GetValue(), NULL, 16);
 	GenerateLab(cpu_pt, mem_pt, running, regs, start, end, lab_name.ToStdString(), description.ToStdString());
 }
 
