@@ -255,8 +255,8 @@ VerifyLabFrame::VerifyLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	SetSizer(main_sizer);
 	SetBackgroundColour(wxColour(100, 200, 100));
 	running = std::make_shared<bool>();
-	description = "Нет описания";
-	lab_name = "Лабораторная работа";
+	description = "";
+	lab_name = GraphConst::lab_not_loaded;
 	CreateStatusBar();
 }
 
@@ -348,12 +348,74 @@ void VerifyLabFrame::OnStartAddressChange(wxCommandEvent& evt) {
 
 // проверить лабораторную
 void VerifyLabFrame::OnVerifyButton(wxCommandEvent& evt) {
-	wxLogStatus("verify");
+	if (lab_name == GraphConst::lab_not_loaded) {
+		wxMessageDialog dialog(this, "Лабораторная не загружена", lab_name);
+		dialog.ShowModal();
+		return;
+	}
+
+	// записываем то, что находится в поле кода в файл
+	std::string text = code_editor->GetValue().ToStdString();
+	std::ofstream temp("temp.asm");
+	temp << text << "\nHLT";	// код остановки добавляется в конец каждой программы
+	temp.close();
+
+	// код запуска компилятора с записанным файлом
+	STARTUPINFOA si;
+	PROCESS_INFORMATION pi;
+
+	// set the size of the structures
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	// start the program up
+	CreateProcessA
+	(
+		NULL,   // the path
+		const_cast<LPSTR>(".\\FASM.EXE temp.asm"),  // Command line
+		NULL,                   // Process handle not inheritable
+		NULL,                   // Thread handle not inheritable
+		FALSE,                  // Set handle inheritance to FALSE
+		CREATE_NO_WINDOW,     // Opens file in a separate console
+		NULL,           // Use parent's environment block
+		NULL,           // Use parent's starting directory 
+		&si,            // Pointer to STARTUPINFO structure
+		&pi           // Pointer to PROCESS_INFORMATION structure
+	);
+
+	// ждём пока программа скомпилируется
+	WaitForSingleObject(pi.hProcess, INFINITE);
+
+	// Close process and thread handles.
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+
+	// записываем скомпилированную программу в память
+	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
+	notifyMemChange();
+
+	// проверка работы
+	if (VerifyLab(cpu_pt, mem_pt, running, lab_name.ToStdString())) {
+		wxMessageDialog dialog(this, "Лабораторная зачтена", lab_name);
+		dialog.ShowModal();
+	}
+	else {
+		wxMessageDialog dialog(this, "Лабораторная не зачтена", lab_name);
+		dialog.ShowModal();
+	}
 }
 
 // показать описание
 void VerifyLabFrame::OnShowDescButton(wxCommandEvent& evt) {
-	wxLogStatus("show lab");
+	if (lab_name == GraphConst::lab_not_loaded) {
+		wxMessageDialog dialog(this, "Лабораторная не загружена", lab_name);
+		dialog.ShowModal();
+		return;
+	}
+	// использовать wxFrame
+	wxMessageDialog dialog(this, description, lab_name);
+	dialog.ShowModal();
 }
 
 // загрузить исходный код программы
@@ -379,7 +441,15 @@ void VerifyLabFrame::OnLoadCodeButton(wxCommandEvent& evt) {
 
 // загрузить лабораторную
 void VerifyLabFrame::OnLoadLabButton(wxCommandEvent& evt) {
-	wxLogStatus("load lab");
+	wxFileDialog
+		openFileDialog(this, _("Загрузить исходный код"), "", "",
+			"JSON files (*.json)|*.json", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return;     // the user changed idea...
+
+	lab_name = openFileDialog.GetFilename();
+	description = GetDescription(lab_name.ToStdString());
 }
 
 void VerifyLabFrame::OnByteFieldChange(wxCommandEvent& evt) {
