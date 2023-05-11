@@ -275,6 +275,10 @@ void VerifyLabFrame::initEmulator() {
 	Render();
 }
 
+void VerifyLabFrame::initDescFrame(DescriptionFrame* f) {
+	desc_frame = f;
+}
+
 void VerifyLabFrame::Render() {
 	notifyRegChange();
 	notifyMemChange();
@@ -339,6 +343,7 @@ void VerifyLabFrame::notifyHalt() {
 
 void VerifyLabFrame::OnClose(wxCloseEvent& evt) {
 	Show(false);
+	desc_frame->Show(false);
 }
 
 void VerifyLabFrame::OnStartAddressChange(wxCommandEvent& evt) {
@@ -415,8 +420,7 @@ void VerifyLabFrame::OnShowDescButton(wxCommandEvent& evt) {
 		return;
 	}
 	// использовать wxFrame
-	wxMessageDialog dialog(this, description, lab_name);
-	dialog.ShowModal();
+	desc_frame->Show(true);
 }
 
 // загрузить исходный код программы
@@ -452,6 +456,8 @@ void VerifyLabFrame::OnLoadLabButton(wxCommandEvent& evt) {
 	lab_loaded = true;
 	lab_name = openFileDialog.GetFilename();
 	description = GetDescription(lab_name.ToStdString());
+	desc_frame->SetLabName(lab_name);
+	desc_frame->SetDescription(description);
 }
 
 void VerifyLabFrame::OnByteFieldChange(wxCommandEvent& evt) {

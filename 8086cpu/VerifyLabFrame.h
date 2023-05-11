@@ -6,6 +6,7 @@
 #include "cpu8086.h"
 #include "Memory.h"
 #include "TestingModule.h"
+#include "DescriptionFrame.h"
 #include <string>
 #include <fstream>
 #include <Windows.h>
@@ -13,6 +14,8 @@
 
 class VerifyLabFrame : public wxFrame, public AbstractPresenter {
 private:
+	// frame's
+	DescriptionFrame* desc_frame;
 	// sizers
 	wxBoxSizer* main_sizer;
 	wxBoxSizer* buttons_sizer;
@@ -55,6 +58,7 @@ private:
 public:
 	VerifyLabFrame();
 	void initEmulator();
+	void initDescFrame(DescriptionFrame* f);
 
 	void notifyRegChange() override;
 	void notifyMemChange() override;

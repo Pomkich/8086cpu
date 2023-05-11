@@ -7,6 +7,7 @@
 #include "Memory.h"
 #include "CreateLabFrame.h"
 #include "VerifyLabFrame.h"
+#include "DescriptionFrame.h"
 #include <string>
 #include <fstream>
 #include <Windows.h>
@@ -16,6 +17,7 @@ class MainFrame : public wxFrame, public AbstractPresenter {
 private:
 	CreateLabFrame* lab_frame;
 	VerifyLabFrame* verify_frame;
+	DescriptionFrame* desc_frame;
 	// sizers
 	wxBoxSizer* main_sizer;
 	wxBoxSizer* buttons_sizer;
@@ -62,6 +64,7 @@ public:
 	void initEmulator();
 	void initLabFrame(CreateLabFrame* second_frame);
 	void initVerifyFrame(VerifyLabFrame* third_frame);
+	void initDescFrame(DescriptionFrame* d_f);
 
 	void notifyRegChange() override;
 	void notifyMemChange() override;

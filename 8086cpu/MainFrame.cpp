@@ -299,6 +299,11 @@ void MainFrame::initVerifyFrame(VerifyLabFrame* third_frame) {
 	verify_frame = third_frame;
 }
 
+void MainFrame::initDescFrame(DescriptionFrame* d_f) {
+	desc_frame = d_f;
+	verify_frame->initDescFrame(desc_frame);
+}
+
 void MainFrame::Render() {
 	notifyRegChange();
 	notifyMemChange();
@@ -360,6 +365,7 @@ void MainFrame::notifyMemChange() {
 void MainFrame::OnClose(wxCloseEvent& evt) {
 	lab_frame->Destroy();
 	verify_frame->Destroy();
+	desc_frame->Destroy();
 	Destroy();
 }
 
