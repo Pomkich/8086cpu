@@ -21,8 +21,6 @@ namespace GraphConst {
 	const int screen_width = 800;
 	const int screen_height = 600;
 
-	static wxString lab_not_loaded = "EMPTY_LAB";
-
 	enum class CheckboxIDs {
 		AX, BX, CX, DX, SP, BP, SI, DI, CS, DS, SS, ES, IP,
 		O, S, Z, P, C, A

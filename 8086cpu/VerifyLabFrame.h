@@ -45,6 +45,8 @@ private:
 	// память
 	wxGrid* mem_dump;
 	wxTextCtrl* start_address;
+	// проверка загрузки лабораторной
+	bool lab_loaded;
 
 	// переменная нужна для проверки лабораторной
 	std::shared_ptr<bool> running;

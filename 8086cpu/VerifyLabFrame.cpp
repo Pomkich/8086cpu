@@ -256,7 +256,8 @@ VerifyLabFrame::VerifyLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	SetBackgroundColour(wxColour(100, 200, 100));
 	running = std::make_shared<bool>();
 	description = "";
-	lab_name = GraphConst::lab_not_loaded;
+	lab_name = "Null";
+	lab_loaded = false;
 	CreateStatusBar();
 }
 
@@ -348,7 +349,7 @@ void VerifyLabFrame::OnStartAddressChange(wxCommandEvent& evt) {
 
 // проверить лабораторную
 void VerifyLabFrame::OnVerifyButton(wxCommandEvent& evt) {
-	if (lab_name == GraphConst::lab_not_loaded) {
+	if (!lab_loaded) {
 		wxMessageDialog dialog(this, "Ћабораторна€ не загружена", lab_name);
 		dialog.ShowModal();
 		return;
@@ -408,7 +409,7 @@ void VerifyLabFrame::OnVerifyButton(wxCommandEvent& evt) {
 
 // показать описание
 void VerifyLabFrame::OnShowDescButton(wxCommandEvent& evt) {
-	if (lab_name == GraphConst::lab_not_loaded) {
+	if (!lab_loaded) {
 		wxMessageDialog dialog(this, "Ћабораторна€ не загружена", lab_name);
 		dialog.ShowModal();
 		return;
@@ -448,6 +449,7 @@ void VerifyLabFrame::OnLoadLabButton(wxCommandEvent& evt) {
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;     // the user changed idea...
 
+	lab_loaded = true;
 	lab_name = openFileDialog.GetFilename();
 	description = GetDescription(lab_name.ToStdString());
 }
