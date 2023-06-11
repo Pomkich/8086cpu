@@ -62,7 +62,7 @@ private:
 	void testFlagZ(word new_val);
 	void testFlagS(word new_val, OpType type);
 	void testFlagP(byte val);
-	void testFlagCAdd(word prev_val, word new_val);	// для работы со словами
+	void testFlagCAdd(word prev_val, word new_val);
 	void testFlagCSub(word prev_val, word new_val);
 	void testFlagAAdd(word prev_val, word new_val);
 	void testFlagASub(word prev_val, word new_val);
@@ -85,7 +85,7 @@ private:
 	void ADD_R_IN_W();		// сложение в 16-битный регист
 	void ADD_A_B();
 	void ADD_A_W();
-	void OR_R_OUT_B();		// логическое сложение из байтового регистрар
+	void OR_R_OUT_B();		// логическое сложение из байтового регистра
 	void OR_R_OUT_W();		// логическое сложение из 16-битного регистра
 	void OR_R_IN_B();		// логическое сложение в байтовый регистр
 	void OR_R_IN_W();		// логическое сложение в 16-битный регист

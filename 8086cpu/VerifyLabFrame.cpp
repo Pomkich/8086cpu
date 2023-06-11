@@ -244,6 +244,33 @@ VerifyLabFrame::VerifyLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	mem_field_sizer->Add(mem_dump, 0, wxEXPAND);
 	// MEMORY SIZER END
 
+	// set editable to false for text field
+	AH_field->SetEditable(false);
+	AL_field->SetEditable(false);
+	BH_field->SetEditable(false);
+	BL_field->SetEditable(false);
+	CH_field->SetEditable(false);
+	CL_field->SetEditable(false);
+	DH_field->SetEditable(false);
+	DL_field->SetEditable(false);
+	CS_field->SetEditable(false);
+	IP_field->SetEditable(false);
+	SS_field->SetEditable(false);
+	SP_field->SetEditable(false);
+	BP_field->SetEditable(false);
+	SI_field->SetEditable(false);
+	DI_field->SetEditable(false);
+	DS_field->SetEditable(false);
+	ES_field->SetEditable(false);
+	O_field->SetEditable(false);
+	S_field->SetEditable(false);
+	Z_field->SetEditable(false);
+	P_field->SetEditable(false);
+	C_field->SetEditable(false);
+	A_field->SetEditable(false);
+	mem_dump->EnableEditing(false);
+	mem_dump->EnableDragColSize(false);
+	mem_dump->EnableDragRowSize(false);
 
 	fields_sizer->Add(reg_field_sizer, 1, wxEXPAND | wxALL, GraphConst::base_border);
 	fields_sizer->Add(code_field_sizer, 2, wxEXPAND | wxALL, GraphConst::base_border);
