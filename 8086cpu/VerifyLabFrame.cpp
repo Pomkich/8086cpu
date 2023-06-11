@@ -285,7 +285,6 @@ VerifyLabFrame::VerifyLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	description = "";
 	lab_name = "Null";
 	lab_loaded = false;
-	CreateStatusBar();
 }
 
 void VerifyLabFrame::initEmulator() {

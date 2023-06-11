@@ -312,7 +312,6 @@ CreateLabFrame::CreateLabFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	running = std::make_shared<bool>();
 	description = "Нет описания";
 	lab_name = "Лабораторная работа";
-	CreateStatusBar();
 }
 
 void CreateLabFrame::initEmulator() {

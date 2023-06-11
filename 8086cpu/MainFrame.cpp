@@ -301,7 +301,6 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 
 	SetSizer(main_sizer);
 	SetBackgroundColour(wxColour(100, 200, 100));
-	CreateStatusBar();
 }
 
 void MainFrame::initEmulator() {
