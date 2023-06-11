@@ -7,14 +7,6 @@ wxBEGIN_EVENT_TABLE(VerifyLabFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD_LAB, VerifyLabFrame::OnLoadLabButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, VerifyLabFrame::OnStartAddressChange)
 	EVT_CLOSE(VerifyLabFrame::OnClose)
-	EVT_TEXT(GraphConst::FieldIDs::AH, VerifyLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::AL, VerifyLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::BH, VerifyLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::BL, VerifyLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::CH, VerifyLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::CL, VerifyLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::DH, VerifyLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::DL, VerifyLabFrame::OnByteFieldChange)
 wxEND_EVENT_TABLE()
 
 // вспомогательные функции
@@ -484,16 +476,4 @@ void VerifyLabFrame::OnLoadLabButton(wxCommandEvent& evt) {
 	description = GetDescription(lab_name.ToStdString());
 	desc_frame->SetLabName(lab_name);
 	desc_frame->SetDescription(description);
-}
-
-void VerifyLabFrame::OnByteFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
-}
-
-void VerifyLabFrame::OnWordFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
-}
-
-void VerifyLabFrame::OnFlagFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
 }

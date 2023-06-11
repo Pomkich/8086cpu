@@ -84,9 +84,6 @@ private:
 	void OnReferenceButton(wxCommandEvent& evt);
 	void OnCreateLabButton(wxCommandEvent& evt);
 	void OnTestLabButton(wxCommandEvent& evt);
-	void OnByteFieldChange(wxCommandEvent& evt);
-	void OnWordFieldChange(wxCommandEvent& evt);
-	void OnFlagFieldChange(wxCommandEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 };

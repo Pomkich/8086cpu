@@ -79,9 +79,6 @@ private:
 	void OnGenerateButton(wxCommandEvent& evt);
 	void OnAddDescButton(wxCommandEvent& evt);
 	void OnLoadButton(wxCommandEvent& evt);
-	void OnByteFieldChange(wxCommandEvent& evt);
-	void OnWordFieldChange(wxCommandEvent& evt);
-	void OnFlagFieldChange(wxCommandEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 };

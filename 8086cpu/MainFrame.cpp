@@ -10,14 +10,6 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(GraphConst::ButtonsIDs::CREATE_LAB, MainFrame::OnCreateLabButton)
 	EVT_MENU(GraphConst::ButtonsIDs::TEST_LAB, MainFrame::OnTestLabButton)
 	EVT_CLOSE(MainFrame::OnClose)
-	EVT_TEXT(GraphConst::FieldIDs::AH, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::AL, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::BH, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::BL, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::CH, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::CL, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::DH, MainFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::DL, MainFrame::OnByteFieldChange)
 wxEND_EVENT_TABLE()
 
 // вспомогательные функции
@@ -398,12 +390,10 @@ void MainFrame::OnClose(wxCloseEvent& evt) {
 void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
 	start_address->SetValue(evt.GetString().MakeUpper());
 	notifyMemChange();
-	wxLogStatus(start_address->GetValue());
 }
 
 void MainFrame::OnClockButton(wxCommandEvent& evt) {
 	cpu_pt->clock();
-	wxLogStatus("clicked");
 }
 
 // загрузить исходный код программы
@@ -481,21 +471,8 @@ void MainFrame::OnReferenceButton(wxCommandEvent& evt) {
 
 void MainFrame::OnCreateLabButton(wxCommandEvent& evt) {
 	lab_frame->Show(true);
-	wxLogStatus("create lab");
 }
 
 void MainFrame::OnTestLabButton(wxCommandEvent& evt) {
 	verify_frame->Show(true);
-}
-
-void MainFrame::OnByteFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
-}
-
-void MainFrame::OnWordFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
-}
-
-void MainFrame::OnFlagFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
 }

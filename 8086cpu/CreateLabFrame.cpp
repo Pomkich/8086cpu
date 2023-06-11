@@ -6,14 +6,6 @@ wxBEGIN_EVENT_TABLE(CreateLabFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::CREATE_LAB, CreateLabFrame::OnGenerateButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, CreateLabFrame::OnStartAddressChange)
 	EVT_CLOSE(CreateLabFrame::OnClose)
-	EVT_TEXT(GraphConst::FieldIDs::AH, CreateLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::AL, CreateLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::BH, CreateLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::BL, CreateLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::CH, CreateLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::CL, CreateLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::DH, CreateLabFrame::OnByteFieldChange)
-	EVT_TEXT(GraphConst::FieldIDs::DL, CreateLabFrame::OnByteFieldChange)
 wxEND_EVENT_TABLE()
 
 // вспомогательные функции
@@ -406,7 +398,6 @@ void CreateLabFrame::OnClose(wxCloseEvent& evt) {
 void CreateLabFrame::OnStartAddressChange(wxCommandEvent& evt) {
 	start_address->SetValue(evt.GetString().MakeUpper());
 	notifyMemChange();
-	wxLogStatus(start_address->GetValue());
 }
 
 void CreateLabFrame::OnGenerateButton(wxCommandEvent& evt) {
@@ -488,16 +479,4 @@ void CreateLabFrame::OnLoadButton(wxCommandEvent& evt) {
 		code_editor->AppendText('\n');
 	}
 	stream.close();
-}
-
-void CreateLabFrame::OnByteFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
-}
-
-void CreateLabFrame::OnWordFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
-}
-
-void CreateLabFrame::OnFlagFieldChange(wxCommandEvent& evt) {
-	wxLogStatus(evt.GetString());
 }
