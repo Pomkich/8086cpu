@@ -447,8 +447,7 @@ void MainFrame::OnCompileButton(wxCommandEvent& evt) {
 	CloseHandle(pi.hThread);
 
 	// сбрасываем эмулятор в исходное состояние
-	cpu_pt->setRegVal(RegId::CS, 0x1000);
-	cpu_pt->setRegVal(RegId::IP, 0x0);
+	cpu_pt->loadDefaultState();
 	mem_pt->reset();
 	// записываем скомпилированную программу в память
 	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");

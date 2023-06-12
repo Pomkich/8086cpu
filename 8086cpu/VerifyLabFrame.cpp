@@ -415,9 +415,13 @@ void VerifyLabFrame::OnVerifyButton(wxCommandEvent& evt) {
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
 
+	// сбрасываем эмулятор в исходное состояние
+	cpu_pt->loadDefaultState();
+	mem_pt->reset();
 	// записываем скомпилированную программу в память
 	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
 	notifyMemChange();
+	notifyRegChange();
 
 	// проверка работы
 	if (VerifyLab(cpu_pt, mem_pt, running, lab_name.ToStdString())) {

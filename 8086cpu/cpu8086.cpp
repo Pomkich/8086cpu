@@ -50,22 +50,28 @@ void cpu8086::initPresenter(AbstractPresenter* p_pres) {
 	presenter = p_pres;
 }
 
-void cpu8086::loadTestProgram() {
+void cpu8086::loadDefaultState() {
+	// инициализация базовых регистров
+	setRegVal(RegId::AX, 0x00);
+	setRegVal(RegId::BX, 0x00);
+	setRegVal(RegId::CX, 0x00);
+	setRegVal(RegId::DX, 0x00);
+	setRegVal(RegId::SP, 0x00);
+	setRegVal(RegId::BP, 0x00);
+	setRegVal(RegId::SI, 0x00);
+	setRegVal(RegId::DI, 0x00);
 	// инициализация сегментов
 	setRegVal(RegId::CS, 0x1000);
 	setRegVal(RegId::DS, 0x2000);
 	setRegVal(RegId::SS, 0x3000);
-	// загрузка программы в память
-	memory->writeB(0x10000, 0xB8);	// MOV AX, 12345
-	memory->writeB(0x10001, 0x39);	// MOV BX, 5000
-	memory->writeB(0x10002, 0x30);	// SUB AX, BX
-	memory->writeB(0x10003, 0xBB);	// XOR AX, BX
-	memory->writeB(0x10004, 0x88);
-	memory->writeB(0x10005, 0x13);
-	memory->writeB(0x10006, 0x2B);
-	memory->writeB(0x10007, 0xC3);
-	memory->writeB(0x10008, 0x33);
-	memory->writeB(0x10009, 0xC3);
+	setRegVal(RegId::IP, 0x00);
+	// инициализация флагов
+	remFlag(Flag::O);
+	remFlag(Flag::S);
+	remFlag(Flag::Z);
+	remFlag(Flag::A);
+	remFlag(Flag::P);
+	remFlag(Flag::C);
 }
 
 word cpu8086::getRegVal(RegId reg_id) {
