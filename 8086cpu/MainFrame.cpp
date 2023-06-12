@@ -296,6 +296,9 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 
 	SetSizer(main_sizer);
 	SetBackgroundColour(wxColour(100, 200, 100));
+
+	running = std::make_shared<bool>();
+	*running = false;
 }
 
 void MainFrame::initEmulator() {
@@ -381,6 +384,12 @@ void MainFrame::notifyMemChange() {
 			}
 		}
 	}
+}
+
+void MainFrame::notifyHalt() {
+	*running = false;
+	wxMessageDialog dialog(this, "Программа остановлена");
+	dialog.ShowModal();
 }
 
 void MainFrame::OnClose(wxCloseEvent& evt) {
@@ -470,46 +479,10 @@ void MainFrame::OnLoadButton(wxCommandEvent& evt) {
 
 // скомплиировать исходный код
 void MainFrame::OnRunButton(wxCommandEvent& evt) {
-	// записываем то, что находится в поле кода в файл
-	std::string text = code_editor->GetValue().ToStdString();
-	std::ofstream temp("temp.asm");
-	temp << text << "\nHLT";	// код остановки добавляется в конец каждой программы
-	temp.close();
-
-	// код запуска компилятора с записанным файлом
-	STARTUPINFOA si;
-	PROCESS_INFORMATION pi;
-
-	// set the size of the structures
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
-	ZeroMemory(&pi, sizeof(pi));
-
-	// start the program up
-	CreateProcessA
-	(
-		NULL,   // the path
-		const_cast<LPSTR>(".\\FASM.EXE temp.asm"),  // Command line
-		NULL,                   // Process handle not inheritable
-		NULL,                   // Thread handle not inheritable
-		FALSE,                  // Set handle inheritance to FALSE
-		CREATE_NO_WINDOW,     // Opens file in a separate console
-		NULL,           // Use parent's environment block
-		NULL,           // Use parent's starting directory 
-		&si,            // Pointer to STARTUPINFO structure
-		&pi           // Pointer to PROCESS_INFORMATION structure
-	);
-
-	// ждём пока программа скомпилируется
-	WaitForSingleObject(pi.hProcess, INFINITE);
-
-	// Close process and thread handles.
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
-
-	// записываем скомпилированную программу в память
-	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
-	notifyMemChange();
+	*running = true;
+	while (*running) {
+		cpu_pt->clock();
+	}
 }
 
 void MainFrame::OnSandboxButton(wxCommandEvent& evt) {

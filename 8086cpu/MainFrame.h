@@ -60,6 +60,7 @@ private:
 	wxGrid* mem_dump;
 	wxTextCtrl* start_address;
 
+	std::shared_ptr<bool> running;
 public:
 	MainFrame();
 	void initEmulator();
@@ -70,7 +71,7 @@ public:
 	void notifyRegChange() override;
 	void notifyMemChange() override;
 	void notifyStkChange() override {};
-	void notifyHalt() override {};
+	void notifyHalt() override;
 
 	void Render();
 
