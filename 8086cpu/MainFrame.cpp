@@ -2,6 +2,7 @@
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_BUTTON(GraphConst::ButtonsIDs::CLOCK, MainFrame::OnClockButton)
+	EVT_BUTTON(GraphConst::ButtonsIDs::COMPILE, MainFrame::OnCompileButton)
 	EVT_BUTTON(GraphConst::ButtonsIDs::LOAD, MainFrame::OnLoadButton)
 	EVT_BUTTON(GraphConst::ButtonsIDs::RUN, MainFrame::OnRunButton)
 	EVT_TEXT_ENTER(GraphConst::FieldIDs::START_ADDRESS, MainFrame::OnStartAddressChange)
@@ -67,10 +68,12 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "8086 emulator") {
 	// BUTTON SIZER START
 	clock_button = new wxButton(this, GraphConst::ButtonsIDs::CLOCK, "Шаг");
 	run_button = new wxButton(this, GraphConst::ButtonsIDs::RUN, "Старт");
+	compile_button = new wxButton(this, GraphConst::ButtonsIDs::COMPILE, "Компилировать");
 	stop_button = new wxButton(this, GraphConst::ButtonsIDs::STOP, "Стоп");
 	load_button = new wxButton(this, GraphConst::ButtonsIDs::LOAD, "Загрузить");
 	buttons_sizer->Add(clock_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	buttons_sizer->Add(run_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
+	buttons_sizer->Add(compile_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	buttons_sizer->Add(stop_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	buttons_sizer->Add(load_button, 1, wxALIGN_CENTER | wxALL, GraphConst::base_border);
 	// BUTTON SIZER END
@@ -394,6 +397,54 @@ void MainFrame::OnStartAddressChange(wxCommandEvent& evt) {
 
 void MainFrame::OnClockButton(wxCommandEvent& evt) {
 	cpu_pt->clock();
+}
+
+void MainFrame::OnCompileButton(wxCommandEvent& evt) {
+	// записываем то, что находится в поле кода в файл
+	std::string text = code_editor->GetValue().ToStdString();
+	std::ofstream temp("temp.asm");
+	temp << text << "\nHLT";	// код остановки добавляется в конец каждой программы
+	temp.close();
+
+	// код запуска компилятора с записанным файлом
+	STARTUPINFOA si;
+	PROCESS_INFORMATION pi;
+
+	// set the size of the structures
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	// start the program up
+	CreateProcessA
+	(
+		NULL,   // the path
+		const_cast<LPSTR>(".\\FASM.EXE temp.asm"),  // Command line
+		NULL,                   // Process handle not inheritable
+		NULL,                   // Thread handle not inheritable
+		FALSE,                  // Set handle inheritance to FALSE
+		CREATE_NO_WINDOW,     // Opens file in a separate console
+		NULL,           // Use parent's environment block
+		NULL,           // Use parent's starting directory 
+		&si,            // Pointer to STARTUPINFO structure
+		&pi           // Pointer to PROCESS_INFORMATION structure
+	);
+
+	// ждём пока программа скомпилируется
+	WaitForSingleObject(pi.hProcess, INFINITE);
+
+	// Close process and thread handles.
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+
+	// сбрасываем эмулятор в исходное состояние
+	cpu_pt->setRegVal(RegId::CS, 0x1000);
+	cpu_pt->setRegVal(RegId::IP, 0x0);
+	mem_pt->reset();
+	// записываем скомпилированную программу в память
+	mem_pt->loadProgram((cpu_pt->getRegVal(RegId::CS) << 4) + cpu_pt->getRegVal(RegId::IP), ".\\temp.bin");
+	notifyMemChange();
+	notifyRegChange();
 }
 
 // загрузить исходный код программы

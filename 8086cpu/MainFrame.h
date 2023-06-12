@@ -36,6 +36,7 @@ private:
 	// кнопки
 	wxButton* clock_button;
 	wxButton* run_button;
+	wxButton* compile_button;
 	wxButton* stop_button;
 	wxButton* load_button;
 	// регистры
@@ -78,6 +79,7 @@ private:
 	// button handlers
 	void OnStartAddressChange(wxCommandEvent& evt);
 	void OnClockButton(wxCommandEvent& evt);
+	void OnCompileButton(wxCommandEvent& evt);
 	void OnLoadButton(wxCommandEvent& evt);
 	void OnRunButton(wxCommandEvent& evt);
 	void OnSandboxButton(wxCommandEvent& evt);
