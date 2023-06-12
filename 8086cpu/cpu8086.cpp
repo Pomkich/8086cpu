@@ -1641,7 +1641,6 @@ void cpu8086::CMP_R_OUT_B() {
 	fetchModRegRm(mod, reg, rm);
 
 	byte& first_reg = getRegB(reg);
-	byte temp = 0;	// временная переменная с которой выполняется сравнение
 
 	// переменные нужны для проверки флагов
 	byte prev_val = 0;
@@ -1650,7 +1649,7 @@ void cpu8086::CMP_R_OUT_B() {
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
-		temp = second_reg - first_reg;	// по идее такое невозможно
+		new_val = second_reg - first_reg;	// по идее такое невозможно
 	}
 	else {	// вычисление эффективного адреса
 		word displacement = fetchDisp(mod, rm);	// смещение
@@ -1674,7 +1673,6 @@ void cpu8086::CMP_R_OUT_W() {
 	fetchModRegRm(mod, reg, rm);
 
 	word& first_reg = getRegW(reg);
-	word temp = 0;	// временная переменная с которой выполняется сравнение
 
 	// переменные нужны для проверки флагов
 	word prev_val = 0;
@@ -1683,7 +1681,7 @@ void cpu8086::CMP_R_OUT_W() {
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
-		temp = second_reg - first_reg;	// по идее такое невозможно
+		new_val = second_reg - first_reg;	// по идее такое невозможно
 	}
 	else {	// вычисление эффективного адреса
 		word displacement = fetchDisp(mod, rm);	// смещение
@@ -1707,15 +1705,15 @@ void cpu8086::CMP_R_IN_B() {
 	fetchModRegRm(mod, reg, rm);
 	// определяем регистр для байтов
 	byte& first_reg = getRegB(reg);
-	byte temp = 0;	// временная переменная с которой выполняется сравнение
 
 	// переменные нужны для проверки флагов
 	byte prev_val = first_reg;
+	byte new_val = 0;
 	
 
 	if (mod == 3) {	// регистровая адресация
 		byte& second_reg = getRegB(rm);
-		temp = first_reg - second_reg;
+		new_val = first_reg - second_reg;
 	}
 	else {	// вычисление эффективного адреса
 		word displacement = fetchDisp(mod, rm);	// смещение
@@ -1723,15 +1721,15 @@ void cpu8086::CMP_R_IN_B() {
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
 		address = ((dword)DS << 4) + EA;
-		temp = first_reg - memory->readB(address);
+		new_val = first_reg - memory->readB(address);
 	}
 	// установка флагов
-	testFlagZ(temp);
-	testFlagS(temp, OpType::Byte);
-	testFlagP(temp);
-	testFlagCSub(prev_val, temp);
-	testFlagASub(prev_val, temp);
-	testFlagO(prev_val, temp, OpType::Byte);
+	testFlagZ(new_val);
+	testFlagS(new_val, OpType::Byte);
+	testFlagP(new_val);
+	testFlagCSub(prev_val, new_val);
+	testFlagASub(prev_val, new_val);
+	testFlagO(prev_val, new_val, OpType::Byte);
 }
 
 void cpu8086::CMP_R_IN_W() {
@@ -1739,15 +1737,14 @@ void cpu8086::CMP_R_IN_W() {
 	fetchModRegRm(mod, reg, rm);
 
 	word& first_reg = getRegW(reg);
-	word temp = 0;	// временная переменная с которой выполняется сравнение
 
 	// переменные нужны для проверки флагов
 	word prev_val = first_reg;
-	
+	word new_val = 0;	// временная переменная с которой выполняется сравнение
 
 	if (mod == 3) {	// регистровая адресация
 		word& second_reg = getRegW(rm);
-		temp = first_reg - second_reg;
+		new_val = first_reg - second_reg;
 	}
 	else {	// вычисление эффективного адреса
 		word displacement = fetchDisp(mod, rm);	// смещение
@@ -1755,14 +1752,14 @@ void cpu8086::CMP_R_IN_W() {
 		// получаем эффективный адрес
 		word EA = fetchEA(mod, rm, displacement);
 		address = ((dword)DS << 4) + EA;
-		temp = first_reg - memory->readW(address);
+		new_val = first_reg - memory->readW(address);
 	}
-	testFlagZ(temp);
-	testFlagS(temp, OpType::Word);
-	testFlagP(temp);
-	testFlagCSub(prev_val, temp);
-	testFlagASub(prev_val, temp);
-	testFlagO(prev_val, temp, OpType::Word);
+	testFlagZ(new_val);
+	testFlagS(new_val, OpType::Word);
+	testFlagP(new_val);
+	testFlagCSub(prev_val, new_val);
+	testFlagASub(prev_val, new_val);
+	testFlagO(prev_val, new_val, OpType::Word);
 }
 
 void cpu8086::CMP_A_B() {
