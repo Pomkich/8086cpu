@@ -455,6 +455,9 @@ void cpu8086::initOpTable() {
 	opcode_table[0x81] = std::bind(&cpu8086::IMMED_W, this);
 	opcode_table[0x82] = std::bind(&cpu8086::IMMED_B_SX, this);
 	opcode_table[0x83] = std::bind(&cpu8086::IMMED_W_SX, this);
+	// обмен
+	opcode_table[0x86] = std::bind(&cpu8086::XCHG_B, this);
+	opcode_table[0x87] = std::bind(&cpu8086::XCHG_W, this);
 	// помещение значения из регистра в память
 	opcode_table[0x88] = std::bind(&cpu8086::MOV_R_OUT_B, this);
 	opcode_table[0x89] = std::bind(&cpu8086::MOV_R_OUT_W, this);
@@ -2518,6 +2521,58 @@ void cpu8086::MOV_A_OUT_B() {
 void cpu8086::MOV_A_OUT_W() {
 	address = fetchCodeWord();
 	memory->writeW(((dword)DS << 4) + address, A.X);
+}
+
+void cpu8086::XCHG_B() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	byte& first_reg = getRegB(reg);
+
+	byte temp = 0;
+
+	if (mod == 3) {	// регистровая адресация
+		byte& second_reg = getRegB(rm);
+		temp = first_reg;
+		first_reg = second_reg;
+		second_reg = temp;
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		temp = memory->readB(address);
+		memory->writeB(address, first_reg);
+		first_reg = temp;
+	}
+}
+
+void cpu8086::XCHG_W() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	word& first_reg = getRegW(reg);
+
+	word temp = 0;
+
+	if (mod == 3) {	// регистровая адресация
+		word& second_reg = getRegW(rm);
+		temp = first_reg;
+		first_reg = second_reg;
+		second_reg = temp;
+	}
+	else {	// вычисление эффективного адреса
+		word displacement = fetchDisp(mod, rm);	// смещение
+
+		// получаем эффективный адрес
+		word EA = fetchEA(mod, rm, displacement);
+		address = ((dword)DS << 4) + EA;
+		temp = memory->readW(address);
+		memory->writeW(address, first_reg);
+		first_reg = temp;
+	}
 }
 
 void cpu8086::MOV_MEM_IMM_B() {

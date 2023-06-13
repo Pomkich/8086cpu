@@ -150,6 +150,8 @@ private:
 	void MOV_A_IN_W();
 	void MOV_A_OUT_B();
 	void MOV_A_OUT_W();
+	void XCHG_B();
+	void XCHG_W();
 	void MOV_R_IMM_B(byte& reg);
 	void MOV_R_IMM_W(word& reg);
 	void MOV_MEM_IMM_B();
