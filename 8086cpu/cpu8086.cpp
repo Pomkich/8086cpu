@@ -458,6 +458,15 @@ void cpu8086::initOpTable() {
 	// обмен
 	opcode_table[0x86] = std::bind(&cpu8086::XCHG_B, this);
 	opcode_table[0x87] = std::bind(&cpu8086::XCHG_W, this);
+	// обмен для AX
+	opcode_table[0x90] = std::bind(&cpu8086::XCHG_AX, this, std::ref(A.X));
+	opcode_table[0x91] = std::bind(&cpu8086::XCHG_AX, this, std::ref(C.X));
+	opcode_table[0x92] = std::bind(&cpu8086::XCHG_AX, this, std::ref(D.X));
+	opcode_table[0x93] = std::bind(&cpu8086::XCHG_AX, this, std::ref(B.X));
+	opcode_table[0x94] = std::bind(&cpu8086::XCHG_AX, this, std::ref(SP));
+	opcode_table[0x95] = std::bind(&cpu8086::XCHG_AX, this, std::ref(BP));
+	opcode_table[0x96] = std::bind(&cpu8086::XCHG_AX, this, std::ref(SI));
+	opcode_table[0x97] = std::bind(&cpu8086::XCHG_AX, this, std::ref(DI));
 	// помещение значения из регистра в память
 	opcode_table[0x88] = std::bind(&cpu8086::MOV_R_OUT_B, this);
 	opcode_table[0x89] = std::bind(&cpu8086::MOV_R_OUT_W, this);
@@ -2573,6 +2582,12 @@ void cpu8086::XCHG_W() {
 		memory->writeW(address, first_reg);
 		first_reg = temp;
 	}
+}
+
+void cpu8086::XCHG_AX(word& reg) {
+	word temp = A.X;
+	A.X = reg;
+	reg = temp;
 }
 
 void cpu8086::MOV_MEM_IMM_B() {
