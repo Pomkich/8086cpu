@@ -510,6 +510,8 @@ void cpu8086::initOpTable() {
 	opcode_table[0xC6] = std::bind(&cpu8086::MOV_MEM_IMM_B, this);
 	opcode_table[0xC7] = std::bind(&cpu8086::MOV_MEM_IMM_W, this);
 	// loop
+	opcode_table[0xE0] = std::bind(&cpu8086::LOOPNZ, this);
+	opcode_table[0xE1] = std::bind(&cpu8086::LOOPZ, this);
 	opcode_table[0xE2] = std::bind(&cpu8086::LOOP, this);
 	// halt
 	opcode_table[0xF4] = std::bind(&cpu8086::HLT, this);
@@ -2758,6 +2760,22 @@ void cpu8086::MOV_SR_IN() {
 		word EA = fetchEA(mod, rm, displacement);
 		address = ((dword)DS << 4) + EA;
 		first_reg = memory->readW(address);
+	}
+}
+
+void cpu8086::LOOPNZ() {
+	C.X--;
+	char short_label = std::make_signed_t<char>(fetchCodeByte());
+	if (C.X && !getFlag(Flag::Z)) {
+		IP += short_label;
+	}
+}
+
+void cpu8086::LOOPZ() {
+	C.X--;
+	char short_label = std::make_signed_t<char>(fetchCodeByte());
+	if (C.X && getFlag(Flag::Z)) {
+		IP += short_label;
 	}
 }
 
