@@ -186,6 +186,10 @@ void cpu8086::remFlag(Flag f) { flag_reg &= (~(1 << (word)f)); }
 // получение эффективного адреса в зависимости от типа адресации
 word cpu8086::fetchEA(byte MOD, byte RM, word disp) {
 	word effective_address = 0;
+	// специальные переменные, которые хранят значение со знаком
+	// (иногда происходит адресация со знаком минус)
+	int8_t signed_disp_byte = std::make_signed_t<int8_t>(disp);
+	int16_t signed_disp_word = std::make_signed_t<int16_t>(disp);
 	switch (MOD) {
 	case 0:	// MOD 00; no displacement
 		switch (RM) {
@@ -195,32 +199,32 @@ word cpu8086::fetchEA(byte MOD, byte RM, word disp) {
 		case 3: effective_address = BP + DI; break;
 		case 4: effective_address = SI; break;
 		case 5: effective_address = DI; break;
-		case 6: effective_address = disp; break;	// direct addressing
+		case 6: effective_address = signed_disp_word; break;	// direct addressing
 		case 7: effective_address = B.X; break;
 		}
 		break;
 	case 1:	// MOD 01; 8-bit displacement
 		switch (RM) {
-		case 0: effective_address = B.X + SI + disp; break;
-		case 1: effective_address = B.X + DI + disp; break;
-		case 2: effective_address = BP + SI + disp; break;
-		case 3: effective_address = BP + DI + disp; break;
-		case 4: effective_address = SI + disp; break;
-		case 5: effective_address = DI + disp; break;
-		case 6: effective_address = BP + disp; break;
-		case 7: effective_address = B.X + disp; break;
+		case 0: effective_address = B.X + SI + signed_disp_byte; break;
+		case 1: effective_address = B.X + DI + signed_disp_byte; break;
+		case 2: effective_address = BP + SI + signed_disp_byte; break;
+		case 3: effective_address = BP + DI + signed_disp_byte; break;
+		case 4: effective_address = SI + signed_disp_byte; break;
+		case 5: effective_address = DI + signed_disp_byte; break;
+		case 6: effective_address = BP + signed_disp_byte; break;
+		case 7: effective_address = B.X + signed_disp_byte; break;
 		}
 		break;
 	case 2:	// MOD 10; 16-bit displacement
 		switch (RM) {
-		case 0: effective_address = B.X + SI + disp; break;
-		case 1: effective_address = B.X + DI + disp; break;
-		case 2: effective_address = BP + SI + disp; break;
-		case 3: effective_address = BP + DI + disp; break;
-		case 4: effective_address = SI + disp; break;
-		case 5: effective_address = DI + disp; break;
-		case 6: effective_address = BP + disp; break;
-		case 7: effective_address = B.X + disp; break;
+		case 0: effective_address = B.X + SI + signed_disp_word; break;
+		case 1: effective_address = B.X + DI + signed_disp_word; break;
+		case 2: effective_address = BP + SI + signed_disp_word; break;
+		case 3: effective_address = BP + DI + signed_disp_word; break;
+		case 4: effective_address = SI + signed_disp_word; break;
+		case 5: effective_address = DI + signed_disp_word; break;
+		case 6: effective_address = BP + signed_disp_word; break;
+		case 7: effective_address = B.X + signed_disp_word; break;
 		}
 		break;
 	//case 3:	// MOD 11; register addressing not supported
