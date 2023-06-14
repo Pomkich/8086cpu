@@ -158,5 +158,6 @@ private:
 	void MOV_R_IMM_W(word& reg);
 	void MOV_MEM_IMM_B();
 	void MOV_MEM_IMM_W();
+	void LOOP();
 	void HLT();
 };
