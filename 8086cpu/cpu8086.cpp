@@ -458,6 +458,8 @@ void cpu8086::initOpTable() {
 	// обмен
 	opcode_table[0x86] = std::bind(&cpu8086::XCHG_B, this);
 	opcode_table[0x87] = std::bind(&cpu8086::XCHG_W, this);
+	// загрузка эффективного адреса
+	opcode_table[0x8D] = std::bind(&cpu8086::LEA, this);
 	// обмен для AX
 	opcode_table[0x90] = std::bind(&cpu8086::XCHG_AX, this, std::ref(A.X));
 	opcode_table[0x91] = std::bind(&cpu8086::XCHG_AX, this, std::ref(C.X));
@@ -2716,6 +2718,18 @@ void cpu8086::MOV_SR_OUT() {
 		word EA = fetchEA(mod, rm, displacement);
 		address = ((dword)DS << 4) + EA;
 		memory->writeW(address, first_reg);
+	}
+}
+
+void cpu8086::LEA() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	word& first_reg = getRegW(reg);
+
+	if (mod != 3) {
+		word displacement = fetchDisp(mod, rm);
+		first_reg = fetchEA(mod, rm, displacement);
 	}
 }
 
