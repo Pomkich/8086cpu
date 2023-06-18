@@ -515,6 +515,9 @@ void cpu8086::initOpTable() {
 	opcode_table[0xE2] = std::bind(&cpu8086::LOOP, this);
 	// halt
 	opcode_table[0xF4] = std::bind(&cpu8086::HLT, this);
+
+	// вторая дополнительная группа комманд
+	opcode_table[0xFE] = std::bind(&cpu8086::GRP_SECOND, this);
 }
 
 /******OPCODES_BEG******/
@@ -2789,5 +2792,34 @@ void cpu8086::LOOP() {
 
 void cpu8086::HLT() {
 	presenter->notifyHalt();
+}
+
+void cpu8086::GRP_SECOND() {
+	byte mod, reg, rm;
+	fetchModRegRm(mod, reg, rm);
+
+	if (reg == 0b000 && mod == 0b11) {	// inc 8-bit register
+		byte& first_reg = getRegB(rm);
+		byte prev_val = first_reg;
+		first_reg++;
+
+		testFlagZ(first_reg);
+		testFlagS(first_reg, OpType::Byte);
+		testFlagP(first_reg);
+		testFlagAAdd(prev_val, first_reg);
+		testFlagO(prev_val, first_reg, OpType::Byte);
+	}
+	else if (reg == 0b001 && mod == 0b11) {	// dec 8-bit register
+		byte& first_reg = getRegB(rm);
+		byte prev_val = first_reg;
+		first_reg--;
+
+		testFlagZ(first_reg);
+		testFlagS(first_reg, OpType::Byte);
+		testFlagP(first_reg);
+		testFlagAAdd(prev_val, first_reg);
+		testFlagO(prev_val, first_reg, OpType::Byte);
+	}
+
 }
 /******OPCODES_END******/

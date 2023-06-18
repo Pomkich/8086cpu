@@ -162,4 +162,5 @@ private:
 	void LOOPZ();
 	void LOOP();
 	void HLT();
+	void GRP_SECOND();
 };
