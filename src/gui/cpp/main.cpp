@@ -1,5 +1,6 @@
 #include <wx/wx.h>
 #include "EmulatorApp.h"
+#pragma comment(linker, "/SUBSYSTEM:windows")
 
 wxIMPLEMENT_APP(EmulatorApp);
 
